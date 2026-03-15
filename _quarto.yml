@@ -1,5 +1,27 @@
 project:
-  title: "playground"
+  type: website
+  output-dir: docs
 
-editor: visual
+execute:
+  echo: true
+  message: false
+  warning: false
 
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    code-fold: show
+    code-summary: "Show the code"
+    embed-resources: false
+
+website:
+  title: "Data Science Lab"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: experiments/index.qmd
+        text: Experiments
+      - about.qmd
