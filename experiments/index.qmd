@@ -1,11 +1,11 @@
 ---
-title: "datasci"
+title: "Experiments"
+listing:
+  contents: .
+  type: grid
+  sort: "date desc"
+  categories: true
+  fields: [date, categories, description]
 ---
 
-# Experiments
-
-Small technical experiments and demos.
-
-- [Using ellmer for structured survey analysis](ellmer-survey-analysis.qmd)
-- [LLM structured JSON outputs](llm-json-structuring.qmd)
-- [ggplot theme experiments](ggplot-theme-experiments.qmd)
+Small experiments exploring R, Quarto, and LLM tooling.

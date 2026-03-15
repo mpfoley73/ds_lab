@@ -1,7 +1,21 @@
 ---
-title: "datasci"
+title: "Data Science Lab"
 ---
 
-This is a Quarto website.
+This site is a collection of small experiments exploring:
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+-   R data science
+-   Quarto publishing
+-   LLM tooling
+-   survey analysis
+
+## Recent Experiments
+
+```{=markdown}
+::: {.listing}
+contents: experiments
+sort: "date desc"
+limit: 5
+type: table
+:::
+```

@@ -6,22 +6,30 @@ execute:
   echo: true
   message: false
   warning: false
+  freeze: auto  # so old posts don't rerun every build
 
 format:
   html:
+    theme: cosmo
     toc: true
     toc-depth: 3
     toc-location: left
     code-fold: show
     code-summary: "Show the code"
-    embed-resources: false
 
 website:
   title: "Data Science Lab"
+  site-url: https://mpfoley73.github.io/ds_lab
   navbar:
     left:
       - href: index.qmd
         text: Home
       - href: experiments/index.qmd
         text: Experiments
+      - href: notes/index.qmd
+        text: Notes
       - about.qmd
+  page-navigation: true
+  repo-url: https://github.com/mpfoley73/ds_lab
+  repo-actions: [edit, source]
+  search: true
