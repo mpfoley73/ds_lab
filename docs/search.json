@@ -152,5 +152,61 @@
     "title": "Cleveland’s Changing Population",
     "section": "Takeaways",
     "text": "Takeaways"
+  },
+  {
+    "objectID": "experiments/gt_tables/index.html",
+    "href": "experiments/gt_tables/index.html",
+    "title": "Understanding gt Tables",
+    "section": "",
+    "text": "The gt package has so many functions that it can feel overwhelming. This notebook establishes a baseline foundation to create 80% of what you would normally need, and enough conceptual understanding to guess what’s possible and where to look."
+  },
+  {
+    "objectID": "experiments/gt_tables/index.html#goal",
+    "href": "experiments/gt_tables/index.html#goal",
+    "title": "Understanding gt Tables",
+    "section": "",
+    "text": "The gt package has so many functions that it can feel overwhelming. This notebook establishes a baseline foundation to create 80% of what you would normally need, and enough conceptual understanding to guess what’s possible and where to look."
+  },
+  {
+    "objectID": "experiments/gt_tables/index.html#setup",
+    "href": "experiments/gt_tables/index.html#setup",
+    "title": "Understanding gt Tables",
+    "section": "Setup",
+    "text": "Setup\nThe package comes with several sample datasets. We’ll use gtcars.\n\n\nShow the code\nlibrary(tidyverse)\nlibrary(gt)\n\nglimpse(gt::gtcars)\n\n\nRows: 47\nColumns: 15\n$ mfr         &lt;chr&gt; \"Ford\", \"Ferrari\", \"Ferrari\", \"Ferrari\", \"Ferrari\", \"Ferra…\n$ model       &lt;chr&gt; \"GT\", \"458 Speciale\", \"458 Spider\", \"458 Italia\", \"488 GTB…\n$ year        &lt;dbl&gt; 2017, 2015, 2015, 2014, 2016, 2015, 2017, 2015, 2015, 2015…\n$ trim        &lt;chr&gt; \"Base Coupe\", \"Base Coupe\", \"Base\", \"Base Coupe\", \"Base Co…\n$ bdy_style   &lt;chr&gt; \"coupe\", \"coupe\", \"convertible\", \"coupe\", \"coupe\", \"conver…\n$ hp          &lt;dbl&gt; 647, 597, 562, 562, 661, 553, 680, 652, 731, 949, 573, 545…\n$ hp_rpm      &lt;dbl&gt; 6250, 9000, 9000, 9000, 8000, 7500, 8250, 8000, 8250, 9000…\n$ trq         &lt;dbl&gt; 550, 398, 398, 398, 561, 557, 514, 504, 509, 664, 476, 436…\n$ trq_rpm     &lt;dbl&gt; 5900, 6000, 6000, 6000, 3000, 4750, 5750, 6000, 6000, 6750…\n$ mpg_c       &lt;dbl&gt; 11, 13, 13, 13, 15, 16, 12, 11, 11, 12, 21, 16, 11, 16, 12…\n$ mpg_h       &lt;dbl&gt; 18, 17, 17, 17, 22, 23, 17, 16, 16, 16, 22, 22, 18, 20, 20…\n$ drivetrain  &lt;chr&gt; \"rwd\", \"rwd\", \"rwd\", \"rwd\", \"rwd\", \"rwd\", \"awd\", \"awd\", \"r…\n$ trsmn       &lt;chr&gt; \"7a\", \"7a\", \"7a\", \"7a\", \"7a\", \"7a\", \"7a\", \"7a\", \"7a\", \"7a\"…\n$ ctry_origin &lt;chr&gt; \"United States\", \"Italy\", \"Italy\", \"Italy\", \"Italy\", \"Ital…\n$ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000, 29…"
+  },
+  {
+    "objectID": "experiments/gt_tables/index.html#experiment",
+    "href": "experiments/gt_tables/index.html#experiment",
+    "title": "Understanding gt Tables",
+    "section": "Experiment",
+    "text": "Experiment\n\nBasic Table\ngt() converts a data frame into a gt object.\n\n\nShow the code\ngt::gtcars |&gt;\n  head() |&gt;\n  select(mfr, model, year, hp, mpg_c, mpg_h) |&gt;\n  gt()\n\n\n\n\n\n\n\n\nmfr\nmodel\nyear\nhp\nmpg_c\nmpg_h\n\n\n\n\nFord\nGT\n2017\n647\n11\n18\n\n\nFerrari\n458 Speciale\n2015\n597\n13\n17\n\n\nFerrari\n458 Spider\n2015\n562\n13\n17\n\n\nFerrari\n458 Italia\n2014\n562\n13\n17\n\n\nFerrari\n488 GTB\n2016\n661\n15\n22\n\n\nFerrari\nCalifornia\n2015\n553\n16\n23\n\n\n\n\n\n\n\nThe first thing to notice is that the object has a table body and column labels. It can potentially have a stub (row labels), header, and footer.\n\nThis is analagous to a ggplot object. There is a base plot with x and y aesthetic definitions and labs(). It’s useful to keep the analogy in mind because “gt” stands for “grammar of tables” - a loose parallel to “grammar of graphics”.\n\n\n\n\n\n\nGrammar of Tables\n\n\n\nNeither the gt site nor its GitHub README mention “grammar of tables”, but articles on the web repeatedly attribute the name to it.\n\n\nLet’s first add the components that you would normally want.\n\n\nShow the code\ngt::gtcars |&gt;\n  head() |&gt;\n  select(mfr, model, year, hp, mpg_c, mpg_h) |&gt;\n  gt::gt() |&gt;\n  gt::tab_header(\n    title = \"gt Cars\",\n    subtitle = \"Like mtcars, but in a different package.\"\n  )\n\n\n\n\n\n\n\n\ngt Cars\n\n\nLike mtcars, but in a different package.\n\n\nmfr\nmodel\nyear\nhp\nmpg_c\nmpg_h\n\n\n\n\nFord\nGT\n2017\n647\n11\n18\n\n\nFerrari\n458 Speciale\n2015\n597\n13\n17\n\n\nFerrari\n458 Spider\n2015\n562\n13\n17\n\n\nFerrari\n458 Italia\n2014\n562\n13\n17\n\n\nFerrari\n488 GTB\n2016\n661\n15\n22\n\n\nFerrari\nCalifornia\n2015\n553\n16\n23\n\n\n\n\n\n\n\ncols_hide() so you can use the columns without showing them."
+  },
+  {
+    "objectID": "experiments/gt_tables/index.html#observations",
+    "href": "experiments/gt_tables/index.html#observations",
+    "title": "Understanding gt Tables",
+    "section": "Observations",
+    "text": "Observations"
+  },
+  {
+    "objectID": "experiments/gt_tables/index.html#takeaways",
+    "href": "experiments/gt_tables/index.html#takeaways",
+    "title": "Understanding gt Tables",
+    "section": "Takeaways",
+    "text": "Takeaways\n\ngtsummary and gtextras extend gt."
+  },
+  {
+    "objectID": "experiments/gt_tables/index.html#build-up-a-table",
+    "href": "experiments/gt_tables/index.html#build-up-a-table",
+    "title": "Understanding gt Tables",
+    "section": "Build Up a Table",
+    "text": "Build Up a Table\n\n1. The Basic Table\ngt() converts a data frame into a gt object.\n\n\nShow the code\ntbl_1 &lt;- gt::gtcars |&gt;\n    head() |&gt;\n    select(mfr, model, year, hp, mpg_c, mpg_h) |&gt;\n    # STUB\n    gt::gt(rowname_col = \"mfr\") |&gt;\n    # TABLE HEADER\n    gt::tab_header(\n        title = \"gt Cars\",\n        subtitle = \"Like mtcars, but in a different package.\"\n    ) |&gt;\n    # COLUMN LABELS\n    gt::cols_label(\n        # mfr = \"Manufacturer\",\n        model = \"Model\",\n        year = \"Year\",\n        hp = \"Horsepower\",\n        mpg_c = \"MPG - City\",\n        mpg_h = \"MPG - Hwy\"\n    ) |&gt;\n    # STUB HEAD\n    gt::tab_stubhead(\"Manufacturer\") |&gt;\n    # TABLE FOOTER\n    gt::tab_source_note(\"gtcars is from the gt package.\")\n\ntbl_1\n\n\n\n\n\n\n\n\ngt Cars\n\n\nLike mtcars, but in a different package.\n\n\nManufacturer\nModel\nYear\nHorsepower\nMPG - City\nMPG - Hwy\n\n\n\n\nFord\nGT\n2017\n647\n11\n18\n\n\nFerrari\n458 Speciale\n2015\n597\n13\n17\n\n\nFerrari\n458 Spider\n2015\n562\n13\n17\n\n\nFerrari\n458 Italia\n2014\n562\n13\n17\n\n\nFerrari\n488 GTB\n2016\n661\n15\n22\n\n\nFerrari\nCalifornia\n2015\n553\n16\n23\n\n\n\ngtcars is from the gt package.\n\n\n\n\n\n\n\n\nThe first thing to notice is that the object has a table body and column labels. It can potentially have a stub (row groups or labels), header, and footer.\n\nThis is analagous to the ggplot object. There is a base plot with x and y aesthetic definitions and labs(). The analogy is useful because “gt” stands for “grammar of tables” - a loose parallel to “grammar of graphics”.1\n\n\n\n\n\n\nGrammar of Tables\n\n\n\nThe Grammar of Graphics is a framework of building up a plot with layers. The plot aesthetics map the table attributes to plot attributes. The code does not specify ‘draw this here’, but rather ‘apply these rules for this geom.’\nThe Grammar of Tables is similar in that the pipeline of gt functions applies rules for how to treat the data frame.\n\n\n\n\n2. Footnotes\nYou can add footnotes almost anywhere on the table. Base command is tab_footnote(footnote, locations) where locations is a function related to a part of the table:\n\ncells_body()\ncells_column_labels()\ncells_column_spanners()\ncells_grand_summary()\ncells_group()\ncells_row_groups()\ncells_source_notes()\ncells_stub()\ncells_stub_grand_summary()\ncells_stub_summary()\ncells_stubhead()\n\n\n\nShow the code\ntbl_2 &lt;- tbl_1 |&gt;\n    gt::tab_footnote(\n        \"Miles per gallon\",\n        locations = gt::cells_column_labels(columns = mpg_c)\n    ) |&gt;\n    # Footnote in table body. Uses formula.\n    gt::tab_footnote(\n        \"Fuel efficient!\",\n        locations = gt::cells_body(\n            columns = mpg_h,\n            rows = mpg_h &gt; 20\n        )\n    )\n\ntbl_2\n\n\n\n\n\n\n\n\ngt Cars\n\n\nLike mtcars, but in a different package.\n\n\nManufacturer\nModel\nYear\nHorsepower\nMPG - City1\nMPG - Hwy\n\n\n\n\nFord\nGT\n2017\n647\n11\n18\n\n\nFerrari\n458 Speciale\n2015\n597\n13\n17\n\n\nFerrari\n458 Spider\n2015\n562\n13\n17\n\n\nFerrari\n458 Italia\n2014\n562\n13\n17\n\n\nFerrari\n488 GTB\n2016\n661\n15\n2 22\n\n\nFerrari\nCalifornia\n2015\n553\n16\n2 23\n\n\n\n1 Miles per gallon\n\n\n2 Fuel efficient!\n\n\ngtcars is from the gt package.\n\n\n\n\n\n\n\n\ncols_hide() so you can use the columns without showing them."
+  },
+  {
+    "objectID": "experiments/gt_tables/index.html#footnotes",
+    "href": "experiments/gt_tables/index.html#footnotes",
+    "title": "Understanding gt Tables",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nNeither the gt site nor its GitHub README mention “grammar of tables”, but articles on the web repeatedly attribute the name to it.↩︎"
   }
 ]

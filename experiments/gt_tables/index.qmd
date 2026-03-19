@@ -1,0 +1,118 @@
+---
+title: "Understanding **gt** Tables"
+subtitle: "How to use **gt**"
+date: 2026-03-15
+categories: [gt, tables]
+description: |
+  Experimenting with gt package to learn basics plus
+  advanced features.
+---
+
+## Goal
+The **gt** package has so many functions that it can feel overwhelming. This notebook establishes a baseline foundation to create 80% of what you would normally need, and enough conceptual understanding to guess what's possible and where to look.
+
+## Setup
+
+The package comes with several sample datasets. We'll use `gtcars`.
+
+```{r}
+library(tidyverse)
+library(gt)
+
+glimpse(gt::gtcars)
+```
+
+## Build Up a Table
+
+### 1. The Basic Table
+
+`gt()` converts a data frame into a **gt** object. 
+
+```{r}
+#| code-fold: true
+
+tbl_1 <- gt::gtcars |>
+    head() |>
+    select(mfr, model, year, hp, mpg_c, mpg_h) |>
+    # STUB
+    gt::gt(rowname_col = "mfr") |>
+    # TABLE HEADER
+    gt::tab_header(
+        title = "gt Cars",
+        subtitle = "Like mtcars, but in a different package."
+    ) |>
+    # COLUMN LABELS
+    gt::cols_label(
+        # mfr = "Manufacturer",
+        model = "Model",
+        year = "Year",
+        hp = "Horsepower",
+        mpg_c = "MPG - City",
+        mpg_h = "MPG - Hwy"
+    ) |>
+    # STUB HEAD
+    gt::tab_stubhead("Manufacturer") |>
+    # TABLE FOOTER
+    gt::tab_source_note("gtcars is from the gt package.")
+
+tbl_1
+```
+
+The first thing to notice is that the object has a *table body* and *column labels*. It can potentially have a *stub* (row groups or labels), header, and footer.
+
+![](gt_parts_of_a_table.svg)
+
+This is analagous to the **ggplot** object. There is a base plot with `x` and `y` aesthetic definitions and `labs()`. The analogy is useful because "gt" stands for "grammar of tables" - a loose parallel to "grammar of graphics".[^1]
+
+[^1]: Neither the [gt site](https://gt.rstudio.com/) nor its [GitHub README](https://github.com/rstudio/gt/) mention "grammar of tables", but articles on the web repeatedly attribute the name to it.
+
+::: {.callout-note}
+### Grammar of Tables
+The *Grammar of Graphics* is a framework of building up a plot with layers. The plot aesthetics map the table attributes to plot attributes. The code does not specify '_draw this here_', but rather 'apply _these rules_ for this geom.'
+
+The *Grammar of Tables* is similar in that the pipeline of **gt** functions applies rules for how to treat the data frame.
+:::
+
+### 2. Footnotes
+
+You can add footnotes almost anywhere on the table. Base command is `tab_footnote(footnote, locations)` where `locations` is a function related to a part of the table:
+
+- `cells_body()`
+- `cells_column_labels()`
+- `cells_column_spanners()`
+- `cells_grand_summary()`
+- `cells_group()`
+- `cells_row_groups()`
+- `cells_source_notes()`
+- `cells_stub()`
+- `cells_stub_grand_summary()`
+- `cells_stub_summary()`
+- `cells_stubhead()`
+
+```{r}
+#| code-fold: true
+
+tbl_2 <- tbl_1 |>
+    gt::tab_footnote(
+        "Miles per gallon",
+        locations = gt::cells_column_labels(columns = mpg_c)
+    ) |>
+    # Footnote in table body. Uses formula.
+    gt::tab_footnote(
+        "Fuel efficient!",
+        locations = gt::cells_body(
+            columns = mpg_h,
+            rows = mpg_h > 20
+        )
+    )
+
+tbl_2
+```
+
+`cols_hide()` so you can use the columns without showing them.
+
+## Observations
+
+## Takeaways
+
+- **gtsummary** and **gtextras** extend **gt**.

@@ -5,5 +5,13 @@
       "/experiments/gt_tables.html",
       "/experiments/us_census_api/census.html"
     ]
+  },
+  {
+    "listing": "/experiments/gt_tables/index.html",
+    "items": []
+  },
+  {
+    "listing": "/experiments/us_census_api/census.html",
+    "items": []
   }
 ]
