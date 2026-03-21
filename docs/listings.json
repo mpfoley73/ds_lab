@@ -2,7 +2,7 @@
   {
     "listing": "/experiments/index.html",
     "items": [
-      "/experiments/gt_tables.html",
+      "/experiments/gt_tables/index.html",
       "/experiments/us_census_api/census.html"
     ]
   },
