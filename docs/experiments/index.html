@@ -112,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
 
     const options = {
-      valueNames: ['listing-date','listing-categories','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-title','listing-date','listing-description','listing-image',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
       searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
     };
@@ -245,18 +245,14 @@ window.Quarto = {
 
 <div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
 <div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="Z3QlMkN0YWJsZXM=" data-listing-date-sort="1773547200000" data-listing-file-modified-sort="1774091383264" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1556">
+<div class="g-col-1" data-index="0" data-categories="Z3QlMkN0YWJsZXM=" data-listing-date-sort="1773547200000" data-listing-file-modified-sort="1774093787541" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1556">
 <a href="../experiments/gt_tables/index.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="gt_tables\gt_parts_of_a_table.svg" style="height: 150px;"  class="thumbnail-image card-img"/></p>
 <div class="card-body post-contents">
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Z3Q='); return false;">
-gt
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('dGFibGVz'); return false;">
-tables
-</div>
-</div>
+<h5 class="no-anchor card-title listing-title">
+Great Tables with <strong>gt</strong>
+</h5>
 <div class="card-text listing-description">
 <p>Experimenting with gt package to learn basics plus advanced features.</p>
 </div>
@@ -269,20 +265,16 @@ Mar 15, 2026
 </div>
 </a>
 </div>
-<div class="g-col-1" data-index="1" data-categories="Y2Vuc3VzJTJDY2xldmVsYW5k" data-listing-date-sort="1732078800000" data-listing-file-modified-sort="1773588053700" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="47" data-listing-word-count-sort="9388">
+<div class="g-col-1" data-index="1" data-categories="Y2Vuc3VzJTJDY2xldmVsYW5k" data-listing-date-sort="1732078800000" data-listing-file-modified-sort="1774093668318" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="49" data-listing-word-count-sort="9603">
 <a href="../experiments/us_census_api/census.html" class="quarto-grid-link">
 <div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="us_census_api\inputs\wikipedia_cleveland.png" alt="Screen capture from Cleveland article on Wikipedia." style="height: 150px;"  class="thumbnail-image card-img"/></p>
 <div class="card-body post-contents">
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Y2Vuc3Vz'); return false;">
-census
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Y2xldmVsYW5k'); return false;">
-cleveland
-</div>
-</div>
+<h5 class="no-anchor card-title listing-title">
+Cleveland’s Changing Population
+</h5>
 <div class="card-text listing-description">
-The resurgence of people moving to downtown Cleveland is making news.<sup>1</sup> According to a study commissioned by Downtown Cleveland Inc., the downtown population was almost…<sup></sup><sup></sup><sup></sup>
+<p>Working with APIs using the tidycensus R package.</p>
 </div>
 <div class="card-attribution card-text-small end">
 <div class="listing-date">
@@ -773,7 +765,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">  type: grid</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">  sort: "date desc"</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">  categories: true</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  fields: [date, categories, description]</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  fields: [title, date, description, image]</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>Small experiments exploring R, Quarto, and LLM tooling.</span></code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>

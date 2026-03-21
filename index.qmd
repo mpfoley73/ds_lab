@@ -2,11 +2,14 @@
 title: "Data Science Lab"
 listing:
   - id: experiments-grid
-    contents: .
-    type: grid
+    contents: "experiments/."
+    max-items: 5
+    type: default
+    exclude: 
+      filename: "index.qmd"
     sort: "date desc"
-    categories: true
-    fields: [date, categories, description]
+    # categories: true
+    fields: [title, date, description, image]
 ---
 
 This site is a collection of small experiments exploring data science with R.

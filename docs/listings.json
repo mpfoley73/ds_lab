@@ -13,5 +13,12 @@
   {
     "listing": "/experiments/us_census_api/census.html",
     "items": []
+  },
+  {
+    "listing": "/index.html",
+    "items": [
+      "/experiments/gt_tables/gt_tables.html",
+      "/experiments/us_census_api/census.html"
+    ]
   }
 ]

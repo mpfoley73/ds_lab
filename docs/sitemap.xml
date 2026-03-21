@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/index.html</loc>
-    <lastmod>2026-03-21T11:43:27.730Z</lastmod>
+    <lastmod>2026-03-21T13:22:02.540Z</lastmod>
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/notes/tricks.html</loc>
@@ -10,7 +10,7 @@
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/experiments/us_census_api/census.html</loc>
-    <lastmod>2026-03-15T15:20:53.700Z</lastmod>
+    <lastmod>2026-03-21T13:04:22.497Z</lastmod>
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/experiments/gt_tables.html</loc>
@@ -18,10 +18,14 @@
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/experiments/index.html</loc>
-    <lastmod>2026-03-21T11:43:48.283Z</lastmod>
+    <lastmod>2026-03-21T12:33:46.328Z</lastmod>
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/experiments/gt_tables/index.html</loc>
     <lastmod>2026-03-21T11:09:43.264Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mpfoley73.github.io/ds_lab/experiments/gt_tables/gt_tables.html</loc>
+    <lastmod>2026-03-21T13:25:16.603Z</lastmod>
   </url>
 </urlset>
