@@ -53,7 +53,7 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "About this site"
+    "text": "ds_lab is a personal data-science lab site that captures reproducible exploration, research notes, and utility recipes for working with R."
   },
   {
     "objectID": "experiments/index.html",
@@ -271,5 +271,103 @@
     "title": "Great Tables with gt",
     "section": "Takeaways",
     "text": "Takeaways\nYou now have the mental model and toolkit to create polished tables for 80% of real-world situations. We covered:\n\nStructure: Use stubs, row groups, and column spanners to organize data logically.\nContext. Use headers, footers, and footnotes to explain what readers are looking at.\nStyle. Use colors, text formatting, and heat maps to draw attention to what matters.\n\nFrom here:\n\nThe {gt} documentation is comprehensive and you know the conceptual landscape well enough to navigate it.\nExplore the ecosystem: {gtSummary} for statistical summaries, *{gtExtras}** for plots and spark lines."
+  },
+  {
+    "objectID": "notes/tricks.html",
+    "href": "notes/tricks.html",
+    "title": "Tricks",
+    "section": "",
+    "text": "This page collects small, repeatable data science snippets and practical patterns I use in everyday projects. Keep it lightweight: no full story, just what works and why.\n\n\n\nR packages: tidycensus, tigris, dplyr, sf, janitor\nAlways cache heavy raster/shape downloads in Rdata or .qs for speed.\n\nlibrary(tidycensus)\nlibrary(dplyr)\nlibrary(sf)\n\noptions(tigris_use_cache = TRUE)\n\n# get tract geometry + ACS data (2023 ACS 1-year example)\nacs &lt;- get_acs(\n  geography = 'tract',\n  state = 'OH',\n  county = 'Cuyahoga',\n  variables = c(med_income = 'B19013_001'),\n  year = 2023,\n  geometry = TRUE,\n  output = 'wide'\n) %&gt;%\n  st_transform(5070)\n\nKeep CRS consistent: st_transform(5070) or st_crs(3857) for mapping layers.\nNull cleanup: mutate(med_income = if_else(estimate_med_income &lt; 0, NA_real_, estimate_med_income)).\n\n\n\n\n\nStart with gt(df) and use pipes.\nHighlight numeric ranges or outliers with data_color().\nUse cols_label() to make informative headers.\ntab_style with cell_text(weight = 'bold') on interesting rows.\n\ntable &lt;- mtcars %&gt;%\n  tibble::rownames_to_column('model') %&gt;%\n  gt() %&gt;%\n  cols_label(\n    mpg = 'MPG',\n    cyl = 'Cylinders',\n    hp = 'Horsepower'\n  ) %&gt;%\n  data_color(\n    columns = vars(mpg),\n    colors = scales::col_numeric(c('white', 'blue'), domain = NULL)\n  ) %&gt;%\n  fmt_number(columns = vars(mpg, hp), decimals = 1)\n\n# save as image\ngtsave(table, 'gt-mtcars.png')\n\n\n\n\nUse chunk options to keep pages readable:\n\necho: false for finished results\neval: false for illustrative snippets\ncollapse: true for long pipelines\n\nLink content with relative paths:\n\n[Notes](../notes/index.qmd)\n[Experiments](../experiments/index.qmd)\n\nFor reproducible output, freeze dependencies with Quarto site format and lock R package versions via {renv}.\n\n\n\n\n\nclean names + type conversions:\n\nlibrary(dplyr)\nlibrary(janitor)\n\ndf &lt;- data %&gt;%\n  clean_names() %&gt;%\n  mutate(across(where(is.character), str_trim)) %&gt;%\n  mutate(across(starts_with('date'), as.Date))\n\npivoting census variables:\n\nwide &lt;- acs %&gt;%\n  select(GEOID, variable, estimate) %&gt;%\n  pivot_wider(names_from = variable, values_from = estimate)\n\n\n\n\nCheck package versions with sessionInfo().\nSaving intermediate outputs:\n\nsaveRDS(acs, 'data/acs_cuyahoga_2023.rds')\n\nWhen HTML/table layout breaks, clear Quarto cache: quarto render --no-cache.\n\n\n\n\n\ntidycensus::load_variables(year, 'acs1', cache = TRUE)\ntigris::counties(state = 'OH', cb = TRUE)\nsf::st_intersection() for spatial overlays\ngt::glue_data() for dynamic cell text\n\n\n\n\n\nKeep this file updated with tricks that save at least 5 minutes per task.\nPut full experimental explorations in experiments/, and keep notes/tricks.qmd as your short-direct-action cookbook."
+  },
+  {
+    "objectID": "notes/tricks.html#census-tigris-tidycensus",
+    "href": "notes/tricks.html#census-tigris-tidycensus",
+    "title": "Tricks",
+    "section": "",
+    "text": "R packages: tidycensus, tigris, dplyr, sf, janitor\nAlways cache heavy raster/shape downloads in Rdata or .qs for speed.\n\nlibrary(tidycensus)\nlibrary(dplyr)\nlibrary(sf)\n\noptions(tigris_use_cache = TRUE)\n\n# get tract geometry + ACS data (2023 ACS 1-year example)\nacs &lt;- get_acs(\n  geography = 'tract',\n  state = 'OH',\n  county = 'Cuyahoga',\n  variables = c(med_income = 'B19013_001'),\n  year = 2023,\n  geometry = TRUE,\n  output = 'wide'\n) %&gt;%\n  st_transform(5070)\n\nKeep CRS consistent: st_transform(5070) or st_crs(3857) for mapping layers.\nNull cleanup: mutate(med_income = if_else(estimate_med_income &lt; 0, NA_real_, estimate_med_income))."
+  },
+  {
+    "objectID": "notes/tricks.html#gt-table-styling-quick-recipes",
+    "href": "notes/tricks.html#gt-table-styling-quick-recipes",
+    "title": "Tricks",
+    "section": "",
+    "text": "Start with gt(df) and use pipes.\nHighlight numeric ranges or outliers with data_color().\nUse cols_label() to make informative headers.\ntab_style with cell_text(weight = 'bold') on interesting rows.\n\ntable &lt;- mtcars %&gt;%\n  tibble::rownames_to_column('model') %&gt;%\n  gt() %&gt;%\n  cols_label(\n    mpg = 'MPG',\n    cyl = 'Cylinders',\n    hp = 'Horsepower'\n  ) %&gt;%\n  data_color(\n    columns = vars(mpg),\n    colors = scales::col_numeric(c('white', 'blue'), domain = NULL)\n  ) %&gt;%\n  fmt_number(columns = vars(mpg, hp), decimals = 1)\n\n# save as image\ngtsave(table, 'gt-mtcars.png')"
+  },
+  {
+    "objectID": "notes/tricks.html#quarto-code-chunk-best-practices",
+    "href": "notes/tricks.html#quarto-code-chunk-best-practices",
+    "title": "Tricks",
+    "section": "",
+    "text": "Use chunk options to keep pages readable:\n\necho: false for finished results\neval: false for illustrative snippets\ncollapse: true for long pipelines\n\nLink content with relative paths:\n\n[Notes](../notes/index.qmd)\n[Experiments](../experiments/index.qmd)\n\nFor reproducible output, freeze dependencies with Quarto site format and lock R package versions via {renv}."
+  },
+  {
+    "objectID": "notes/tricks.html#data-wrangling-patterns",
+    "href": "notes/tricks.html#data-wrangling-patterns",
+    "title": "Tricks",
+    "section": "",
+    "text": "clean names + type conversions:\n\nlibrary(dplyr)\nlibrary(janitor)\n\ndf &lt;- data %&gt;%\n  clean_names() %&gt;%\n  mutate(across(where(is.character), str_trim)) %&gt;%\n  mutate(across(starts_with('date'), as.Date))\n\npivoting census variables:\n\nwide &lt;- acs %&gt;%\n  select(GEOID, variable, estimate) %&gt;%\n  pivot_wider(names_from = variable, values_from = estimate)"
+  },
+  {
+    "objectID": "notes/tricks.html#debugging-reproducibility-notes",
+    "href": "notes/tricks.html#debugging-reproducibility-notes",
+    "title": "Tricks",
+    "section": "",
+    "text": "Check package versions with sessionInfo().\nSaving intermediate outputs:\n\nsaveRDS(acs, 'data/acs_cuyahoga_2023.rds')\n\nWhen HTML/table layout breaks, clear Quarto cache: quarto render --no-cache."
+  },
+  {
+    "objectID": "notes/tricks.html#quick-references",
+    "href": "notes/tricks.html#quick-references",
+    "title": "Tricks",
+    "section": "",
+    "text": "tidycensus::load_variables(year, 'acs1', cache = TRUE)\ntigris::counties(state = 'OH', cb = TRUE)\nsf::st_intersection() for spatial overlays\ngt::glue_data() for dynamic cell text\n\n\n\n\n\nKeep this file updated with tricks that save at least 5 minutes per task.\nPut full experimental explorations in experiments/, and keep notes/tricks.qmd as your short-direct-action cookbook."
+  },
+  {
+    "objectID": "notes/index.html",
+    "href": "notes/index.html",
+    "title": "Notes",
+    "section": "",
+    "text": "Notes hub\nThis folder contains quick recipes and reference notes.\nUse the “Tricks” page for copy-paste workflows; use experiments/ for full analysis notebooks.\n\nTricks: quick, short snippets for census API, gt, and Quarto.\nCensus API tips: full experiment with transform & save.\nGT tables: complete formatting workflow."
+  },
+  {
+    "objectID": "about.html#about-this-site",
+    "href": "about.html#about-this-site",
+    "title": "About",
+    "section": "",
+    "text": "ds_lab is a personal data-science lab site that captures reproducible exploration, research notes, and utility recipes for working with R."
+  },
+  {
+    "objectID": "about.html#who-maintains-it",
+    "href": "about.html#who-maintains-it",
+    "title": "About",
+    "section": "Who maintains it",
+    "text": "Who maintains it\n\nMichael Foley\nGitHub: @mpfoley73"
+  },
+  {
+    "objectID": "about.html#whats-here",
+    "href": "about.html#whats-here",
+    "title": "About",
+    "section": "What’s here",
+    "text": "What’s here\n\nNotes: notes/index.qmd (tips, code patterns, gotchas)\nExperiments: experiments/index.qmd (census API, gt, mapping)\nProject pages: index.qmd, about.qmd, etc."
+  },
+  {
+    "objectID": "about.html#tech-stack",
+    "href": "about.html#tech-stack",
+    "title": "About",
+    "section": "Tech stack",
+    "text": "Tech stack\n\nQuarto site, R Markdown, rendered to docs/\nHTML output with CSS theme, local site_libs/ asset freeze\nData: experiments/us_census_api/ includes acs1yr_2023.Rdata, decennial_2020.Rdata"
+  },
+  {
+    "objectID": "about.html#how-to-contribute",
+    "href": "about.html#how-to-contribute",
+    "title": "About",
+    "section": "How to contribute",
+    "text": "How to contribute\n\nFork/clone\nEdit .qmd in repo\nquarto preview and quarto render\nPR to main branch"
+  },
+  {
+    "objectID": "about.html#license",
+    "href": "about.html#license",
+    "title": "About",
+    "section": "License",
+    "text": "License\nCC BY 4.0 / MIT / whichever you prefer."
   }
 ]

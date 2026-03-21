@@ -1,0 +1,12 @@
+---
+title: "Notes"
+---
+
+# Notes hub
+
+This folder contains quick recipes and reference notes.  
+Use the “Tricks” page for copy-paste workflows; use `experiments/` for full analysis notebooks.
+
+- [Tricks](tricks.qmd): quick, short snippets for census API, `gt`, and Quarto.
+- [Census API tips](../experiments/us_census_api/census.qmd): full experiment with transform & save.
+- [GT tables](../experiments/gt_tables/gt_tables.qmd): complete formatting workflow.

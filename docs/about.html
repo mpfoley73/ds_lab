@@ -68,10 +68,9 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -97,6 +96,10 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Experiments</span></a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./notes/index.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link active" href="./about.html" aria-current="page"> 
 <span class="menu-text">About</span></a>
   </li>  
@@ -110,9 +113,23 @@ ul.task-list li input[type="checkbox"] {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#about-this-site" id="toc-about-this-site" class="nav-link active" data-scroll-target="#about-this-site">About this site</a></li>
+  <li><a href="#who-maintains-it" id="toc-who-maintains-it" class="nav-link" data-scroll-target="#who-maintains-it">Who maintains it</a></li>
+  <li><a href="#whats-here" id="toc-whats-here" class="nav-link" data-scroll-target="#whats-here">What’s here</a></li>
+  <li><a href="#tech-stack" id="toc-tech-stack" class="nav-link" data-scroll-target="#tech-stack">Tech stack</a></li>
+  <li><a href="#how-to-contribute" id="toc-how-to-contribute" class="nav-link" data-scroll-target="#how-to-contribute">How to contribute</a></li>
+  <li><a href="#license" id="toc-license" class="nav-link" data-scroll-target="#license">License</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/about.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/about.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -136,9 +153,48 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>About this site</p>
+<section id="about-this-site" class="level2">
+<h2 class="anchored" data-anchor-id="about-this-site">About this site</h2>
+<p><code>ds_lab</code> is a personal data-science lab site that captures reproducible exploration, research notes, and utility recipes for working with R.</p>
+</section>
+<section id="who-maintains-it" class="level2">
+<h2 class="anchored" data-anchor-id="who-maintains-it">Who maintains it</h2>
+<ul>
+<li>Michael Foley</li>
+<li>GitHub: <code>@mpfoley73</code></li>
+</ul>
+</section>
+<section id="whats-here" class="level2">
+<h2 class="anchored" data-anchor-id="whats-here">What’s here</h2>
+<ul>
+<li>Notes: <code>notes/index.qmd</code> (tips, code patterns, gotchas)</li>
+<li>Experiments: <code>experiments/index.qmd</code> (census API, <code>gt</code>, mapping)</li>
+<li>Project pages: <code>index.qmd</code>, <code>about.qmd</code>, etc.</li>
+</ul>
+</section>
+<section id="tech-stack" class="level2">
+<h2 class="anchored" data-anchor-id="tech-stack">Tech stack</h2>
+<ul>
+<li>Quarto site, R Markdown, rendered to <code>docs/</code></li>
+<li>HTML output with CSS theme, local <code>site_libs/</code> asset freeze</li>
+<li>Data: <code>experiments/us_census_api/</code> includes <code>acs1yr_2023.Rdata</code>, <code>decennial_2020.Rdata</code></li>
+</ul>
+</section>
+<section id="how-to-contribute" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-contribute">How to contribute</h2>
+<ol type="1">
+<li>Fork/clone</li>
+<li>Edit <code>.qmd</code> in repo</li>
+<li><code>quarto preview</code> and <code>quarto render</code></li>
+<li>PR to main branch</li>
+</ol>
+</section>
+<section id="license" class="level2">
+<h2 class="anchored" data-anchor-id="license">License</h2>
+<p>CC BY 4.0 / MIT / whichever you prefer.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -231,7 +287,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
-      var filterRegex = new RegExp('/' + window.location.host + '/');
+      var filterRegex = new RegExp("https:\/\/mpfoley73\.github\.io\/ds_lab");
     var isInternal = (href) => {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
@@ -563,4 +619,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-</body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/about.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/about.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>

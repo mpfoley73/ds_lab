@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -114,20 +148,174 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#data-science-tricks-and-short-recipes" id="toc-data-science-tricks-and-short-recipes" class="nav-link active" data-scroll-target="#data-science-tricks-and-short-recipes">Data science tricks and short recipes</a>
+  <ul class="collapse">
+  <li><a href="#census-tigris-tidycensus" id="toc-census-tigris-tidycensus" class="nav-link" data-scroll-target="#census-tigris-tidycensus">1. Census + tigris + tidycensus</a></li>
+  <li><a href="#gt-table-styling-quick-recipes" id="toc-gt-table-styling-quick-recipes" class="nav-link" data-scroll-target="#gt-table-styling-quick-recipes">2. <code>gt</code> table styling quick recipes</a></li>
+  <li><a href="#quarto-code-chunk-best-practices" id="toc-quarto-code-chunk-best-practices" class="nav-link" data-scroll-target="#quarto-code-chunk-best-practices">3. Quarto + code chunk best practices</a></li>
+  <li><a href="#data-wrangling-patterns" id="toc-data-wrangling-patterns" class="nav-link" data-scroll-target="#data-wrangling-patterns">4. Data wrangling patterns</a></li>
+  <li><a href="#debugging-reproducibility-notes" id="toc-debugging-reproducibility-notes" class="nav-link" data-scroll-target="#debugging-reproducibility-notes">5. Debugging &amp; reproducibility notes</a></li>
+  <li><a href="#quick-references" id="toc-quick-references" class="nav-link" data-scroll-target="#quick-references">6. Quick references</a>
+  <ul class="collapse">
+  <li><a href="#notes" id="toc-notes" class="nav-link" data-scroll-target="#notes">Notes</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/notes/tricks.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/notes/tricks.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tricks</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
+</header>
 
+
+<section id="data-science-tricks-and-short-recipes" class="level1">
+<h1>Data science tricks and short recipes</h1>
+<p>This page collects small, repeatable data science snippets and practical patterns I use in everyday projects. Keep it lightweight: no full story, just what works and why.</p>
+<section id="census-tigris-tidycensus" class="level2">
+<h2 class="anchored" data-anchor-id="census-tigris-tidycensus">1. Census + tigris + tidycensus</h2>
+<ul>
+<li>R packages: <code>tidycensus</code>, <code>tigris</code>, <code>dplyr</code>, <code>sf</code>, <code>janitor</code></li>
+<li>Always cache heavy raster/shape downloads in <code>Rdata</code> or <code>.qs</code> for speed.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tigris_use_cache =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># get tract geometry + ACS data (2023 ACS 1-year example)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>acs <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">geography =</span> <span class="st">'tract'</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">state =</span> <span class="st">'OH'</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">county =</span> <span class="st">'Cuyahoga'</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">med_income =</span> <span class="st">'B19013_001'</span>),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="dv">2023</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">output =</span> <span class="st">'wide'</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">5070</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Keep CRS consistent: <code>st_transform(5070)</code> or <code>st_crs(3857)</code> for mapping layers.</li>
+<li>Null cleanup: <code>mutate(med_income = if_else(estimate_med_income &lt; 0, NA_real_, estimate_med_income))</code>.</li>
+</ul>
+</section>
+<section id="gt-table-styling-quick-recipes" class="level2">
+<h2 class="anchored" data-anchor-id="gt-table-styling-quick-recipes">2. <code>gt</code> table styling quick recipes</h2>
+<ul>
+<li>Start with <code>gt(df)</code> and use pipes.</li>
+<li>Highlight numeric ranges or outliers with <code>data_color()</code>.</li>
+<li>Use <code>cols_label()</code> to make informative headers.</li>
+<li><code>tab_style</code> with <code>cell_text(weight = 'bold')</code> on interesting rows.</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>table <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">'model'</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mpg =</span> <span class="st">'MPG'</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cyl =</span> <span class="st">'Cylinders'</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">hp =</span> <span class="st">'Horsepower'</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data_color</span>(</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">columns =</span> <span class="fu">vars</span>(mpg),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">colors =</span> scales<span class="sc">::</span><span class="fu">col_numeric</span>(<span class="fu">c</span>(<span class="st">'white'</span>, <span class="st">'blue'</span>), <span class="at">domain =</span> <span class="cn">NULL</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="fu">vars</span>(mpg, hp), <span class="at">decimals =</span> <span class="dv">1</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># save as image</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">gtsave</span>(table, <span class="st">'gt-mtcars.png'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="quarto-code-chunk-best-practices" class="level2">
+<h2 class="anchored" data-anchor-id="quarto-code-chunk-best-practices">3. Quarto + code chunk best practices</h2>
+<ul>
+<li>Use chunk options to keep pages readable:
+<ul>
+<li><code>echo: false</code> for finished results</li>
+<li><code>eval: false</code> for illustrative snippets</li>
+<li><code>collapse: true</code> for long pipelines</li>
+</ul></li>
+<li>Link content with relative paths:
+<ul>
+<li><code>[Notes](../notes/index.qmd)</code></li>
+<li><code>[Experiments](../experiments/index.qmd)</code></li>
+</ul></li>
+<li>For reproducible output, freeze dependencies with Quarto site format and lock R package versions via <code>{renv}</code>.</li>
+</ul>
+</section>
+<section id="data-wrangling-patterns" class="level2">
+<h2 class="anchored" data-anchor-id="data-wrangling-patterns">4. Data wrangling patterns</h2>
+<ul>
+<li>clean names + type conversions:</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character), str_trim)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">starts_with</span>(<span class="st">'date'</span>), as.Date))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>pivoting census variables:</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>wide <span class="ot">&lt;-</span> acs <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(GEOID, variable, estimate) <span class="sc">%&gt;%</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> variable, <span class="at">values_from =</span> estimate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="debugging-reproducibility-notes" class="level2">
+<h2 class="anchored" data-anchor-id="debugging-reproducibility-notes">5. Debugging &amp; reproducibility notes</h2>
+<ul>
+<li>Check package versions with <code>sessionInfo()</code>.</li>
+<li>Saving intermediate outputs:</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(acs, <span class="st">'data/acs_cuyahoga_2023.rds'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>When HTML/table layout breaks, clear Quarto cache: <code>quarto render --no-cache</code>.</li>
+</ul>
+</section>
+<section id="quick-references" class="level2">
+<h2 class="anchored" data-anchor-id="quick-references">6. Quick references</h2>
+<ul>
+<li><code>tidycensus::load_variables(year, 'acs1', cache = TRUE)</code></li>
+<li><code>tigris::counties(state = 'OH', cb = TRUE)</code></li>
+<li><code>sf::st_intersection()</code> for spatial overlays</li>
+<li><code>gt::glue_data()</code> for dynamic cell text</li>
+</ul>
+<hr>
+<section id="notes" class="level3">
+<h3 class="anchored" data-anchor-id="notes">Notes</h3>
+<ul>
+<li>Keep this file updated with tricks that save at least 5 minutes per task.</li>
+<li>Put full experimental explorations in <code>experiments/</code>, and keep <code>notes/tricks.qmd</code> as your short-direct-action cookbook.</li>
+</ul>
+
+
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -552,4 +740,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/notes/tricks.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/notes/tricks.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/notes/tricks.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/notes/tricks.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>

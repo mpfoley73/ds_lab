@@ -2,4 +2,34 @@
 title: "About"
 ---
 
-About this site
+## About this site
+
+`ds_lab` is a personal data-science lab site that captures reproducible exploration, research notes, and utility recipes for working with R.
+
+## Who maintains it
+
+- Michael Foley
+- GitHub: `@mpfoley73`
+
+## What’s here
+
+- Notes: `notes/index.qmd` (tips, code patterns, gotchas)
+- Experiments: `experiments/index.qmd` (census API, `gt`, mapping)
+- Project pages: `index.qmd`, `about.qmd`, etc.
+
+## Tech stack
+
+- Quarto site, R Markdown, rendered to `docs/`
+- HTML output with CSS theme, local `site_libs/` asset freeze
+- Data: `experiments/us_census_api/` includes `acs1yr_2023.Rdata`, `decennial_2020.Rdata`
+
+## How to contribute
+
+1. Fork/clone
+2. Edit `.qmd` in repo
+3. `quarto preview` and `quarto render`
+4. PR to main branch
+
+## License
+
+CC BY 4.0 / MIT / whichever you prefer.

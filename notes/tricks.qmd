@@ -1,0 +1,122 @@
+﻿---
+title: "Tricks"
+---
+
+# Data science tricks and short recipes
+
+This page collects small, repeatable data science snippets and practical patterns I use in everyday projects.
+Keep it lightweight: no full story, just what works and why.
+
+## 1. Census + tigris + tidycensus
+
+- R packages: `tidycensus`, `tigris`, `dplyr`, `sf`, `janitor`
+- Always cache heavy raster/shape downloads in `Rdata` or `.qs` for speed.
+
+```r
+library(tidycensus)
+library(dplyr)
+library(sf)
+
+options(tigris_use_cache = TRUE)
+
+# get tract geometry + ACS data (2023 ACS 1-year example)
+acs <- get_acs(
+  geography = 'tract',
+  state = 'OH',
+  county = 'Cuyahoga',
+  variables = c(med_income = 'B19013_001'),
+  year = 2023,
+  geometry = TRUE,
+  output = 'wide'
+) %>%
+  st_transform(5070)
+```
+
+- Keep CRS consistent: `st_transform(5070)` or `st_crs(3857)` for mapping layers.
+- Null cleanup: `mutate(med_income = if_else(estimate_med_income < 0, NA_real_, estimate_med_income))`.
+
+## 2. `gt` table styling quick recipes
+
+- Start with `gt(df)` and use pipes.
+- Highlight numeric ranges or outliers with `data_color()`.
+- Use `cols_label()` to make informative headers.
+- `tab_style` with `cell_text(weight = 'bold')` on interesting rows.
+
+```r
+table <- mtcars %>%
+  tibble::rownames_to_column('model') %>%
+  gt() %>%
+  cols_label(
+    mpg = 'MPG',
+    cyl = 'Cylinders',
+    hp = 'Horsepower'
+  ) %>%
+  data_color(
+    columns = vars(mpg),
+    colors = scales::col_numeric(c('white', 'blue'), domain = NULL)
+  ) %>%
+  fmt_number(columns = vars(mpg, hp), decimals = 1)
+
+# save as image
+gtsave(table, 'gt-mtcars.png')
+```
+
+## 3. Quarto + code chunk best practices
+
+- Use chunk options to keep pages readable:
+  - `echo: false` for finished results
+  - `eval: false` for illustrative snippets
+  - `collapse: true` for long pipelines
+
+- Link content with relative paths:
+  - `[Notes](../notes/index.qmd)`
+  - `[Experiments](../experiments/index.qmd)`
+
+- For reproducible output, freeze dependencies with Quarto site format and lock R package versions via `{renv}`.
+
+## 4. Data wrangling patterns
+
+- clean names + type conversions:
+
+```r
+library(dplyr)
+library(janitor)
+
+df <- data %>%
+  clean_names() %>%
+  mutate(across(where(is.character), str_trim)) %>%
+  mutate(across(starts_with('date'), as.Date))
+```
+
+- pivoting census variables:
+
+```r
+wide <- acs %>%
+  select(GEOID, variable, estimate) %>%
+  pivot_wider(names_from = variable, values_from = estimate)
+```
+
+## 5. Debugging & reproducibility notes
+
+- Check package versions with `sessionInfo()`.
+- Saving intermediate outputs:
+
+```r
+saveRDS(acs, 'data/acs_cuyahoga_2023.rds')
+```
+
+- When HTML/table layout breaks, clear Quarto cache: `quarto render --no-cache`.
+
+## 6. Quick references
+
+- `tidycensus::load_variables(year, 'acs1', cache = TRUE)`
+- `tigris::counties(state = 'OH', cb = TRUE)`
+- `sf::st_intersection()` for spatial overlays
+- `gt::glue_data()` for dynamic cell text
+
+---
+
+### Notes
+
+- Keep this file updated with tricks that save at least 5 minutes per task.
+- Put full experimental explorations in `experiments/`, and keep `notes/tricks.qmd` as your short-direct-action cookbook.
