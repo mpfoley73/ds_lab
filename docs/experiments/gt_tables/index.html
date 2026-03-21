@@ -66,8 +66,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -104,65 +102,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
 
 </head>
 
@@ -215,10 +155,10 @@ window.Quarto = {
    
   <ul>
   <li><a href="#goal" id="toc-goal" class="nav-link active" data-scroll-target="#goal">Goal</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
   <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
   <li><a href="#build-up-a-table" id="toc-build-up-a-table" class="nav-link" data-scroll-target="#build-up-a-table">Build Up a Table</a>
   <ul class="collapse">
-  <li><a href="#the-basic-table" id="toc-the-basic-table" class="nav-link" data-scroll-target="#the-basic-table">1. The Basic Table</a></li>
   <li><a href="#footnotes" id="toc-footnotes" class="nav-link" data-scroll-target="#footnotes">2. Footnotes</a></li>
   </ul></li>
   <li><a href="#observations" id="toc-observations" class="nav-link" data-scroll-target="#observations">Observations</a></li>
@@ -228,8 +168,8 @@ window.Quarto = {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(0)</span></div></div></div>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -270,92 +210,46 @@ window.Quarto = {
 
 <section id="goal" class="level2">
 <h2 class="anchored" data-anchor-id="goal">Goal</h2>
-<p>The <strong>gt</strong> package has so many functions that it can feel overwhelming. This notebook establishes a baseline foundation to create 80% of what you would normally need, and enough conceptual understanding to guess what’s possible and where to look.</p>
+<p>The <a href="https://gt.rstudio.com/"><strong>{gt}</strong></a> package has so many functions that it can feel overwhelming. This notebook establishes a baseline foundation to create 80% of what you would normally need, and enough conceptual understanding to guess what’s possible and where to look.</p>
 </section>
-<section id="setup" class="level2">
-<h2 class="anchored" data-anchor-id="setup">Setup</h2>
-<p>The package comes with several sample datasets. We’ll use <code>gtcars</code>.</p>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>There’s no best package, just the best for your situation.</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gt<span class="sc">::</span>gtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 47
-Columns: 15
-$ mfr         &lt;chr&gt; "Ford", "Ferrari", "Ferrari", "Ferrari", "Ferrari", "Ferra…
-$ model       &lt;chr&gt; "GT", "458 Speciale", "458 Spider", "458 Italia", "488 GTB…
-$ year        &lt;dbl&gt; 2017, 2015, 2015, 2014, 2016, 2015, 2017, 2015, 2015, 2015…
-$ trim        &lt;chr&gt; "Base Coupe", "Base Coupe", "Base", "Base Coupe", "Base Co…
-$ bdy_style   &lt;chr&gt; "coupe", "coupe", "convertible", "coupe", "coupe", "conver…
-$ hp          &lt;dbl&gt; 647, 597, 562, 562, 661, 553, 680, 652, 731, 949, 573, 545…
-$ hp_rpm      &lt;dbl&gt; 6250, 9000, 9000, 9000, 8000, 7500, 8250, 8000, 8250, 9000…
-$ trq         &lt;dbl&gt; 550, 398, 398, 398, 561, 557, 514, 504, 509, 664, 476, 436…
-$ trq_rpm     &lt;dbl&gt; 5900, 6000, 6000, 6000, 3000, 4750, 5750, 6000, 6000, 6750…
-$ mpg_c       &lt;dbl&gt; 11, 13, 13, 13, 15, 16, 12, 11, 11, 12, 21, 16, 11, 16, 12…
-$ mpg_h       &lt;dbl&gt; 18, 17, 17, 17, 22, 23, 17, 16, 16, 16, 22, 22, 18, 20, 20…
-$ drivetrain  &lt;chr&gt; "rwd", "rwd", "rwd", "rwd", "rwd", "rwd", "awd", "awd", "r…
-$ trsmn       &lt;chr&gt; "7a", "7a", "7a", "7a", "7a", "7a", "7a", "7a", "7a", "7a"…
-$ ctry_origin &lt;chr&gt; "United States", "Italy", "Italy", "Italy", "Italy", "Ital…
-$ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000, 29…</code></pre>
-</div>
-</div>
-</section>
-<section id="build-up-a-table" class="level2">
-<h2 class="anchored" data-anchor-id="build-up-a-table">Build Up a Table</h2>
-<section id="the-basic-table" class="level3">
-<h3 class="anchored" data-anchor-id="the-basic-table">1. The Basic Table</h3>
-<p><code>gt()</code> converts a data frame into a <strong>gt</strong> object.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tbl_1 <span class="ot">&lt;-</span> gt<span class="sc">::</span>gtcars <span class="sc">|&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>() <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(mfr, model, year, hp, mpg_c, mpg_h) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># STUB</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">gt</span>(<span class="at">rowname_col =</span> <span class="st">"mfr"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TABLE HEADER</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_header</span>(</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"gt Cars"</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Like mtcars, but in a different package."</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># COLUMN LABELS</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">cols_label</span>(</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mfr = "Manufacturer",</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="st">"Model"</span>,</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">year =</span> <span class="st">"Year"</span>,</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">hp =</span> <span class="st">"Horsepower"</span>,</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">mpg_c =</span> <span class="st">"MPG - City"</span>,</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">mpg_h =</span> <span class="st">"MPG - Hwy"</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># STUB HEAD</span></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_stubhead</span>(<span class="st">"Manufacturer"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TABLE FOOTER</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_source_note</span>(<span class="st">"gtcars is from the gt package."</span>)</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>tbl_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>Table, <span class="sc">~</span><span class="st">`</span><span class="at">Best for</span><span class="st">`</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"`knitr::kble()`/**{kableExtra}**"</span>, <span class="st">"PDF/LaTeX. (Also quick 'n dirty)"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**{flextable}**"</span>, <span class="st">"Word/PowerPoint"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**{gt}**"</span>, <span class="st">"HTML reports"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**{reactable}**"</span>, <span class="st">"Interactive HTML dashboards/Shiny apps"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**{DT}**"</span>, <span class="st">"Quick interactive exploration (Shiny or standalone)"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"What else am I missing?"</span>, <span class="st">"**{huxtable}**? **{tinytable}**?"</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">fmt_markdown</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_row_group</span>(<span class="at">rows =</span> <span class="dv">6</span>, <span class="at">label =</span> <span class="st">""</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">row_group_order</span>(<span class="fu">c</span>(<span class="cn">NA</span>, <span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="ucixvivmvp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ucixvivmvp table {
+<div id="qwhnoaujua" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#qwhnoaujua table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ucixvivmvp thead, #ucixvivmvp tbody, #ucixvivmvp tfoot, #ucixvivmvp tr, #ucixvivmvp td, #ucixvivmvp th {
+#qwhnoaujua thead, #qwhnoaujua tbody, #qwhnoaujua tfoot, #qwhnoaujua tr, #qwhnoaujua td, #qwhnoaujua th {
   border-style: none;
 }
 
-#ucixvivmvp p {
+#qwhnoaujua p {
   margin: 0;
   padding: 0;
 }
 
-#ucixvivmvp .gt_table {
+#qwhnoaujua .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -381,12 +275,12 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-left-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_caption {
+#qwhnoaujua .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ucixvivmvp .gt_title {
+#qwhnoaujua .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -398,7 +292,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-bottom-width: 0;
 }
 
-#ucixvivmvp .gt_subtitle {
+#qwhnoaujua .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -410,7 +304,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-top-width: 0;
 }
 
-#ucixvivmvp .gt_heading {
+#qwhnoaujua .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -422,13 +316,13 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-right-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_bottom_border {
+#qwhnoaujua .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_col_headings {
+#qwhnoaujua .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -443,7 +337,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-right-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_col_heading {
+#qwhnoaujua .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -463,7 +357,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   overflow-x: hidden;
 }
 
-#ucixvivmvp .gt_column_spanner_outer {
+#qwhnoaujua .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -475,15 +369,15 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   padding-right: 4px;
 }
 
-#ucixvivmvp .gt_column_spanner_outer:first-child {
+#qwhnoaujua .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ucixvivmvp .gt_column_spanner_outer:last-child {
+#qwhnoaujua .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ucixvivmvp .gt_column_spanner {
+#qwhnoaujua .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -495,11 +389,11 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   width: 100%;
 }
 
-#ucixvivmvp .gt_spanner_row {
+#qwhnoaujua .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ucixvivmvp .gt_group_heading {
+#qwhnoaujua .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -525,7 +419,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   text-align: left;
 }
 
-#ucixvivmvp .gt_empty_group_heading {
+#qwhnoaujua .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -540,15 +434,15 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   vertical-align: middle;
 }
 
-#ucixvivmvp .gt_from_md > :first-child {
+#qwhnoaujua .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ucixvivmvp .gt_from_md > :last-child {
+#qwhnoaujua .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ucixvivmvp .gt_row {
+#qwhnoaujua .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -567,7 +461,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   overflow-x: hidden;
 }
 
-#ucixvivmvp .gt_stub {
+#qwhnoaujua .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -580,7 +474,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   padding-right: 5px;
 }
 
-#ucixvivmvp .gt_stub_row_group {
+#qwhnoaujua .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -594,15 +488,15 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   vertical-align: top;
 }
 
-#ucixvivmvp .gt_row_group_first td {
+#qwhnoaujua .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ucixvivmvp .gt_row_group_first th {
+#qwhnoaujua .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ucixvivmvp .gt_summary_row {
+#qwhnoaujua .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -612,16 +506,16 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   padding-right: 5px;
 }
 
-#ucixvivmvp .gt_first_summary_row {
+#qwhnoaujua .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_first_summary_row.thick {
+#qwhnoaujua .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ucixvivmvp .gt_last_summary_row {
+#qwhnoaujua .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -631,7 +525,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-bottom-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_grand_summary_row {
+#qwhnoaujua .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -641,7 +535,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   padding-right: 5px;
 }
 
-#ucixvivmvp .gt_first_grand_summary_row {
+#qwhnoaujua .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -651,7 +545,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-top-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_last_grand_summary_row_top {
+#qwhnoaujua .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -661,11 +555,11 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-bottom-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_striped {
+#qwhnoaujua .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ucixvivmvp .gt_table_body {
+#qwhnoaujua .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -674,7 +568,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-bottom-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_footnotes {
+#qwhnoaujua .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -688,7 +582,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-right-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_footnote {
+#qwhnoaujua .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -697,7 +591,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   padding-right: 5px;
 }
 
-#ucixvivmvp .gt_sourcenotes {
+#qwhnoaujua .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -711,7 +605,7 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   border-right-color: #D3D3D3;
 }
 
-#ucixvivmvp .gt_sourcenote {
+#qwhnoaujua .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -719,72 +613,635 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
   padding-right: 5px;
 }
 
-#ucixvivmvp .gt_left {
+#qwhnoaujua .gt_left {
   text-align: left;
 }
 
-#ucixvivmvp .gt_center {
+#qwhnoaujua .gt_center {
   text-align: center;
 }
 
-#ucixvivmvp .gt_right {
+#qwhnoaujua .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ucixvivmvp .gt_font_normal {
+#qwhnoaujua .gt_font_normal {
   font-weight: normal;
 }
 
-#ucixvivmvp .gt_font_bold {
+#qwhnoaujua .gt_font_bold {
   font-weight: bold;
 }
 
-#ucixvivmvp .gt_font_italic {
+#qwhnoaujua .gt_font_italic {
   font-style: italic;
 }
 
-#ucixvivmvp .gt_super {
+#qwhnoaujua .gt_super {
   font-size: 65%;
 }
 
-#ucixvivmvp .gt_footnote_marks {
+#qwhnoaujua .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ucixvivmvp .gt_asterisk {
+#qwhnoaujua .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ucixvivmvp .gt_indent_1 {
+#qwhnoaujua .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ucixvivmvp .gt_indent_2 {
+#qwhnoaujua .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ucixvivmvp .gt_indent_3 {
+#qwhnoaujua .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ucixvivmvp .gt_indent_4 {
+#qwhnoaujua .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ucixvivmvp .gt_indent_5 {
+#qwhnoaujua .gt_indent_5 {
   text-indent: 25px;
 }
 
-#ucixvivmvp .katex-display {
+#qwhnoaujua .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#ucixvivmvp div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#qwhnoaujua div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_col_headings header">
+<th id="Table" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Table</th>
+<th id="Best-for" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Best for</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="gt_group_heading_row odd">
+<td colspan="2" class="gt_empty_group_heading" data-quarto-table-cell-role="th" scope="colgroup"></td>
+</tr>
+<tr class="gt_row_group_first even">
+<td class="gt_row gt_left" headers="NA  Table"><code>knitr::kble()</code>/<strong>{kableExtra}</strong></td>
+<td class="gt_row gt_left" headers="NA  Best for">PDF/LaTeX. (Also quick ’n dirty)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NA  Table"><strong>{flextable}</strong></td>
+<td class="gt_row gt_left" headers="NA  Best for">Word/PowerPoint</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NA  Table"><strong>{gt}</strong></td>
+<td class="gt_row gt_left" headers="NA  Best for">HTML reports</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="NA  Table"><strong>{reactable}</strong></td>
+<td class="gt_row gt_left" headers="NA  Best for">Interactive HTML dashboards/Shiny apps</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="NA  Table"><strong>{DT}</strong></td>
+<td class="gt_row gt_left" headers="NA  Best for">Quick interactive exploration (Shiny or standalone)</td>
+</tr>
+<tr class="gt_group_heading_row odd">
+<td colspan="2" class="gt_empty_group_heading" data-quarto-table-cell-role="th" scope="colgroup"></td>
+</tr>
+<tr class="gt_row_group_first even">
+<td class="gt_row gt_left" headers="  Table">What else am I missing?</td>
+<td class="gt_row gt_left" headers="  Best for"><strong>{huxtable}</strong>? <strong>{tinytable}</strong>?</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<p>The package comes with several sample datasets. We’ll use <code>gtcars</code>.</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gt<span class="sc">::</span>gtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 47
+Columns: 15
+$ mfr         &lt;chr&gt; "Ford", "Ferrari", "Ferrari", "Ferrari", "Ferrari", "Ferra…
+$ model       &lt;chr&gt; "GT", "458 Speciale", "458 Spider", "458 Italia", "488 GTB…
+$ year        &lt;dbl&gt; 2017, 2015, 2015, 2014, 2016, 2015, 2017, 2015, 2015, 2015…
+$ trim        &lt;chr&gt; "Base Coupe", "Base Coupe", "Base", "Base Coupe", "Base Co…
+$ bdy_style   &lt;chr&gt; "coupe", "coupe", "convertible", "coupe", "coupe", "conver…
+$ hp          &lt;dbl&gt; 647, 597, 562, 562, 661, 553, 680, 652, 731, 949, 573, 545…
+$ hp_rpm      &lt;dbl&gt; 6250, 9000, 9000, 9000, 8000, 7500, 8250, 8000, 8250, 9000…
+$ trq         &lt;dbl&gt; 550, 398, 398, 398, 561, 557, 514, 504, 509, 664, 476, 436…
+$ trq_rpm     &lt;dbl&gt; 5900, 6000, 6000, 6000, 3000, 4750, 5750, 6000, 6000, 6750…
+$ mpg_c       &lt;dbl&gt; 11, 13, 13, 13, 15, 16, 12, 11, 11, 12, 21, 16, 11, 16, 12…
+$ mpg_h       &lt;dbl&gt; 18, 17, 17, 17, 22, 23, 17, 16, 16, 16, 22, 22, 18, 20, 20…
+$ drivetrain  &lt;chr&gt; "rwd", "rwd", "rwd", "rwd", "rwd", "rwd", "awd", "awd", "r…
+$ trsmn       &lt;chr&gt; "7a", "7a", "7a", "7a", "7a", "7a", "7a", "7a", "7a", "7a"…
+$ ctry_origin &lt;chr&gt; "United States", "Italy", "Italy", "Italy", "Italy", "Ital…
+$ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000, 29…</code></pre>
+</div>
+</div>
+</section>
+<section id="build-up-a-table" class="level2">
+<h2 class="anchored" data-anchor-id="build-up-a-table">Build Up a Table</h2>
+<p>Let’s build up a <strong>{gt}</strong> table from scratch. Here is a refrence schematic from the <a href="https://gt.rstudio.com/">gt</a> website:</p>
+<p><img src="gt_parts_of_a_table.svg" class="img-fluid"></p>
+<p>The ### 1. The Basic Table</p>
+<p><code>gt()</code> converts a data frame into a <strong>gt</strong> object.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tbl_1 <span class="ot">&lt;-</span> gt<span class="sc">::</span>gtcars <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>() <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(mfr, model, year, hp, mpg_c, mpg_h) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># STUB</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">gt</span>(<span class="at">rowname_col =</span> <span class="st">"mfr"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TABLE HEADER</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_header</span>(</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"gt Cars"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Like mtcars, but in a different package."</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># COLUMN LABELS</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">cols_label</span>(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mfr = "Manufacturer",</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="st">"Model"</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">year =</span> <span class="st">"Year"</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">hp =</span> <span class="st">"Horsepower"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">mpg_c =</span> <span class="st">"MPG - City"</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">mpg_h =</span> <span class="st">"MPG - Hwy"</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># STUB HEAD</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_stubhead</span>(<span class="st">"Manufacturer"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TABLE FOOTER</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_source_note</span>(<span class="st">"gtcars is from the gt package."</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>tbl_1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div id="kkjfwnjxar" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kkjfwnjxar table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#kkjfwnjxar thead, #kkjfwnjxar tbody, #kkjfwnjxar tfoot, #kkjfwnjxar tr, #kkjfwnjxar td, #kkjfwnjxar th {
+  border-style: none;
+}
+
+#kkjfwnjxar p {
+  margin: 0;
+  padding: 0;
+}
+
+#kkjfwnjxar .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#kkjfwnjxar .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#kkjfwnjxar .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#kkjfwnjxar .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#kkjfwnjxar .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#kkjfwnjxar .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#kkjfwnjxar .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#kkjfwnjxar .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#kkjfwnjxar .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#kkjfwnjxar .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#kkjfwnjxar .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#kkjfwnjxar .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#kkjfwnjxar .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#kkjfwnjxar .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#kkjfwnjxar .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kkjfwnjxar .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#kkjfwnjxar .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#kkjfwnjxar .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#kkjfwnjxar .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kkjfwnjxar .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#kkjfwnjxar .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kkjfwnjxar .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#kkjfwnjxar .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kkjfwnjxar .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#kkjfwnjxar .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#kkjfwnjxar .gt_left {
+  text-align: left;
+}
+
+#kkjfwnjxar .gt_center {
+  text-align: center;
+}
+
+#kkjfwnjxar .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#kkjfwnjxar .gt_font_normal {
+  font-weight: normal;
+}
+
+#kkjfwnjxar .gt_font_bold {
+  font-weight: bold;
+}
+
+#kkjfwnjxar .gt_font_italic {
+  font-style: italic;
+}
+
+#kkjfwnjxar .gt_super {
+  font-size: 65%;
+}
+
+#kkjfwnjxar .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#kkjfwnjxar .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#kkjfwnjxar .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#kkjfwnjxar .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#kkjfwnjxar .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#kkjfwnjxar .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#kkjfwnjxar .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#kkjfwnjxar .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#kkjfwnjxar div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -867,7 +1324,6 @@ $ msrp        &lt;dbl&gt; 447000, 291744, 263553, 233509, 245400, 198973, 298000
 </div>
 </div>
 <p>The first thing to notice is that the object has a <em>table body</em> and <em>column labels</em>. It can potentially have a <em>stub</em> (row groups or labels), header, and footer.</p>
-<p><img src="gt_parts_of_a_table.svg" class="img-fluid"></p>
 <p>This is analagous to the <strong>ggplot</strong> object. There is a base plot with <code>x</code> and <code>y</code> aesthetic definitions and <code>labs()</code>. The analogy is useful because “gt” stands for “grammar of tables” - a loose parallel to “grammar of graphics”.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -883,7 +1339,6 @@ Grammar of Tables
 <p>The <em>Grammar of Tables</em> is similar in that the pipeline of <strong>gt</strong> functions applies rules for how to treat the data frame.</p>
 </div>
 </div>
-</section>
 <section id="footnotes" class="level3">
 <h3 class="anchored" data-anchor-id="footnotes">2. Footnotes</h3>
 <p>You can add footnotes almost anywhere on the table. Base command is <code>tab_footnote(footnote, locations)</code> where <code>locations</code> is a function related to a part of the table:</p>
@@ -903,40 +1358,40 @@ Grammar of Tables
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tbl_2 <span class="ot">&lt;-</span> tbl_1 <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Miles per gallon"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">locations =</span> gt<span class="sc">::</span><span class="fu">cells_column_labels</span>(<span class="at">columns =</span> mpg_c)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Footnote in table body. Uses formula.</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Fuel efficient!"</span>,</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">locations =</span> gt<span class="sc">::</span><span class="fu">cells_body</span>(</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">columns =</span> mpg_h,</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">rows =</span> mpg_h <span class="sc">&gt;</span> <span class="dv">20</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>tbl_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tbl_2 <span class="ot">&lt;-</span> tbl_1 <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Miles per gallon"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">locations =</span> gt<span class="sc">::</span><span class="fu">cells_column_labels</span>(<span class="at">columns =</span> mpg_c)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Footnote in table body. Uses formula.</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Fuel efficient!"</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">locations =</span> gt<span class="sc">::</span><span class="fu">cells_body</span>(</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">columns =</span> mpg_h,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">rows =</span> mpg_h <span class="sc">&gt;</span> <span class="dv">20</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>tbl_2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div id="lugothjzjk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#lugothjzjk table {
+<div id="fggnehnrgy" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#fggnehnrgy table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#lugothjzjk thead, #lugothjzjk tbody, #lugothjzjk tfoot, #lugothjzjk tr, #lugothjzjk td, #lugothjzjk th {
+#fggnehnrgy thead, #fggnehnrgy tbody, #fggnehnrgy tfoot, #fggnehnrgy tr, #fggnehnrgy td, #fggnehnrgy th {
   border-style: none;
 }
 
-#lugothjzjk p {
+#fggnehnrgy p {
   margin: 0;
   padding: 0;
 }
 
-#lugothjzjk .gt_table {
+#fggnehnrgy .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -962,12 +1417,12 @@ Grammar of Tables
   border-left-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_caption {
+#fggnehnrgy .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#lugothjzjk .gt_title {
+#fggnehnrgy .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -979,7 +1434,7 @@ Grammar of Tables
   border-bottom-width: 0;
 }
 
-#lugothjzjk .gt_subtitle {
+#fggnehnrgy .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -991,7 +1446,7 @@ Grammar of Tables
   border-top-width: 0;
 }
 
-#lugothjzjk .gt_heading {
+#fggnehnrgy .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1003,13 +1458,13 @@ Grammar of Tables
   border-right-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_bottom_border {
+#fggnehnrgy .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_col_headings {
+#fggnehnrgy .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1024,7 +1479,7 @@ Grammar of Tables
   border-right-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_col_heading {
+#fggnehnrgy .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1044,7 +1499,7 @@ Grammar of Tables
   overflow-x: hidden;
 }
 
-#lugothjzjk .gt_column_spanner_outer {
+#fggnehnrgy .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1056,15 +1511,15 @@ Grammar of Tables
   padding-right: 4px;
 }
 
-#lugothjzjk .gt_column_spanner_outer:first-child {
+#fggnehnrgy .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lugothjzjk .gt_column_spanner_outer:last-child {
+#fggnehnrgy .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lugothjzjk .gt_column_spanner {
+#fggnehnrgy .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1076,11 +1531,11 @@ Grammar of Tables
   width: 100%;
 }
 
-#lugothjzjk .gt_spanner_row {
+#fggnehnrgy .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#lugothjzjk .gt_group_heading {
+#fggnehnrgy .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1106,7 +1561,7 @@ Grammar of Tables
   text-align: left;
 }
 
-#lugothjzjk .gt_empty_group_heading {
+#fggnehnrgy .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1121,15 +1576,15 @@ Grammar of Tables
   vertical-align: middle;
 }
 
-#lugothjzjk .gt_from_md > :first-child {
+#fggnehnrgy .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#lugothjzjk .gt_from_md > :last-child {
+#fggnehnrgy .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#lugothjzjk .gt_row {
+#fggnehnrgy .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1148,7 +1603,7 @@ Grammar of Tables
   overflow-x: hidden;
 }
 
-#lugothjzjk .gt_stub {
+#fggnehnrgy .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1161,7 +1616,7 @@ Grammar of Tables
   padding-right: 5px;
 }
 
-#lugothjzjk .gt_stub_row_group {
+#fggnehnrgy .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1175,15 +1630,15 @@ Grammar of Tables
   vertical-align: top;
 }
 
-#lugothjzjk .gt_row_group_first td {
+#fggnehnrgy .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#lugothjzjk .gt_row_group_first th {
+#fggnehnrgy .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#lugothjzjk .gt_summary_row {
+#fggnehnrgy .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1193,16 +1648,16 @@ Grammar of Tables
   padding-right: 5px;
 }
 
-#lugothjzjk .gt_first_summary_row {
+#fggnehnrgy .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_first_summary_row.thick {
+#fggnehnrgy .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#lugothjzjk .gt_last_summary_row {
+#fggnehnrgy .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1212,7 +1667,7 @@ Grammar of Tables
   border-bottom-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_grand_summary_row {
+#fggnehnrgy .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1222,7 +1677,7 @@ Grammar of Tables
   padding-right: 5px;
 }
 
-#lugothjzjk .gt_first_grand_summary_row {
+#fggnehnrgy .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1232,7 +1687,7 @@ Grammar of Tables
   border-top-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_last_grand_summary_row_top {
+#fggnehnrgy .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1242,11 +1697,11 @@ Grammar of Tables
   border-bottom-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_striped {
+#fggnehnrgy .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lugothjzjk .gt_table_body {
+#fggnehnrgy .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1255,7 +1710,7 @@ Grammar of Tables
   border-bottom-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_footnotes {
+#fggnehnrgy .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1269,7 +1724,7 @@ Grammar of Tables
   border-right-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_footnote {
+#fggnehnrgy .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1278,7 +1733,7 @@ Grammar of Tables
   padding-right: 5px;
 }
 
-#lugothjzjk .gt_sourcenotes {
+#fggnehnrgy .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1292,7 +1747,7 @@ Grammar of Tables
   border-right-color: #D3D3D3;
 }
 
-#lugothjzjk .gt_sourcenote {
+#fggnehnrgy .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1300,72 +1755,72 @@ Grammar of Tables
   padding-right: 5px;
 }
 
-#lugothjzjk .gt_left {
+#fggnehnrgy .gt_left {
   text-align: left;
 }
 
-#lugothjzjk .gt_center {
+#fggnehnrgy .gt_center {
   text-align: center;
 }
 
-#lugothjzjk .gt_right {
+#fggnehnrgy .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lugothjzjk .gt_font_normal {
+#fggnehnrgy .gt_font_normal {
   font-weight: normal;
 }
 
-#lugothjzjk .gt_font_bold {
+#fggnehnrgy .gt_font_bold {
   font-weight: bold;
 }
 
-#lugothjzjk .gt_font_italic {
+#fggnehnrgy .gt_font_italic {
   font-style: italic;
 }
 
-#lugothjzjk .gt_super {
+#fggnehnrgy .gt_super {
   font-size: 65%;
 }
 
-#lugothjzjk .gt_footnote_marks {
+#fggnehnrgy .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#lugothjzjk .gt_asterisk {
+#fggnehnrgy .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#lugothjzjk .gt_indent_1 {
+#fggnehnrgy .gt_indent_1 {
   text-indent: 5px;
 }
 
-#lugothjzjk .gt_indent_2 {
+#fggnehnrgy .gt_indent_2 {
   text-indent: 10px;
 }
 
-#lugothjzjk .gt_indent_3 {
+#fggnehnrgy .gt_indent_3 {
   text-indent: 15px;
 }
 
-#lugothjzjk .gt_indent_4 {
+#fggnehnrgy .gt_indent_4 {
   text-indent: 20px;
 }
 
-#lugothjzjk .gt_indent_5 {
+#fggnehnrgy .gt_indent_5 {
   text-indent: 25px;
 }
 
-#lugothjzjk .katex-display {
+#fggnehnrgy .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#lugothjzjk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#fggnehnrgy div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1466,20 +1921,12 @@ Grammar of Tables
 </ul>
 
 
-
 <!-- -->
 
 </section>
 
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
 <li id="fn1"><p>Neither the <a href="https://gt.rstudio.com/">gt site</a> nor its <a href="https://github.com/rstudio/gt/">GitHub README</a> mention “grammar of tables”, but articles on the web repeatedly attribute the name to it.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1953,124 +2400,147 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="sourceCode" id="cb5" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Understanding **gt** Tables"</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "How to use **gt**"</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2026-03-15</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [gt, tables]</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> |</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">  Experimenting with gt package to learn basics plus</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">  advanced features.</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Goal</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>The **gt** package has so many functions that it can feel overwhelming. This notebook establishes a baseline foundation to create 80% of what you would normally need, and enough conceptual understanding to guess what's possible and where to look.</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Setup</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>The package comes with several sample datasets. We'll use <span class="in">`gtcars`</span>.</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gt<span class="sc">::</span>gtcars)</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## Build Up a Table</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1. The Basic Table</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="in">`gt()`</span> converts a data frame into a **gt** object. </span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: true</span></span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>tbl_1 <span class="ot">&lt;-</span> gt<span class="sc">::</span>gtcars <span class="sc">|&gt;</span></span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>() <span class="sc">|&gt;</span></span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(mfr, model, year, hp, mpg_c, mpg_h) <span class="sc">|&gt;</span></span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># STUB</span></span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">gt</span>(<span class="at">rowname_col =</span> <span class="st">"mfr"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TABLE HEADER</span></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_header</span>(</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"gt Cars"</span>,</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Like mtcars, but in a different package."</span></span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># COLUMN LABELS</span></span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">cols_label</span>(</span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mfr = "Manufacturer",</span></span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="st">"Model"</span>,</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">year =</span> <span class="st">"Year"</span>,</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>        <span class="at">hp =</span> <span class="st">"Horsepower"</span>,</span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>        <span class="at">mpg_c =</span> <span class="st">"MPG - City"</span>,</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>        <span class="at">mpg_h =</span> <span class="st">"MPG - Hwy"</span></span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># STUB HEAD</span></span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_stubhead</span>(<span class="st">"Manufacturer"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TABLE FOOTER</span></span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_source_note</span>(<span class="st">"gtcars is from the gt package."</span>)</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>tbl_1</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>The first thing to notice is that the object has a *table body* and *column labels*. It can potentially have a *stub* (row groups or labels), header, and footer.</span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="al">![](gt_parts_of_a_table.svg)</span></span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>This is analagous to the **ggplot** object. There is a base plot with <span class="in">`x`</span> and <span class="in">`y`</span> aesthetic definitions and <span class="in">`labs()`</span>. The analogy is useful because "gt" stands for "grammar of tables" - a loose parallel to "grammar of graphics".<span class="ot">[^1]</span></span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a><span class="ot">[^1]: </span>Neither the <span class="co">[</span><span class="ot">gt site</span><span class="co">](https://gt.rstudio.com/)</span> nor its <span class="co">[</span><span class="ot">GitHub README</span><span class="co">](https://github.com/rstudio/gt/)</span> mention "grammar of tables", but articles on the web repeatedly attribute the name to it.</span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a><span class="fu">### Grammar of Tables</span></span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>The *Grammar of Graphics* is a framework of building up a plot with layers. The plot aesthetics map the table attributes to plot attributes. The code does not specify '_draw this here_', but rather 'apply _these rules_ for this geom.'</span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>The *Grammar of Tables* is similar in that the pipeline of **gt** functions applies rules for how to treat the data frame.</span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a><span class="fu">### 2. Footnotes</span></span>
-<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>You can add footnotes almost anywhere on the table. Base command is <span class="in">`tab_footnote(footnote, locations)`</span> where <span class="in">`locations`</span> is a function related to a part of the table:</span>
-<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_body()`</span></span>
-<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_column_labels()`</span></span>
-<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_column_spanners()`</span></span>
-<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_grand_summary()`</span></span>
-<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_group()`</span></span>
-<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_row_groups()`</span></span>
-<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_source_notes()`</span></span>
-<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_stub()`</span></span>
-<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_stub_grand_summary()`</span></span>
-<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_stub_summary()`</span></span>
-<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_stubhead()`</span></span>
-<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: true</span></span>
-<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>tbl_2 <span class="ot">&lt;-</span> tbl_1 <span class="sc">|&gt;</span></span>
-<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
-<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Miles per gallon"</span>,</span>
-<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>        <span class="at">locations =</span> gt<span class="sc">::</span><span class="fu">cells_column_labels</span>(<span class="at">columns =</span> mpg_c)</span>
-<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Footnote in table body. Uses formula.</span></span>
-<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
-<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Fuel efficient!"</span>,</span>
-<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>        <span class="at">locations =</span> gt<span class="sc">::</span><span class="fu">cells_body</span>(</span>
-<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>            <span class="at">columns =</span> mpg_h,</span>
-<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>            <span class="at">rows =</span> mpg_h <span class="sc">&gt;</span> <span class="dv">20</span></span>
-<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a>tbl_2</span>
-<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a><span class="in">`cols_hide()`</span> so you can use the columns without showing them.</span>
-<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a><span class="fu">## Observations</span></span>
-<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a><span class="fu">## Takeaways</span></span>
-<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-124"><a href="#cb5-124" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**gtsummary** and **gtextras** extend **gt**.</span>
+<div class="sourceCode" id="cb6" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Understanding **gt** Tables"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="an">subtitle:</span><span class="co"> "How to use **gt**"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2026-03-15</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [gt, tables]</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> |</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">  Experimenting with gt package to learn basics plus</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">  advanced features.</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Goal</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>The <span class="co">[</span><span class="ot">**{gt}**</span><span class="co">](https://gt.rstudio.com/)</span> package has so many functions that it can feel overwhelming. This notebook establishes a baseline foundation to create 80% of what you would normally need, and enough conceptual understanding to guess what's possible and where to look.</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## Background</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>There's no best package, just the best for your situation.</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>dplyr<span class="sc">::</span><span class="fu">tribble</span>(</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="sc">~</span>Table, <span class="sc">~</span><span class="st">`</span><span class="at">Best for</span><span class="st">`</span>,</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"`knitr::kble()`/**{kableExtra}**"</span>, <span class="st">"PDF/LaTeX. (Also quick 'n dirty)"</span>,</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**{flextable}**"</span>, <span class="st">"Word/PowerPoint"</span>,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**{gt}**"</span>, <span class="st">"HTML reports"</span>,</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**{reactable}**"</span>, <span class="st">"Interactive HTML dashboards/Shiny apps"</span>,</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"**{DT}**"</span>, <span class="st">"Quick interactive exploration (Shiny or standalone)"</span>,</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"What else am I missing?"</span>, <span class="st">"**{huxtable}**? **{tinytable}**?"</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">fmt_markdown</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_row_group</span>(<span class="at">rows =</span> <span class="dv">6</span>, <span class="at">label =</span> <span class="st">""</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">row_group_order</span>(<span class="fu">c</span>(<span class="cn">NA</span>, <span class="st">""</span>))</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a><span class="fu">## Setup</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>The package comes with several sample datasets. We'll use <span class="in">`gtcars`</span>.</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(gt<span class="sc">::</span>gtcars)</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="fu">## Build Up a Table</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>Let's build up a **{gt}** table from scratch. Here is a refrence schematic from the <span class="co">[</span><span class="ot">gt</span><span class="co">](https://gt.rstudio.com/)</span> website:</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a><span class="al">![](gt_parts_of_a_table.svg)</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>The </span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1. The Basic Table</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a><span class="in">`gt()`</span> converts a data frame into a **gt** object. </span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: true</span></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>tbl_1 <span class="ot">&lt;-</span> gt<span class="sc">::</span>gtcars <span class="sc">|&gt;</span></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>() <span class="sc">|&gt;</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(mfr, model, year, hp, mpg_c, mpg_h) <span class="sc">|&gt;</span></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>    <span class="co"># STUB</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">gt</span>(<span class="at">rowname_col =</span> <span class="st">"mfr"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TABLE HEADER</span></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_header</span>(</span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"gt Cars"</span>,</span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Like mtcars, but in a different package."</span></span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>    <span class="co"># COLUMN LABELS</span></span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">cols_label</span>(</span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>        <span class="co"># mfr = "Manufacturer",</span></span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="st">"Model"</span>,</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a>        <span class="at">year =</span> <span class="st">"Year"</span>,</span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a>        <span class="at">hp =</span> <span class="st">"Horsepower"</span>,</span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a>        <span class="at">mpg_c =</span> <span class="st">"MPG - City"</span>,</span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a>        <span class="at">mpg_h =</span> <span class="st">"MPG - Hwy"</span></span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a>    <span class="co"># STUB HEAD</span></span>
+<span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_stubhead</span>(<span class="st">"Manufacturer"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>    <span class="co"># TABLE FOOTER</span></span>
+<span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_source_note</span>(<span class="st">"gtcars is from the gt package."</span>)</span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a>tbl_1</span>
+<span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-92"><a href="#cb6-92" aria-hidden="true" tabindex="-1"></a>The first thing to notice is that the object has a *table body* and *column labels*. It can potentially have a *stub* (row groups or labels), header, and footer.</span>
+<span id="cb6-93"><a href="#cb6-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-94"><a href="#cb6-94" aria-hidden="true" tabindex="-1"></a>This is analagous to the **ggplot** object. There is a base plot with <span class="in">`x`</span> and <span class="in">`y`</span> aesthetic definitions and <span class="in">`labs()`</span>. The analogy is useful because "gt" stands for "grammar of tables" - a loose parallel to "grammar of graphics".<span class="ot">[^1]</span></span>
+<span id="cb6-95"><a href="#cb6-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-96"><a href="#cb6-96" aria-hidden="true" tabindex="-1"></a><span class="ot">[^1]: </span>Neither the <span class="co">[</span><span class="ot">gt site</span><span class="co">](https://gt.rstudio.com/)</span> nor its <span class="co">[</span><span class="ot">GitHub README</span><span class="co">](https://github.com/rstudio/gt/)</span> mention "grammar of tables", but articles on the web repeatedly attribute the name to it.</span>
+<span id="cb6-97"><a href="#cb6-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-98"><a href="#cb6-98" aria-hidden="true" tabindex="-1"></a>::: {.callout-note}</span>
+<span id="cb6-99"><a href="#cb6-99" aria-hidden="true" tabindex="-1"></a><span class="fu">### Grammar of Tables</span></span>
+<span id="cb6-100"><a href="#cb6-100" aria-hidden="true" tabindex="-1"></a>The *Grammar of Graphics* is a framework of building up a plot with layers. The plot aesthetics map the table attributes to plot attributes. The code does not specify '_draw this here_', but rather 'apply _these rules_ for this geom.'</span>
+<span id="cb6-101"><a href="#cb6-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-102"><a href="#cb6-102" aria-hidden="true" tabindex="-1"></a>The *Grammar of Tables* is similar in that the pipeline of **gt** functions applies rules for how to treat the data frame.</span>
+<span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-105"><a href="#cb6-105" aria-hidden="true" tabindex="-1"></a><span class="fu">### 2. Footnotes</span></span>
+<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-107"><a href="#cb6-107" aria-hidden="true" tabindex="-1"></a>You can add footnotes almost anywhere on the table. Base command is <span class="in">`tab_footnote(footnote, locations)`</span> where <span class="in">`locations`</span> is a function related to a part of the table:</span>
+<span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_body()`</span></span>
+<span id="cb6-110"><a href="#cb6-110" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_column_labels()`</span></span>
+<span id="cb6-111"><a href="#cb6-111" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_column_spanners()`</span></span>
+<span id="cb6-112"><a href="#cb6-112" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_grand_summary()`</span></span>
+<span id="cb6-113"><a href="#cb6-113" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_group()`</span></span>
+<span id="cb6-114"><a href="#cb6-114" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_row_groups()`</span></span>
+<span id="cb6-115"><a href="#cb6-115" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_source_notes()`</span></span>
+<span id="cb6-116"><a href="#cb6-116" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_stub()`</span></span>
+<span id="cb6-117"><a href="#cb6-117" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_stub_grand_summary()`</span></span>
+<span id="cb6-118"><a href="#cb6-118" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_stub_summary()`</span></span>
+<span id="cb6-119"><a href="#cb6-119" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`cells_stubhead()`</span></span>
+<span id="cb6-120"><a href="#cb6-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-123"><a href="#cb6-123" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb6-124"><a href="#cb6-124" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: true</span></span>
+<span id="cb6-125"><a href="#cb6-125" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-126"><a href="#cb6-126" aria-hidden="true" tabindex="-1"></a>tbl_2 <span class="ot">&lt;-</span> tbl_1 <span class="sc">|&gt;</span></span>
+<span id="cb6-127"><a href="#cb6-127" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb6-128"><a href="#cb6-128" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Miles per gallon"</span>,</span>
+<span id="cb6-129"><a href="#cb6-129" aria-hidden="true" tabindex="-1"></a>        <span class="at">locations =</span> gt<span class="sc">::</span><span class="fu">cells_column_labels</span>(<span class="at">columns =</span> mpg_c)</span>
+<span id="cb6-130"><a href="#cb6-130" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb6-131"><a href="#cb6-131" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Footnote in table body. Uses formula.</span></span>
+<span id="cb6-132"><a href="#cb6-132" aria-hidden="true" tabindex="-1"></a>    gt<span class="sc">::</span><span class="fu">tab_footnote</span>(</span>
+<span id="cb6-133"><a href="#cb6-133" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Fuel efficient!"</span>,</span>
+<span id="cb6-134"><a href="#cb6-134" aria-hidden="true" tabindex="-1"></a>        <span class="at">locations =</span> gt<span class="sc">::</span><span class="fu">cells_body</span>(</span>
+<span id="cb6-135"><a href="#cb6-135" aria-hidden="true" tabindex="-1"></a>            <span class="at">columns =</span> mpg_h,</span>
+<span id="cb6-136"><a href="#cb6-136" aria-hidden="true" tabindex="-1"></a>            <span class="at">rows =</span> mpg_h <span class="sc">&gt;</span> <span class="dv">20</span></span>
+<span id="cb6-137"><a href="#cb6-137" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb6-138"><a href="#cb6-138" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-139"><a href="#cb6-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-140"><a href="#cb6-140" aria-hidden="true" tabindex="-1"></a>tbl_2</span>
+<span id="cb6-141"><a href="#cb6-141" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb6-142"><a href="#cb6-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-143"><a href="#cb6-143" aria-hidden="true" tabindex="-1"></a><span class="in">`cols_hide()`</span> so you can use the columns without showing them.</span>
+<span id="cb6-144"><a href="#cb6-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-145"><a href="#cb6-145" aria-hidden="true" tabindex="-1"></a><span class="fu">## Observations</span></span>
+<span id="cb6-146"><a href="#cb6-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-147"><a href="#cb6-147" aria-hidden="true" tabindex="-1"></a><span class="fu">## Takeaways</span></span>
+<span id="cb6-148"><a href="#cb6-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-149"><a href="#cb6-149" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**gtsummary** and **gtextras** extend **gt**.</span>
 </code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

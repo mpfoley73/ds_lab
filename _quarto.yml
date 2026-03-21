@@ -33,7 +33,4 @@ website:
   repo-url: https://github.com/mpfoley73/ds_lab
   repo-actions: [edit, source]
   search: true
-
-listing:
-  categories: true
   

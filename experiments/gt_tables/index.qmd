@@ -9,7 +9,27 @@ description: |
 ---
 
 ## Goal
-The **gt** package has so many functions that it can feel overwhelming. This notebook establishes a baseline foundation to create 80% of what you would normally need, and enough conceptual understanding to guess what's possible and where to look.
+The [**{gt}**](https://gt.rstudio.com/) package has so many functions that it can feel overwhelming. This notebook establishes a baseline foundation to create 80% of what you would normally need, and enough conceptual understanding to guess what's possible and where to look.
+
+## Background
+
+There's no best package, just the best for your situation.
+
+```{r}
+dplyr::tribble(
+    ~Table, ~`Best for`,
+    "`knitr::kble()`/**{kableExtra}**", "PDF/LaTeX. (Also quick 'n dirty)",
+    "**{flextable}**", "Word/PowerPoint",
+    "**{gt}**", "HTML reports",
+    "**{reactable}**", "Interactive HTML dashboards/Shiny apps",
+    "**{DT}**", "Quick interactive exploration (Shiny or standalone)",
+    "What else am I missing?", "**{huxtable}**? **{tinytable}**?"
+) |>
+    gt::gt() |>
+    gt::fmt_markdown() |>
+    gt::tab_row_group(rows = 6, label = "") |>
+    gt::row_group_order(c(NA, ""))
+```
 
 ## Setup
 
@@ -24,6 +44,11 @@ glimpse(gt::gtcars)
 
 ## Build Up a Table
 
+Let's build up a **{gt}** table from scratch. Here is a refrence schematic from the [gt](https://gt.rstudio.com/) website:
+
+![](gt_parts_of_a_table.svg)
+
+The 
 ### 1. The Basic Table
 
 `gt()` converts a data frame into a **gt** object. 
@@ -59,8 +84,6 @@ tbl_1
 ```
 
 The first thing to notice is that the object has a *table body* and *column labels*. It can potentially have a *stub* (row groups or labels), header, and footer.
-
-![](gt_parts_of_a_table.svg)
 
 This is analagous to the **ggplot** object. There is a base plot with `x` and `y` aesthetic definitions and `labs()`. The analogy is useful because "gt" stands for "grammar of tables" - a loose parallel to "grammar of graphics".[^1]
 
