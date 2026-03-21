@@ -14,7 +14,7 @@ format:
     toc: true
     toc-depth: 3
     toc-location: left
-    code-fold: show
+    code-fold: true
     code-summary: "Show the code"
 
 website:

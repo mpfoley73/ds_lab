@@ -1,21 +1,17 @@
 ---
 title: "Data Science Lab"
+listing:
+  - id: experiments-grid
+    contents: .
+    type: grid
+    sort: "date desc"
+    categories: true
+    fields: [date, categories, description]
 ---
 
-This site is a collection of small experiments exploring:
-
--   R data science
--   Quarto publishing
--   LLM tooling
--   survey analysis
+This site is a collection of small experiments exploring data science with R.
 
 ## Recent Experiments
 
-```{=markdown}
-::: {.listing}
-contents: experiments
-sort: "date desc"
-limit: 5
-type: table
+::: {#experiments-grid}
 :::
-```
