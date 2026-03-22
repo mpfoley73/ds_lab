@@ -25,7 +25,8 @@
     "listing": "/notes/index.html",
     "items": [
       "/notes/llm_providers.html",
-      "/notes/prob_distr.html"
+      "/notes/prob_distr.html",
+      "/notes/logreg_interactions.html"
     ]
   }
 ]

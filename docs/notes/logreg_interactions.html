@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2021-08-15">
+<meta name="description" content="Using interaction effects in a logistic regression">
+
+<title>Logistic Regression Interactions – Data Science Lab</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ddd961a2510921635943dfbbd19534c4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+
+<script src="../site_libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Data Science Lab</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../experiments/index.html"> 
+<span class="menu-text">Experiments</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../notes/index.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#odds-and-odds-ratios" id="toc-odds-and-odds-ratios" class="nav-link active" data-scroll-target="#odds-and-odds-ratios">Odds and Odds Ratios</a></li>
+  <li><a href="#logistic-regression-model" id="toc-logistic-regression-model" class="nav-link" data-scroll-target="#logistic-regression-model">Logistic Regression Model</a></li>
+  <li><a href="#interaction-effects" id="toc-interaction-effects" class="nav-link" data-scroll-target="#interaction-effects">Interaction Effects</a></li>
+  <li><a href="#about-the-p-values" id="toc-about-the-p-values" class="nav-link" data-scroll-target="#about-the-p-values">About the p-Values</a></li>
+  <li><a href="#key-take-aways" id="toc-key-take-aways" class="nav-link" data-scroll-target="#key-take-aways">Key Take-aways</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/notes/logreg_interactions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/notes/logreg_interactions.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Logistic Regression Interactions</h1>
+<p class="subtitle lead">Interpreting Interaction Effects in Logistic Regression</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">regression</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    <p>Using interaction effects in a logistic regression</p>
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 15, 2021</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Interpreting the coefficient estimators in a logistic regression is straightforward. The binary logistic regression model is</p>
+<p><span class="math display">\[y = \mathrm{logit}(\pi) = \ln\left(\frac{\pi}{1 - \pi}\right) = X\beta\]</span></p>
+<p>A <span class="math inline">\(\delta = x_1 - x_0\)</span> unit change in <span class="math inline">\(x\)</span> in a estimated regression <span class="math inline">\(\hat{y} = X\hat{\beta}\)</span> is associated with a <span class="math inline">\(\delta\hat{\beta}\)</span> factor change in the <em>log odds</em> of <span class="math inline">\(y\)</span>. More commonly, you take the exponent of the coefficient estimate and say a <span class="math inline">\(\delta\)</span> unit change is associated with a <span class="math inline">\(e^{\delta\hat{\beta}}\)</span> factor change in the <em>odds</em> of <span class="math inline">\(y\)</span> (see my <a href="https://bookdown.org/mpfoley1973/supervised-ml/">handbook</a>). The factor change in the odds, <span class="math inline">\(y^{'} = y \cdot e^{\delta \hat{\beta}}\)</span>, means <span class="math inline">\(e^{\delta\hat{\beta}}\)</span> is the <em>odds ratio</em> relative to the reference level of the predictor variable. How does this change when there are interaction terms? I’m going to tackle that here.</p>
+<p>Here’s the game plan. Base R dataset <code>esoph</code> has cancer diagnoses and several categorical predictor variables. We’ll <em>manually</em> calculate the cancer odds for each combination of predictors and combine them into odds ratios, then show how those same values flow from a fitted logistic regression model.</p>
+<section id="odds-and-odds-ratios" class="level2">
+<h2 class="anchored" data-anchor-id="odds-and-odds-ratios">Odds and Odds Ratios</h2>
+<p>The <code>esoph</code> dataset is a count of cancer cases in a <a href="https://pubmed.ncbi.nlm.nih.gov/28846237/">case-control study</a>. Column <code>ncases</code> is a count of positive diagnoses and <code>ncontrols</code> is a count of negative diagnoses. The dataset has three explanatory variables, but to keep this simple, I’ll narrow the set to one age group, three levels of explanatory variable alcohol consumption (<code>alcgp</code>) and two levels of tobacco consumption (<code>tobgp</code>).</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> esoph <span class="sc">%&gt;%</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(agegp <span class="sc">==</span> <span class="st">"65-74"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">alc =</span> <span class="fu">factor</span>(alcgp, <span class="at">ordered =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">alc =</span> <span class="fu">fct_collapse</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      alc,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      <span class="st">"L"</span> <span class="ot">=</span> <span class="st">"0-39g/day"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"M"</span> <span class="ot">=</span> <span class="st">"40-79"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">"H"</span> <span class="ot">=</span> <span class="st">"80-119"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="st">"H"</span> <span class="ot">=</span> <span class="st">"120+"</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">tob =</span> <span class="fu">factor</span>(tobgp, <span class="at">ordered =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">tob =</span> <span class="fu">fct_collapse</span>(tob, <span class="st">"L"</span> <span class="ot">=</span> <span class="st">"0-9g/day"</span>, <span class="st">"H"</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"10-19"</span>, <span class="st">"20-29"</span>, <span class="st">"30+"</span>))</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(alc, tob) <span class="sc">%&gt;%</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">.groups =</span> <span class="st">"drop"</span>, <span class="at">ncases =</span> <span class="fu">sum</span>(ncases), <span class="at">ncontrols =</span> <span class="fu">sum</span>(ncontrols))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>dat</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 × 4</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="do">##   alc   tob   ncases ncontrols</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;fct&gt; &lt;fct&gt;  &lt;dbl&gt;     &lt;dbl&gt;</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 L     L          5        43</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 L     H          6        17</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 M     L         17        17</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 M     H          8        11</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 H     L          9         8</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 H     H         10        10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The cancer odds is the ratio of the probability of a positive diagnosis to the probability of a negative diagnosis, which given the common denominator is just the ratio of counts.</p>
+<p><span class="math display">\[odds = \frac{\pi_+}{\pi_-} = \frac{\mathrm{ncases / n}}{\mathrm{ncontrols / n}} = \frac{\mathrm{ncases}}{\mathrm{ncontrols}}\]</span></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">odds =</span> ncases <span class="sc">/</span> ncontrols)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> tob, <span class="at">y =</span> odds, <span class="at">color =</span> alc, <span class="at">group =</span> alc)) <span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">stat =</span> <span class="st">"summary"</span>, <span class="at">fun =</span> sum) <span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> sum, <span class="at">geom =</span> <span class="st">"line"</span>) <span class="sc">+</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>(<span class="fu">aes</span>(<span class="at">label =</span> scales<span class="sc">::</span><span class="fu">number</span>(odds, <span class="at">accuracy =</span> .<span class="dv">001</span>))) <span class="sc">+</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Alcohol moderates effect of tobacco on cancer odds."</span>) <span class="sc">+</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="logreg_interactions_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The figure above shows how cancer odds increase with tobacco use and with alcohol consumption, but their effects vary by their combination. If tobacco and alcohol had independent effects on cancer, you’d see parallel lines. Instead, we say alcohol “moderates” the effect of tobacco on cancer risk, and vice-versa.</p>
+<p>You can combine these six combinations of alcohol and tobacco into odds ratios (OR). There are 6x6=36 possible ORs. In my experience, I’ve only cared about comparisons to the reference group. From the data frame definition, we’ve chosen <code>tob</code> = “L” and <code>alc</code> = “L” as the reference group. Its the top row in Table 1.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>odds_ratios <span class="ot">&lt;-</span> <span class="fu">merge</span>(dat, dat, <span class="at">by =</span> <span class="cn">NULL</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">odds_1_lbl =</span> <span class="fu">paste0</span>(<span class="st">"alc"</span>, alc.x, <span class="st">"tob"</span>, tob.x),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">odds_2_lbl =</span> <span class="fu">paste0</span>(<span class="st">"alc"</span>, alc.y, <span class="st">"tob"</span>, tob.y),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">odds_ratio_lbl =</span> <span class="fu">paste</span>(odds_1_lbl, odds_2_lbl, <span class="at">sep =</span> <span class="st">":"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">OR =</span> odds.x <span class="sc">/</span> odds.y</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    odds_1_lbl,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    odds_2_lbl,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    odds_ratio_lbl,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">odds_1 =</span> odds.x,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">odds_2 =</span> odds.y,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    OR</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>odds_ratios <span class="sc">%&gt;%</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">odds_1 =</span> scales<span class="sc">::</span><span class="fu">number</span>(odds_1, <span class="at">accuracy =</span> .<span class="dv">001</span>),</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">odds_2 =</span> scales<span class="sc">::</span><span class="fu">number</span>(odds_2, <span class="at">accuracy =</span> .<span class="dv">001</span>),</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">OR =</span> scales<span class="sc">::</span><span class="fu">number</span>(OR, <span class="at">accuracy =</span> .<span class="dv">001</span>),</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at"> </span><span class="st">`</span> <span class="ot">=</span> <span class="fu">paste</span>(odds_1_lbl, odds_1)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(odds_ratio_lbl, odds_1_lbl, odds_1)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> <span class="fu">c</span>(odds_2_lbl, odds_2),</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> OR,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_sep =</span> <span class="st">"</span><span class="sc">\n</span><span class="st">"</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">flextable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">set_caption</span>(<span class="st">"36 possible odds ratios formed from 6 odds."</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">theme_vanilla</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">border</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">border.right =</span> officer<span class="sc">::</span><span class="fu">fp_border</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">bold</span>(<span class="at">j =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">autofit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-4513b58a{}.cl-4509b968{font-family:'Arial';font-size:10pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-4509b972{font-family:'Arial';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-450db19e{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-450dcf4e{width:1.296in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf58{width:0.864in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf59{width:0.879in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf62{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf63{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf64{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf6c{width:1.296in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf6d{width:0.864in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf6e{width:0.879in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf76{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf77{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf78{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf79{width:1.296in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf80{width:0.864in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf81{width:0.879in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf82{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf83{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf8a{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf8b{width:1.296in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf8c{width:0.864in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf94{width:0.879in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf95{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf9e{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcf9f{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcfa0{width:1.296in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcfa8{width:0.864in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcfa9{width:0.879in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcfaa{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcfb2{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-450dcfb3{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-4513b58a"><thead><tr style="overflow-wrap:break-word;"><th class="cl-450dcf4e"><p class="cl-450db19e"><span class="cl-4509b968"> </span></p></th><th class="cl-450dcf58"><p class="cl-450db19e"><span class="cl-4509b968">alcLtobL</span><br><span class="cl-4509b968">0.116</span></p></th><th class="cl-450dcf59"><p class="cl-450db19e"><span class="cl-4509b968">alcLtobH</span><br><span class="cl-4509b968">0.353</span></p></th><th class="cl-450dcf62"><p class="cl-450db19e"><span class="cl-4509b968">alcMtobL</span><br><span class="cl-4509b968">1.000</span></p></th><th class="cl-450dcf63"><p class="cl-450db19e"><span class="cl-4509b968">alcMtobH</span><br><span class="cl-4509b968">0.727</span></p></th><th class="cl-450dcf59"><p class="cl-450db19e"><span class="cl-4509b968">alcHtobL</span><br><span class="cl-4509b968">1.125</span></p></th><th class="cl-450dcf64"><p class="cl-450db19e"><span class="cl-4509b968">alcHtobH</span><br><span class="cl-4509b968">1.000</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-450dcf6c"><p class="cl-450db19e"><span class="cl-4509b968">alcLtobL 0.116</span></p></td><td class="cl-450dcf6d"><p class="cl-450db19e"><span class="cl-4509b972">1.000</span></p></td><td class="cl-450dcf6e"><p class="cl-450db19e"><span class="cl-4509b972">0.329</span></p></td><td class="cl-450dcf76"><p class="cl-450db19e"><span class="cl-4509b972">0.116</span></p></td><td class="cl-450dcf77"><p class="cl-450db19e"><span class="cl-4509b972">0.160</span></p></td><td class="cl-450dcf6e"><p class="cl-450db19e"><span class="cl-4509b972">0.103</span></p></td><td class="cl-450dcf78"><p class="cl-450db19e"><span class="cl-4509b972">0.116</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-450dcf79"><p class="cl-450db19e"><span class="cl-4509b968">alcLtobH 0.353</span></p></td><td class="cl-450dcf80"><p class="cl-450db19e"><span class="cl-4509b972">3.035</span></p></td><td class="cl-450dcf81"><p class="cl-450db19e"><span class="cl-4509b972">1.000</span></p></td><td class="cl-450dcf82"><p class="cl-450db19e"><span class="cl-4509b972">0.353</span></p></td><td class="cl-450dcf83"><p class="cl-450db19e"><span class="cl-4509b972">0.485</span></p></td><td class="cl-450dcf81"><p class="cl-450db19e"><span class="cl-4509b972">0.314</span></p></td><td class="cl-450dcf8a"><p class="cl-450db19e"><span class="cl-4509b972">0.353</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-450dcf79"><p class="cl-450db19e"><span class="cl-4509b968">alcMtobL 1.000</span></p></td><td class="cl-450dcf80"><p class="cl-450db19e"><span class="cl-4509b972">8.600</span></p></td><td class="cl-450dcf81"><p class="cl-450db19e"><span class="cl-4509b972">2.833</span></p></td><td class="cl-450dcf82"><p class="cl-450db19e"><span class="cl-4509b972">1.000</span></p></td><td class="cl-450dcf83"><p class="cl-450db19e"><span class="cl-4509b972">1.375</span></p></td><td class="cl-450dcf81"><p class="cl-450db19e"><span class="cl-4509b972">0.889</span></p></td><td class="cl-450dcf8a"><p class="cl-450db19e"><span class="cl-4509b972">1.000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-450dcf8b"><p class="cl-450db19e"><span class="cl-4509b968">alcMtobH 0.727</span></p></td><td class="cl-450dcf8c"><p class="cl-450db19e"><span class="cl-4509b972">6.255</span></p></td><td class="cl-450dcf94"><p class="cl-450db19e"><span class="cl-4509b972">2.061</span></p></td><td class="cl-450dcf95"><p class="cl-450db19e"><span class="cl-4509b972">0.727</span></p></td><td class="cl-450dcf9e"><p class="cl-450db19e"><span class="cl-4509b972">1.000</span></p></td><td class="cl-450dcf94"><p class="cl-450db19e"><span class="cl-4509b972">0.646</span></p></td><td class="cl-450dcf9f"><p class="cl-450db19e"><span class="cl-4509b972">0.727</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-450dcf79"><p class="cl-450db19e"><span class="cl-4509b968">alcHtobL 1.125</span></p></td><td class="cl-450dcf80"><p class="cl-450db19e"><span class="cl-4509b972">9.675</span></p></td><td class="cl-450dcf81"><p class="cl-450db19e"><span class="cl-4509b972">3.188</span></p></td><td class="cl-450dcf82"><p class="cl-450db19e"><span class="cl-4509b972">1.125</span></p></td><td class="cl-450dcf83"><p class="cl-450db19e"><span class="cl-4509b972">1.547</span></p></td><td class="cl-450dcf81"><p class="cl-450db19e"><span class="cl-4509b972">1.000</span></p></td><td class="cl-450dcf8a"><p class="cl-450db19e"><span class="cl-4509b972">1.125</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-450dcfa0"><p class="cl-450db19e"><span class="cl-4509b968">alcHtobH 1.000</span></p></td><td class="cl-450dcfa8"><p class="cl-450db19e"><span class="cl-4509b972">8.600</span></p></td><td class="cl-450dcfa9"><p class="cl-450db19e"><span class="cl-4509b972">2.833</span></p></td><td class="cl-450dcfaa"><p class="cl-450db19e"><span class="cl-4509b972">1.000</span></p></td><td class="cl-450dcfb2"><p class="cl-450db19e"><span class="cl-4509b972">1.375</span></p></td><td class="cl-450dcfa9"><p class="cl-450db19e"><span class="cl-4509b972">0.889</span></p></td><td class="cl-450dcfb3"><p class="cl-450db19e"><span class="cl-4509b972">1.000</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="logistic-regression-model" class="level2">
+<h2 class="anchored" data-anchor-id="logistic-regression-model">Logistic Regression Model</h2>
+<p>Recall that a logistic regression fits the <em>log odds</em> of the response variable to the predictor variables. In the equation below, <span class="math inline">\(\pi\)</span> is the event probability (in this case, a cancer diagnosis).</p>
+<p><span class="math display">\[y = \mathrm{logit(\pi)} = \ln\left(\frac{\pi}{1-\pi}\right) = X\beta\]</span></p>
+<p>Our data set is summarized so that <code>ncases</code> and <code>ncontrols</code> combine to specify the binary response to the predictor combinations (see <code>?glm()</code>). Let’s model the log-odds of cancer as a function of alcohol and tobacco consumption, including their interaction.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mdl <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(ncases, ncontrols) <span class="sc">~</span> alc <span class="sc">*</span> tob,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> dat,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>()</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(mdl)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 × 5</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="do">##   term        estimate std.error statistic    p.value</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 (Intercept)    -2.15     0.472     -4.55 0.00000526</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 alcM            2.15     0.584      3.69 0.000228  </span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 alcH            2.27     0.678      3.35 0.000812  </span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 tobH            1.11     0.670      1.66 0.0974    </span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 alcM:tobH      -1.43     0.884     -1.62 0.106     </span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 alcH:tobH      -1.23     0.941     -1.31 0.192</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The intercept term, -2.152, is the log odds of a positive cancer diagnosis for the reference group (<code>tob</code> = “L” and <code>alc</code> = “L”). The <em>p</em>-value is &lt;.0001, so it is significantly different from 0. Its exponential, 0.116, equals <span class="math inline">\(e^\hat{Y}\)</span>, the <em>odds</em> of a positive cancer diagnosis for the reference group. That means a <code>tob</code> = “L”, <code>alc</code> = “L” person has an expected <em>probability</em> of cancer of <span class="math inline">\(e^\hat{Y} / (1 + e^\hat{Y}) =\)</span> 10.4% (inverse logit formula).</p>
+<p>The interpretation of the coefficient estimators, <span class="math inline">\(\hat{\beta}\)</span>, is “a <span class="math inline">\(\delta\)</span> change in <em>x</em> is associated with a <span class="math inline">\(\delta\hat{\beta}\)</span> change in the log-odds of <em>y</em>.” A difference in logs is the same as the log of their ratio, so you can express the change as a ratio.</p>
+<p><span class="math display">\[\begin{eqnarray}
+\delta\beta &amp;=&amp; \log(\pi / (1-\pi))|_{X_1} - \log(\pi / (1-\pi))|_{X_0}\\
+&amp;=&amp; \log\left[\frac{\pi / (1-\pi)|_{X_1}}{\pi / (1-\pi)|_{X_0}}\right]
+\end{eqnarray}\]</span></p>
+<p>A <span class="math inline">\(\delta = 1\)</span> unit increase in <code>tobH</code> from 0 to 1 (from “L” to “H”) is associated with a 1.11 increase in the log-odds of cancer for a low-alcohol (<code>alc</code> = “L”) user. Log-odds are abstract, but since we can express the change in log-odds as the log of a ratio, we can take the exponential.</p>
+<p><span class="math display">\[e^{\delta\beta} = \frac{\pi / (1-\pi)|_{X_1}}{\pi / (1-\pi)|_{X_0}} = \mathrm{OR}\]</span></p>
+<p>The exponentiated coefficient estimators equal the ratio of the odds after and before the change. I.e., they are odds ratios. A <span class="math inline">\(\delta\)</span> unit change in <em>x</em> is associated with a factor <span class="math inline">\(e^{\delta\hat{\beta}}\)</span> change in the <em>odds</em> of <em>y</em>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(mdl, <span class="at">exponentiate =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  term        estimate std.error statistic    p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+1 (Intercept)    0.116     0.472     -4.55 0.00000526
+2 alcM           8.60      0.584      3.69 0.000228  
+3 alcH           9.67      0.678      3.35 0.000812  
+4 tobH           3.04      0.670      1.66 0.0974    
+5 alcM:tobH      0.240     0.884     -1.62 0.106     
+6 alcH:tobH      0.293     0.941     -1.31 0.192     </code></pre>
+</div>
+</div>
+<p>We’ve just seen that the exponential of the intercept, <code>exp(tobH) =</code> 0.116, is the odds of a positive cancer diagnosis for the reference group (<code>alc</code> = <em>L</em>, <code>tob</code> = <em>L</em>). Now look at the three main-effects terms, <code>alcM</code>, <code>alcH</code>, and <code>tobH</code>. These terms are the expected change in the log odds of a positive cancer diagnosis associated with a <span class="math inline">\(\delta = 1\)</span> unit change in the variable <em>holding the other variable at the reference level</em>. E.g., <code>alcM</code> is the change in the log odds associated with a <code>tob</code> = <em>L</em> person changing from <code>alc</code> = <em>L</em> to <code>alc</code> = <em>M</em>. The log of a difference equals the ratio of the logs (basic math), so the <em>exponential</em> of the <code>alcM</code>, <code>alcH</code>, and <code>tobH</code> is the ratio of the <em>odds</em>, the <em>odds ratio</em> (OR).</p>
+<ul>
+<li><code>alcM =</code> 8.60 is the odds of a positive diagnosis for <code>alc</code> = <em>M</em>, <code>tob</code> = <em>L</em> over the odds of a positive diagnosis for <code>alc</code> = <em>L</em> <code>tob</code> = <em>L</em>.<br>
+</li>
+<li><code>alcH =</code> 9.67 is the odds of a positive diagnosis for <code>alc</code> = <em>H</em>, <code>tob</code> = <em>L</em> over the odds of a positive diagnosis for <code>alc</code> = <em>L</em> <code>tob</code> = <em>L</em>.<br>
+</li>
+<li><code>tobH =</code> 3.04 is the odds of a positive diagnosis for <code>alcL</code> = <em>L</em>, <code>tob</code> = <em>H</em> over the odds of a positive diagnosis for <code>alc</code> = <em>L</em> <code>tob</code> = <em>L</em>.</li>
+</ul>
+</section>
+<section id="interaction-effects" class="level2">
+<h2 class="anchored" data-anchor-id="interaction-effects">Interaction Effects</h2>
+<p>Now we’re ready to tackle the interaction terms. The interaction terms measure the incremental change in the odds when you hold the other variable fixed at a different level. E.g., when estimating the change in the log odds of a positive diagnosis associated with a change from <code>alc</code> = <em>L</em> to <code>alc</code> = <em>M</em>, <code>alcM:tobH</code> is the adjustment associated with using a reference level <code>tob</code> = <em>H</em> instead of <code>tob</code> = <em>H</em>.</p>
+<ul>
+<li><code>alcM * alcM:tobH</code> = 8.60 * 0.24 = 2.06 is the odds of a positive diagnosis for <code>alc</code> = <em>M</em>, <code>tob</code> = <em>H</em> over <code>alc</code> = <em>L</em> <code>tob</code> = <em>H</em>.</li>
+<li><code>tobH * alcM:tobH</code> = 3.04 * 0.24 = 0.73 is the odds of a positive diagnosis for <code>alc</code> = <em>M</em>, <code>tob</code> = <em>H</em> over <code>alc</code> = <em>M</em> <code>tob</code> = <em>L</em>.</li>
+<li><code>alcH * alcH:tobH</code> = 9.67 * 0.29 = 2.83 is the odds of a positive diagnosis for <code>alc</code> = <em>H</em>, <code>tob</code> = <em>H</em> over <code>alc</code> = <em>L</em> <code>tob</code> = <em>H</em>.</li>
+<li><code>tobH * alcH:tobH</code> = 3.04 * 0.29 = 0.89 is the odds of a positive diagnosis for <code>alc</code> = <em>H</em>, <code>tob</code> = <em>H</em> over <code>alc</code> = <em>H</em> <code>tob</code> = <em>L</em>.</li>
+</ul>
+<p>But wait - there’s two more odds ratios we can estimate! The effects are multiplicative, so we can calculate the odds ratios of changing both <code>alc</code> and <code>tob</code> vs the reference group.</p>
+<ul>
+<li><code>alcM * tobH * alcM:tobH</code> = 8.60 * 3.04 * 0.24 = 6.25 is the odds of a positive diagnosis for <code>alc</code> = <em>M</em>, <code>tob</code> = <em>H</em> over <code>alc</code> = <em>L</em> <code>tob</code> = <em>L</em>.</li>
+<li><code>alcH * tobH * alcH:tobH</code> = 9.67 * 3.04 * 0.29 = 8.60 is the odds of a positive diagnosis for <code>alc</code> = <em>H</em>, <code>tob</code> = <em>H</em> over <code>alc</code> = <em>L</em> <code>tob</code> = <em>L</em>.</li>
+</ul>
+<p>If you are following along, you see we’ve calculated 7 of the odds ratios from Table 1. In fact, you can calculate all 36 odds ratios through combinations of main effects and interaction effects.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>alcLtobL <span class="ot">=</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"(Intercept)"</span>])</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>alcLtobH <span class="ot">=</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"tobH"</span>])</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>alcMtobL <span class="ot">=</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"alcM"</span>])</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>alcMtobH <span class="ot">=</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"alcM"</span>]) <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"tobH"</span>]) <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"alcM:tobH"</span>])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>alcHtobL <span class="ot">=</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"alcH"</span>])</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>alcHtobH <span class="ot">=</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"alcH"</span>]) <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"tobH"</span>]) <span class="sc">*</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"alcH:tobH"</span>])</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tribble</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>num, <span class="sc">~</span>den, <span class="sc">~</span>OR,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobL"</span>, <span class="st">"1"</span>, alcLtobL,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobH"</span>, <span class="st">"1"</span>, alcLtobL <span class="sc">*</span> alcLtobH,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobL"</span>, <span class="st">"1"</span>, alcLtobL <span class="sc">*</span> alcMtobL,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobH"</span>, <span class="st">"1"</span>, alcLtobL <span class="sc">*</span> alcMtobH,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobL"</span>, <span class="st">"1"</span>, alcLtobL <span class="sc">*</span> alcHtobL,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobH"</span>, <span class="st">"1"</span>, alcLtobL <span class="sc">*</span> alcHtobH,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobL"</span>, <span class="st">"alcLtobL"</span>, <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"(Intercept)"</span>]) <span class="sc">/</span> <span class="fu">exp</span>(<span class="fu">coef</span>(mdl)[<span class="st">"(Intercept)"</span>]),</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobH"</span>, <span class="st">"alcLtobL"</span>, alcLtobH,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobL"</span>, <span class="st">"alcLtobL"</span>, alcMtobL,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobH"</span>, <span class="st">"alcLtobL"</span>, alcMtobH,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobL"</span>, <span class="st">"alcLtobL"</span>, alcHtobL,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobH"</span>, <span class="st">"alcLtobL"</span>, alcHtobH,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobL"</span>, <span class="st">"alcLtobH"</span>, <span class="dv">1</span> <span class="sc">/</span> alcLtobH,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobH"</span>, <span class="st">"alcLtobH"</span>, alcLtobH <span class="sc">/</span> alcLtobH,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobL"</span>, <span class="st">"alcLtobH"</span>, alcMtobL <span class="sc">/</span> alcLtobH,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobH"</span>, <span class="st">"alcLtobH"</span>, alcMtobH <span class="sc">/</span> alcLtobH,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobL"</span>, <span class="st">"alcLtobH"</span>, alcHtobL <span class="sc">/</span> alcLtobH,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobH"</span>, <span class="st">"alcLtobH"</span>, alcHtobH <span class="sc">/</span> alcLtobH,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobL"</span>, <span class="st">"alcMtobL"</span>, <span class="dv">1</span> <span class="sc">/</span> alcMtobL,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobH"</span>, <span class="st">"alcMtobL"</span>, alcLtobH <span class="sc">/</span> alcMtobL,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobL"</span>, <span class="st">"alcMtobL"</span>, alcMtobL <span class="sc">/</span> alcMtobL,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobH"</span>, <span class="st">"alcMtobL"</span>, alcMtobH <span class="sc">/</span> alcMtobL,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobL"</span>, <span class="st">"alcMtobL"</span>, alcHtobL <span class="sc">/</span> alcMtobL,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobH"</span>, <span class="st">"alcMtobL"</span>, alcHtobH <span class="sc">/</span> alcMtobL,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobL"</span>, <span class="st">"alcMtobH"</span>, <span class="dv">1</span> <span class="sc">/</span> alcMtobH,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobH"</span>, <span class="st">"alcMtobH"</span>, alcLtobH <span class="sc">/</span> alcMtobH,</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobL"</span>, <span class="st">"alcMtobH"</span>, alcMtobL <span class="sc">/</span> alcMtobH,</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobH"</span>, <span class="st">"alcMtobH"</span>, alcMtobH <span class="sc">/</span> alcMtobH,</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobL"</span>, <span class="st">"alcMtobH"</span>, alcHtobL <span class="sc">/</span> alcMtobH,</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobH"</span>, <span class="st">"alcMtobH"</span>, alcHtobH <span class="sc">/</span> alcMtobH,</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobL"</span>, <span class="st">"alcHtobL"</span>, <span class="dv">1</span> <span class="sc">/</span> alcHtobL,</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobH"</span>, <span class="st">"alcHtobL"</span>, alcLtobH <span class="sc">/</span> alcHtobL,</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobL"</span>, <span class="st">"alcHtobL"</span>, alcMtobL <span class="sc">/</span> alcHtobL,</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobH"</span>, <span class="st">"alcHtobL"</span>, alcMtobH <span class="sc">/</span> alcHtobL,</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobL"</span>, <span class="st">"alcHtobL"</span>, alcHtobL <span class="sc">/</span> alcHtobL,</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobH"</span>, <span class="st">"alcHtobL"</span>, alcHtobH <span class="sc">/</span> alcHtobL,</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobL"</span>, <span class="st">"alcHtobH"</span>, <span class="dv">1</span> <span class="sc">/</span> alcMtobH,</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcLtobH"</span>, <span class="st">"alcHtobH"</span>, alcLtobH <span class="sc">/</span> alcHtobH,</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobL"</span>, <span class="st">"alcHtobH"</span>, alcMtobL <span class="sc">/</span> alcHtobH,</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcMtobH"</span>, <span class="st">"alcHtobH"</span>, alcMtobH <span class="sc">/</span> alcHtobH,</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobL"</span>, <span class="st">"alcHtobH"</span>, alcHtobL <span class="sc">/</span> alcHtobH,</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  <span class="st">"alcHtobH"</span>, <span class="st">"alcHtobH"</span>, alcHtobH <span class="sc">/</span> alcHtobH</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> num, <span class="at">values_from =</span> OR) <span class="sc">%&gt;%</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">flextable</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">set_caption</span>(<span class="st">"Odds ratios calculated from regression coefficients."</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">theme_vanilla</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">border</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">border.right =</span> officer<span class="sc">::</span><span class="fu">fp_border</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">bold</span>(<span class="at">j =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">colformat_double</span>(<span class="at">digits =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">autofit</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="tabwid tabwid_left"><style>.cl-455e935c{}.cl-45547ab6{font-family:'Arial';font-size:10pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-45547aca{font-family:'Arial';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-455795ac{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-455795ad{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-4557c176{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c180{width:0.864in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c181{width:0.879in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c182{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c18a{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c18b{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c18c{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c194{width:0.864in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c195{width:0.879in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c19e{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c19f{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1a0{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1a8{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1a9{width:0.864in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1aa{width:0.879in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1b2{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1b3{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1b4{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 0.75pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1bc{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 1pt solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1bd{width:0.864in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1c6{width:0.879in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1c7{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1c8{width:0.91in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4557c1c9{width:0.895in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.75pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-455e935c"><thead><tr style="overflow-wrap:break-word;"><th class="cl-4557c176"><p class="cl-455795ac"><span class="cl-45547ab6">den</span></p></th><th class="cl-4557c180"><p class="cl-455795ad"><span class="cl-45547ab6">alcLtobL</span></p></th><th class="cl-4557c181"><p class="cl-455795ad"><span class="cl-45547ab6">alcLtobH</span></p></th><th class="cl-4557c182"><p class="cl-455795ad"><span class="cl-45547ab6">alcMtobL</span></p></th><th class="cl-4557c18a"><p class="cl-455795ad"><span class="cl-45547ab6">alcMtobH</span></p></th><th class="cl-4557c181"><p class="cl-455795ad"><span class="cl-45547ab6">alcHtobL</span></p></th><th class="cl-4557c18b"><p class="cl-455795ad"><span class="cl-45547ab6">alcHtobH</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-4557c18c"><p class="cl-455795ac"><span class="cl-45547ab6">1</span></p></td><td class="cl-4557c194"><p class="cl-455795ad"><span class="cl-45547aca">0.116</span></p></td><td class="cl-4557c195"><p class="cl-455795ad"><span class="cl-45547aca">0.353</span></p></td><td class="cl-4557c19e"><p class="cl-455795ad"><span class="cl-45547aca">1.000</span></p></td><td class="cl-4557c19f"><p class="cl-455795ad"><span class="cl-45547aca">0.727</span></p></td><td class="cl-4557c195"><p class="cl-455795ad"><span class="cl-45547aca">1.125</span></p></td><td class="cl-4557c1a0"><p class="cl-455795ad"><span class="cl-45547aca">1.000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4557c1a8"><p class="cl-455795ac"><span class="cl-45547ab6">alcLtobL</span></p></td><td class="cl-4557c1a9"><p class="cl-455795ad"><span class="cl-45547aca">1.000</span></p></td><td class="cl-4557c1aa"><p class="cl-455795ad"><span class="cl-45547aca">3.035</span></p></td><td class="cl-4557c1b2"><p class="cl-455795ad"><span class="cl-45547aca">8.600</span></p></td><td class="cl-4557c1b3"><p class="cl-455795ad"><span class="cl-45547aca">6.255</span></p></td><td class="cl-4557c1aa"><p class="cl-455795ad"><span class="cl-45547aca">9.675</span></p></td><td class="cl-4557c1b4"><p class="cl-455795ad"><span class="cl-45547aca">8.600</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4557c1a8"><p class="cl-455795ac"><span class="cl-45547ab6">alcLtobH</span></p></td><td class="cl-4557c1a9"><p class="cl-455795ad"><span class="cl-45547aca">0.329</span></p></td><td class="cl-4557c1aa"><p class="cl-455795ad"><span class="cl-45547aca">1.000</span></p></td><td class="cl-4557c1b2"><p class="cl-455795ad"><span class="cl-45547aca">2.833</span></p></td><td class="cl-4557c1b3"><p class="cl-455795ad"><span class="cl-45547aca">2.061</span></p></td><td class="cl-4557c1aa"><p class="cl-455795ad"><span class="cl-45547aca">3.187</span></p></td><td class="cl-4557c1b4"><p class="cl-455795ad"><span class="cl-45547aca">2.833</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4557c1a8"><p class="cl-455795ac"><span class="cl-45547ab6">alcMtobL</span></p></td><td class="cl-4557c1a9"><p class="cl-455795ad"><span class="cl-45547aca">0.116</span></p></td><td class="cl-4557c1aa"><p class="cl-455795ad"><span class="cl-45547aca">0.353</span></p></td><td class="cl-4557c1b2"><p class="cl-455795ad"><span class="cl-45547aca">1.000</span></p></td><td class="cl-4557c1b3"><p class="cl-455795ad"><span class="cl-45547aca">0.727</span></p></td><td class="cl-4557c1aa"><p class="cl-455795ad"><span class="cl-45547aca">1.125</span></p></td><td class="cl-4557c1b4"><p class="cl-455795ad"><span class="cl-45547aca">1.000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4557c1a8"><p class="cl-455795ac"><span class="cl-45547ab6">alcMtobH</span></p></td><td class="cl-4557c1a9"><p class="cl-455795ad"><span class="cl-45547aca">0.160</span></p></td><td class="cl-4557c1aa"><p class="cl-455795ad"><span class="cl-45547aca">0.485</span></p></td><td class="cl-4557c1b2"><p class="cl-455795ad"><span class="cl-45547aca">1.375</span></p></td><td class="cl-4557c1b3"><p class="cl-455795ad"><span class="cl-45547aca">1.000</span></p></td><td class="cl-4557c1aa"><p class="cl-455795ad"><span class="cl-45547aca">1.547</span></p></td><td class="cl-4557c1b4"><p class="cl-455795ad"><span class="cl-45547aca">1.375</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4557c1a8"><p class="cl-455795ac"><span class="cl-45547ab6">alcHtobL</span></p></td><td class="cl-4557c1a9"><p class="cl-455795ad"><span class="cl-45547aca">0.103</span></p></td><td class="cl-4557c1aa"><p class="cl-455795ad"><span class="cl-45547aca">0.314</span></p></td><td class="cl-4557c1b2"><p class="cl-455795ad"><span class="cl-45547aca">0.889</span></p></td><td class="cl-4557c1b3"><p class="cl-455795ad"><span class="cl-45547aca">0.646</span></p></td><td class="cl-4557c1aa"><p class="cl-455795ad"><span class="cl-45547aca">1.000</span></p></td><td class="cl-4557c1b4"><p class="cl-455795ad"><span class="cl-45547aca">0.889</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4557c1bc"><p class="cl-455795ac"><span class="cl-45547ab6">alcHtobH</span></p></td><td class="cl-4557c1bd"><p class="cl-455795ad"><span class="cl-45547aca">0.160</span></p></td><td class="cl-4557c1c6"><p class="cl-455795ad"><span class="cl-45547aca">0.353</span></p></td><td class="cl-4557c1c7"><p class="cl-455795ad"><span class="cl-45547aca">1.000</span></p></td><td class="cl-4557c1c8"><p class="cl-455795ad"><span class="cl-45547aca">0.727</span></p></td><td class="cl-4557c1c6"><p class="cl-455795ad"><span class="cl-45547aca">1.125</span></p></td><td class="cl-4557c1c9"><p class="cl-455795ad"><span class="cl-45547aca">1.000</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="about-the-p-values" class="level2">
+<h2 class="anchored" data-anchor-id="about-the-p-values">About the p-Values</h2>
+<p>Neither of the interaction term <em>p</em>-values were significant at the .05 level. That means the slopes of the moderation lines are not significantly different from the reference levels line.</p>
+<p>If neither interaction term is significant, that means it was unnecessary to control for the interaction in the model. The main effect is the same at all levels of the controlling variables.</p>
+<p>If an interaction term is significant, but the main effect is not significant, it means the combined effects differ from the reference group, but changing only one variable is not different from the reference group. In our example, it would mean <code>alcM &amp; tobH</code> differs <code>alc</code> = “L” and <code>tob</code> = “L”, but not from either <code>alcL &amp; tobH</code> or <code>alcM &amp; tobL</code>.</p>
+<p>If both the main effect and the interaction effect is significant, it means you must interpret your results relative to the reference group.</p>
+<p>This raises another question. How do you report the <em>p</em>-value of the combined effect of two or more coefficients? The theoretical answer is that you need to combine the coefficient estimate variances to calculate a new <em>t</em>-statistic. Say you fit a model</p>
+<p><span class="math display">\[
+y = \beta_0 + \beta_1 \mathrm{alc} + \beta_2 \mathrm{tob} + \beta_3 \mathrm{alc:tob} + \epsilon
+\]</span></p>
+<p>and your fitted model coefficient estimators include <span class="math inline">\(\hat{\beta}_{1M}\)</span> (<em>Medium Alcohol</em>), <span class="math inline">\(\hat{\beta}_{2H}\)</span> (<em>High Tobacco</em>), and <span class="math inline">\(\hat{\beta}_{3MH}\)</span> (<em>MediumAlcohol:HighTobacco</em>). The estimator for the combined effect of <em>Medium Alcohol &amp; High Tobacco</em> relative to the reference group <em>Low Alcohol &amp; Low Tobacco</em>, <span class="math inline">\(\hat{\alpha}\)</span>, is <span class="math inline">\(\hat{\alpha} = \hat{\beta}_{1M} + \hat{\beta}_{2H} + \hat{\beta}_{3MH}\)</span>. The <em>p</em>-value associated with <span class="math inline">\(\hat{\alpha}\)</span> is <span class="math inline">\(p = P(T&gt;t)\)</span> where <span class="math inline">\(t = \hat{\alpha} / \mathrm{SE}(\hat{\alpha})\)</span> (same as for any coefficient estimator). The difficulty is in retrieving <span class="math inline">\(\mathrm{SE}(\hat{\alpha})\)</span>. It equals the squre root of te cobined coefficient estimator variances (<a href="https://en.wikipedia.org/wiki/Variance#Weighted_sum_of_variables">Wikipedia</a>), <span class="math inline">\(\mathrm{SE}(\alpha) = \sqrt{\mathrm{Var}(\alpha)}\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\mathrm{Var}(\alpha) = {} &amp; \mathrm{Var}(\hat{\beta}_{1M}) + \mathrm{Var}(\hat{\beta}_{2H}) + \mathrm{Var}(\hat{\beta}_{3HM}) + \\
+&amp; 2 \left(\mathrm{Cov}(\hat{\beta}_{1M}\hat{\beta}_{2H}) + \mathrm{Cov}(\hat{\beta}_{1M}\hat{\beta}_{3MH} + \mathrm{Cov}(\hat{\beta}_{2H}\hat{\beta}_{3MH}))\right)
+\end{aligned}
+\]</span></p>
+<p>Let’s see this calculation by taking elements from the model variance-covariance matrix.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mdl_vcov <span class="ot">&lt;-</span> mdl <span class="sc">%&gt;%</span> <span class="fu">vcov</span>() <span class="sc">%&gt;%</span>  <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span> <span class="fu">rownames_to_column</span>()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>var_alcM <span class="ot">&lt;-</span> mdl_vcov <span class="sc">%&gt;%</span> <span class="fu">filter</span>(rowname <span class="sc">==</span> <span class="st">"alcM"</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(<span class="st">"alcM"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>var_tobH <span class="ot">&lt;-</span> mdl_vcov <span class="sc">%&gt;%</span> <span class="fu">filter</span>(rowname <span class="sc">==</span> <span class="st">"tobH"</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(<span class="st">"tobH"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>var_alcMtobH <span class="ot">&lt;-</span> mdl_vcov <span class="sc">%&gt;%</span> <span class="fu">filter</span>(rowname <span class="sc">==</span> <span class="st">"alcM:tobH"</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(<span class="st">"alcM.tobH"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>cov_alcM_tobH <span class="ot">&lt;-</span> mdl_vcov <span class="sc">%&gt;%</span> <span class="fu">filter</span>(rowname <span class="sc">==</span> <span class="st">"alcM"</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(<span class="st">"tobH"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>cov_alcM_alcMtobH <span class="ot">&lt;-</span> mdl_vcov <span class="sc">%&gt;%</span> <span class="fu">filter</span>(rowname <span class="sc">==</span> <span class="st">"alcM"</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(<span class="st">"alcM.tobH"</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>cov_tobH_alcMtobH <span class="ot">&lt;-</span> mdl_vcov <span class="sc">%&gt;%</span> <span class="fu">filter</span>(rowname <span class="sc">==</span> <span class="st">"tobH"</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(<span class="st">"alcM.tobH"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># alpha</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>(alpha <span class="ot">&lt;-</span> <span class="fu">coef</span>(mdl)[<span class="st">"alcM"</span>] <span class="sc">+</span> <span class="fu">coef</span>(mdl)[<span class="st">"tobH"</span>] <span class="sc">+</span> <span class="fu">coef</span>(mdl)[<span class="st">"alcM:tobH"</span>])</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="do">##     alcM </span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 1.833308</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># SE for Medium Alcohol + High Tobacco</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>(se <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(var_alcM <span class="sc">+</span> var_tobH <span class="sc">+</span> var_alcMtobH <span class="sc">+</span> </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>             <span class="dv">2</span> <span class="sc">*</span> (cov_alcM_tobH <span class="sc">+</span> cov_alcM_alcMtobH <span class="sc">+</span> cov_tobH_alcMtobH)))</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.6626948</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="co"># t</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>(t <span class="ot">&lt;-</span> alpha <span class="sc">/</span> se)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="do">##     alcM </span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="do">## 2.766445</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="co"># p-value</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>(p_value <span class="ot">&lt;-</span> <span class="fu">pt</span>(<span class="fu">abs</span>(t), <span class="cn">Inf</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)<span class="sc">*</span> <span class="dv">2</span>)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="do">##        alcM </span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.005667121</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Happily, there is a package <strong>emmeans</strong> that calculates both the combined coefficient effects, and these <em>p</em>-values.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>emm <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(mdl, <span class="sc">~</span> alc <span class="sc">*</span> tob)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>emm_contrast <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">contrast</span>(emm, <span class="at">method =</span> <span class="st">"revpairwise"</span>, <span class="at">adjust =</span> <span class="st">"none"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>emm_contrast <span class="sc">%&gt;%</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(contrast, <span class="st">"L L$"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 6
+  contrast  estimate    SE    df z.ratio  p.value
+  &lt;chr&gt;        &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+1 M L - L L     2.15 0.584   Inf    3.69 0.000228
+2 H L - L L     2.27 0.678   Inf    3.35 0.000812
+3 L H - L L     1.11 0.670   Inf    1.66 0.0974  
+4 M H - L L     1.83 0.663   Inf    2.77 0.00567 
+5 H H - L L     2.15 0.651   Inf    3.31 0.000942</code></pre>
+</div>
+</div>
+<p>There it is, second from bottom.</p>
+</section>
+<section id="key-take-aways" class="level2">
+<h2 class="anchored" data-anchor-id="key-take-aways">Key Take-aways</h2>
+<p>What have we learned?</p>
+<ul>
+<li><p>Exponentiated coefficient estimates are odds ratios. The interaction effects are multiplicative moderators of the main effects.</p></li>
+<li><p>When the <em>p</em>-value of an interaction is significant, that means the slopes of the odds lines in your figure are statistically different from each other.</p></li>
+<li><p>Combinations of main-effects and interaction effects always get you a comparison of one group vs another group.</p></li>
+<li><p>Use the <strong>emmeans</strong> package to calculate odds ratios and their associated <em>p</em>-values.</p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/mpfoley73\.github\.io\/ds_lab");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/notes/logreg_interactions.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/notes/logreg_interactions.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>

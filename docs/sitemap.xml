@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/experiments/index.html</loc>
-    <lastmod>2026-03-21T21:38:20.013Z</lastmod>
+    <lastmod>2026-03-22T15:25:45.323Z</lastmod>
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/experiments/gt_tables/index.html</loc>
@@ -30,7 +30,7 @@
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/notes/index.html</loc>
-    <lastmod>2026-03-22T00:16:17.711Z</lastmod>
+    <lastmod>2026-03-22T15:25:57.834Z</lastmod>
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/about.html</loc>
@@ -43,5 +43,9 @@
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/notes/prob_distr.html</loc>
     <lastmod>2026-03-22T15:08:56.016Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mpfoley73.github.io/ds_lab/notes/logreg_interactions.html</loc>
+    <lastmod>2026-03-22T15:24:43.966Z</lastmod>
   </url>
 </urlset>
