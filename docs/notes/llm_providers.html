@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2026-03-21">
+<meta name="description" content="A quick survey of the major players in the LLM space.">
+
+<title>LLM Providers – Data Science Lab</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ddd961a2510921635943dfbbd19534c4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Data Science Lab</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../experiments/index.html"> 
+<span class="menu-text">Experiments</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../notes/index.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#survey-of-major-llm-providers" id="toc-survey-of-major-llm-providers" class="nav-link active" data-scroll-target="#survey-of-major-llm-providers">Survey of Major LLM Providers</a>
+  <ul class="collapse">
+  <li><a href="#anthropics-claude" id="toc-anthropics-claude" class="nav-link" data-scroll-target="#anthropics-claude">Anthropic’s Claude</a></li>
+  <li><a href="#aws-bedrock" id="toc-aws-bedrock" class="nav-link" data-scroll-target="#aws-bedrock">AWS Bedrock</a></li>
+  <li><a href="#azure-openai" id="toc-azure-openai" class="nav-link" data-scroll-target="#azure-openai">Azure OpenAI</a></li>
+  <li><a href="#cloudflare" id="toc-cloudflare" class="nav-link" data-scroll-target="#cloudflare">Cloudflare</a></li>
+  <li><a href="#databricks" id="toc-databricks" class="nav-link" data-scroll-target="#databricks">Databricks</a></li>
+  <li><a href="#deepseek" id="toc-deepseek" class="nav-link" data-scroll-target="#deepseek">DeepSeek</a></li>
+  <li><a href="#github-model-marketplace" id="toc-github-model-marketplace" class="nav-link" data-scroll-target="#github-model-marketplace">GitHub Model Marketplace</a></li>
+  <li><a href="#google-geminivertex-ai" id="toc-google-geminivertex-ai" class="nav-link" data-scroll-target="#google-geminivertex-ai">Google Gemini/Vertex AI</a></li>
+  <li><a href="#groq" id="toc-groq" class="nav-link" data-scroll-target="#groq">Groq</a></li>
+  <li><a href="#hugging-face" id="toc-hugging-face" class="nav-link" data-scroll-target="#hugging-face">Hugging Face</a></li>
+  <li><a href="#mistral" id="toc-mistral" class="nav-link" data-scroll-target="#mistral">Mistral</a></li>
+  <li><a href="#ollama" id="toc-ollama" class="nav-link" data-scroll-target="#ollama">Ollama</a></li>
+  <li><a href="#openai" id="toc-openai" class="nav-link" data-scroll-target="#openai">OpenAI</a></li>
+  <li><a href="#openrouter" id="toc-openrouter" class="nav-link" data-scroll-target="#openrouter">OpenRouter</a></li>
+  <li><a href="#perplexity.ai" id="toc-perplexity.ai" class="nav-link" data-scroll-target="#perplexity.ai">perplexity.ai</a></li>
+  <li><a href="#snowflake-cortex" id="toc-snowflake-cortex" class="nav-link" data-scroll-target="#snowflake-cortex">Snowflake Cortex</a></li>
+  <li><a href="#vllm" id="toc-vllm" class="nav-link" data-scroll-target="#vllm">VLLM</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/notes/llm_providers.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/notes/llm_providers.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">LLM Providers</h1>
+<p class="subtitle lead">A Survey of Model Providers</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">llm</div>
+  </div>
+  </div>
+
+<div>
+  <div class="description">
+    <p>A quick survey of the major players in the LLM space.</p>
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 21, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>What should an analyst know about the major LLM providers? Focus on operational and practical aspects that affect your work. Here’s what matters most.</p>
+<p><strong>1. Model Capabilities for Summarization</strong></p>
+<ul>
+<li><strong>Context Window</strong>: How much text (tokens) the model can process without chunking. Longer windows (e.g., 128K+ tokens).</li>
+<li><strong>Performance Benchmarks</strong>: Look for metrics on summarization tasks (e.g., ROUGE scores for accuracy, coherence, or factual consistency). Cheaper models might hallucinate more or miss nuances in qualitative data.</li>
+</ul>
+<p><strong>2. Cost and Pricing Model</strong></p>
+<ul>
+<li><strong>Per-Token/Input-Output Rates</strong>: Crucial for budget-conscious analysts. Compare input (text you send) vs.&nbsp;output (summary generated) costs.</li>
+</ul>
+<p><strong>3. Ease of Integration and Reliability</strong></p>
+<ul>
+<li><strong>ellmer Compatibility</strong>: prioritize providers with native support. Check for quirks, like authentication setup or error handling.</li>
+<li><strong>Documentation and Support</strong>: Clear R/ellmer examples, forums, or customer support for troubleshooting.</li>
+</ul>
+<p><strong>4. Data Privacy and Security:</strong></p>
+<ul>
+<li><strong>Data Handling</strong>: Does the provider store your text data? For sensitive data ensure compliance with GDPR, HIPAA, or similar. Avoid providers that use data for training without opt-out.</li>
+</ul>
+<p><strong>5. Scalability and Flexibility</strong></p>
+<ul>
+<li><strong>Model Variety</strong>: Multiple models (e.g., lightweight for drafts, advanced for final summaries) let you optimize for cost vs.&nbsp;quality.</li>
+<li><strong>Batch Processing</strong>: Support for asynchronous or bulk requests, which is ideal for large datasets.</li>
+</ul>
+<p><strong>6. Ecosystem and Future-Proofing:</strong></p>
+<ul>
+<li><strong>Community and Updates</strong>: Active development means better models over time. Check GitHub stars, release notes, or roadmaps.</li>
+<li><strong>Integration with Tools</strong>: Beyond <strong>{ellmer}</strong>, does it work with R packages like <strong>{tidyverse}</strong>, or cloud tools (e.g., AWS for data storage)?</li>
+</ul>
+<section id="survey-of-major-llm-providers" class="level2">
+<h2 class="anchored" data-anchor-id="survey-of-major-llm-providers">Survey of Major LLM Providers</h2>
+<p>Let’s briefly survey the major LLM providers and how they stack up on these criteria.</p>
+<section id="anthropics-claude" class="level3">
+<h3 class="anchored" data-anchor-id="anthropics-claude">Anthropic’s Claude</h3>
+<p><strong>Who They Are</strong>: Founded by ex-OpenAI researchers, Anthropic focuses on building safe, beneficial AI. They’re known for prioritizing AI safety and ethical development.</p>
+<p><strong>Why Pay Attention</strong>: Rapidly growing with major partnerships (Amazon, Google, Microsoft), they’re pushing boundaries in AI safety and reasoning capabilities. Their models are frequently updated and competitive in benchmarks.</p>
+<p><strong>Capabilities for Summarization</strong>: Claude models offer some of the longest context windows in the industry and excel at complex reasoning and multi-step analysis, making them strong for nuanced qualitative data summarization.</p>
+<p><strong>Pricing &amp; Integration</strong>: Competitive per-token pricing with batch processing discounts; excellent ellmer support via <code>chat_claude()</code>. Strong API reliability and enterprise features.</p>
+<p><strong>Data Privacy</strong>: Enterprise-grade privacy with US-only inference options; no data training without opt-out.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Best-in-class for agentic workflows and complex tasks; available via major cloud platforms (AWS Bedrock, Google Vertex, Microsoft Foundry) for multi-cloud deployments.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Anthropic monetizes through API consumption (per-token pricing), consumer subscriptions, enterprise licensing, and partnerships with cloud providers. Strong competitive advantage in reasoning/extended thinking capabilities and enterprise safety focus; positioned as premium provider targeting regulated industries and complex reasoning tasks.</p>
+</section>
+<section id="aws-bedrock" class="level3">
+<h3 class="anchored" data-anchor-id="aws-bedrock">AWS Bedrock</h3>
+<p><strong>Who They Are</strong>: Amazon’s managed service for accessing various foundation models.</p>
+<p><strong>Why Pay Attention</strong>: Offers a wide range of models with strong enterprise features and AWS integrations.</p>
+<p><strong>Capabilities for Summarization</strong>: Access to top models like Claude and Llama; good for benchmarking and optimization.</p>
+<p><strong>Pricing</strong>: Pay-as-you-go or provisioned throughput.</p>
+<p><strong>Data Privacy</strong>: Strong compliance (HIPAA, SOC 2); no training on customer data.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Deep AWS integrations; excellent for large-scale, multi-model deployments.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Amazon’s multi-model platform monetizes through pay-per-use token consumption and provisioned throughput commitments; generates revenue while strengthening AWS ecosystem lock-in. Competitive strength lies in model diversity (100+ models), deep AWS integration, compliance certifications (HIPAA, FedRAMP), and cost optimization for enterprise customers at scale.</p>
+</section>
+<section id="azure-openai" class="level3">
+<h3 class="anchored" data-anchor-id="azure-openai">Azure OpenAI</h3>
+<p><strong>Who They Are</strong>: Microsoft’s cloud service offering exclusive access to OpenAI’s models within the Azure ecosystem.</p>
+<p><strong>Why Pay Attention</strong>: Combines OpenAI’s cutting-edge models with Microsoft’s enterprise infrastructure, compliance, and integrations—ideal for large organizations.</p>
+<p><strong>Capabilities for Summarization</strong>: Access to GPT family models with strong analytical performance, suitable for financial and qualitative data summarization.</p>
+<p><strong>Pricing</strong>: Provisioned throughput tied to Azure consumption (enterprise-focused).</p>
+<p><strong>Data Privacy</strong>: Top-tier compliance (HIPAA, FedRAMP) with regional data residency and encryption.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Seamless Microsoft 365/Power BI integrations and governance tools; best for Microsoft-centric enterprises.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Microsoft’s exclusive Azure distribution of OpenAI’s models generates revenue through provisioned/standard throughput pricing tied to Azure account consumption. Key differentiators: Microsoft 365 integration, priority access to latest models, regional data residency compliance, and bundling with Azure AI services for enterprises using Microsoft tech stacks.</p>
+</section>
+<section id="cloudflare" class="level3">
+<h3 class="anchored" data-anchor-id="cloudflare">Cloudflare</h3>
+<p><strong>Who They Are</strong>: Cloud infrastructure company expanding into AI with edge-deployed models.</p>
+<p><strong>Why Pay Attention</strong>: Focuses on low-latency, global inference for fast, accessible AI.</p>
+<p><strong>Capabilities for Summarization</strong>: Supports various open models with good context; cost-effective for moderate workloads.</p>
+<p><strong>Pricing</strong>: Flexible, often included in plans.</p>
+<p><strong>Data Privacy</strong>: Edge deployment minimizes data transfer.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Global POPs for low latency; integrates with Cloudflare tools.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Cloudflare monetizes LLM inference through edge-hosted models across 200+ POPs; included in Workers Pro plans or priced per-token for consumption. Unique positioning: ultra-low latency inference at the edge, developer-friendly integration, and data residency guarantees; competitive advantage for real-time, latency-sensitive applications.</p>
+</section>
+<section id="databricks" class="level3">
+<h3 class="anchored" data-anchor-id="databricks">Databricks</h3>
+<p><strong>Who They Are</strong>: Data platform company offering AI integrations in their lakehouse.</p>
+<p><strong>Why Pay Attention</strong>: Seamlessly combines data processing with AI for analysts.</p>
+<p><strong>Capabilities for Summarization</strong>: Native SQL/Python functions for summarization without data movement.</p>
+<p><strong>Pricing</strong>: Consumption-based on platform usage.</p>
+<p><strong>Data Privacy</strong>: Data stays in your lakehouse/VPC.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Integrates with Spark/Delta; ideal for Databricks users.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Databricks generates revenue through consumption-based pricing on its unified lakehouse platform (DBU/DSU units) for data storage, compute, and LLM serving integrated with data pipelines. Competitive advantage: data stays in lakehouse with native governance, seamless Spark/Delta Lake integration, and end-to-end lineage for analysts already invested in Databricks ecosystem.</p>
+</section>
+<section id="deepseek" class="level3">
+<h3 class="anchored" data-anchor-id="deepseek">DeepSeek</h3>
+<p><strong>Who They Are</strong>: Chinese AI startup focused on efficient, open-source models.</p>
+<p><strong>Why Pay Attention</strong>: Offers exceptional value with strong reasoning at low cost; growing rapidly.</p>
+<p><strong>Capabilities for Summarization</strong>: Models with good context windows and reasoning, competitive with premium providers.</p>
+<p><strong>Pricing</strong>: Significantly cheaper than OpenAI (~90% less).</p>
+<p><strong>Data Privacy</strong>: China-based; may not suit US/EU compliance needs.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Open-source focus with aggregator availability; good for budget teams.</p>
+<p><strong>Business Model &amp; Positioning</strong>: DeepSeek (China-based) monetizes through freemium models with API consumption (~$0.27/$0.40 per million tokens for V3.2—80-90% cheaper than OpenAI). Market positioning: exceptional cost-to-capability ratio targeting budget-conscious teams, strong reasoning via distilled R1 models; disadvantage for US/EU enterprises requiring data sovereignty and compliance guarantees.</p>
+</section>
+<section id="github-model-marketplace" class="level3">
+<h3 class="anchored" data-anchor-id="github-model-marketplace">GitHub Model Marketplace</h3>
+<p><strong>Who They Are</strong>: GitHub’s emerging AI model hosting service.</p>
+<p><strong>Why Pay Attention</strong>: Convenient for developers already on GitHub.</p>
+<p><strong>Capabilities for Summarization</strong>: Access to models like Llama and Mistral.</p>
+<p><strong>Pricing</strong>: Mixed, tied to GitHub Enterprise.</p>
+<p><strong>Data Privacy</strong>: Standard GitHub policies.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Integrates with Copilot; early-stage.</p>
+<p><strong>Business Model &amp; Positioning</strong>: GitHub monetizes model serving through GitHub Enterprise integrations and potential future revenue-sharing with model creators; currently early-stage with limited API infrastructure. Positioning: convenient for GitHub-native developer workflows with Copilot integration; disadvantages include unclear long-term SLA commitments and limited model diversity compared to competitors.</p>
+</section>
+<section id="google-geminivertex-ai" class="level3">
+<h3 class="anchored" data-anchor-id="google-geminivertex-ai">Google Gemini/Vertex AI</h3>
+<p><strong>Who They Are</strong>: Google’s AI division, leveraging DeepMind research, offering models through Vertex AI platform.</p>
+<p><strong>Why Pay Attention</strong>: Backed by Google’s resources and research, they provide multimodal and multilingual capabilities with strong cloud integrations.</p>
+<p><strong>Capabilities for Summarization</strong>: Gemini models support multimodal input (text + images) and excel in multilingual tasks, useful for diverse data summarization.</p>
+<p><strong>Pricing</strong>: Competitive per-token rates.</p>
+<p><strong>Data Privacy</strong>: Strong Google Cloud compliance (SOC 2, HIPAA-eligible).</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Deep GCP integrations (BigQuery, etc.); great for Google-centric workflows.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Google monetizes through per-API token consumption ($1.25-$15/M input tokens) and Vertex AI enterprise services with commitments; leverages Google Cloud infrastructure for customer lock-in. Competitive strengths: multimodal capabilities, 100+ language support, integration with BigQuery/workbenches, and backing by DeepMind research for continuous capability upgrades.</p>
+</section>
+<section id="groq" class="level3">
+<h3 class="anchored" data-anchor-id="groq">Groq</h3>
+<p><strong>Who They Are</strong>: Hardware-focused startup with custom AI chips for fast inference.</p>
+<p><strong>Why Pay Attention</strong>: Pioneers in low-latency AI, offering speed advantages for real-time tasks.</p>
+<p><strong>Capabilities for Summarization</strong>: Supports fast models like Llama; ideal for quick, iterative summarization.</p>
+<p><strong>Pricing</strong>: Low-cost token rates.</p>
+<p><strong>Data Privacy</strong>: No training on user data.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Best for latency-critical workflows; limited model variety.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Groq monetizes through GroqCloud consumption (per-token pricing) leveraging its proprietary LPU (Language Processing Unit) hardware; recently raised $750M for scaling. Unique differentiator: 10x faster inference throughput via custom silicon; competitive advantage for latency-critical applications (real-time analytics, streaming); disadvantage: model diversity limited vs.&nbsp;GPU-based competitors.</p>
+</section>
+<section id="hugging-face" class="level3">
+<h3 class="anchored" data-anchor-id="hugging-face">Hugging Face</h3>
+<p><strong>Who They Are</strong>: Open-source AI community platform with model hosting.</p>
+<p><strong>Why Pay Attention</strong>: Massive ecosystem for experimenting with diverse models.</p>
+<p><strong>Capabilities for Summarization</strong>: 2M+ models, including specialists; good for research.</p>
+<p><strong>Pricing</strong>: Free tier + metered for compute.</p>
+<p><strong>Data Privacy</strong>: Depends on provider; open-source options for local use.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Community-driven; flexible for prototyping.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Hugging Face monetizes through: (1) Inference Endpoints compute ($0.60+/hour), (2) Inference API token consumption via partner providers ($0.02-$1.48/M tokens), (3) Enterprise Team/HF Compute plans ($20+/user/month). Strengths: massive open-source ecosystem (2M+ models), research community engagement, flexibility to run models locally; positioning as community-first, with enterprise services layered on top.</p>
+</section>
+<section id="mistral" class="level3">
+<h3 class="anchored" data-anchor-id="mistral">Mistral</h3>
+<p><strong>Who They Are</strong>: European AI company focused on open-source models.</p>
+<p><strong>Why Pay Attention</strong>: Strong on European languages and privacy compliance.</p>
+<p><strong>Capabilities for Summarization</strong>: Good context and multilingual support.</p>
+<p><strong>Pricing</strong>: Competitive rates.</p>
+<p><strong>Data Privacy</strong>: EU-based with GDPR focus.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Open-source options; enterprise deployments.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Mistral (EU-based) monetizes through API consumption (~$0.30-$2/M tokens), enterprise licensing, and custom model development services (Forge, advanced R&amp;D). Market positioning: EU data residency compliance with GDPR enforcement, open-source model availability for private deployment, and strong European enterprise focus; advantage for regulations-sensitive organizations.</p>
+</section>
+<section id="ollama" class="level3">
+<h3 class="anchored" data-anchor-id="ollama">Ollama</h3>
+<p><strong>Who They Are</strong>: Open-source tool for local AI model inference.</p>
+<p><strong>Why Pay Attention</strong>: Enables privacy-focused, offline AI without cloud costs.</p>
+<p><strong>Capabilities for Summarization</strong>: Runs various open models locally.</p>
+<p><strong>Pricing</strong>: Free and open-source.</p>
+<p><strong>Data Privacy</strong>: Complete local control; no cloud exposure.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Scales to your hardware; community integrations.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Ollama monetizes through free open-source software with potential cloud hardware upsells (faster inference via cloud account); future monetization via premium features and managed services announced. Positioning: local-first inference for data privacy, 40K+ integrations with dev tools; advantage for teams avoiding cloud dependencies; disadvantage: limited SLAs and production-grade support.</p>
+</section>
+<section id="openai" class="level3">
+<h3 class="anchored" data-anchor-id="openai">OpenAI</h3>
+<p><strong>Who They Are</strong>: Founded by Elon Musk and a team of AI researchers, OpenAI is a leading independent AI company focused on advancing AGI (artificial general intelligence) safely.</p>
+<p><strong>Why Pay Attention</strong>: As pioneers in generative AI, they have massive influence, frequent model updates, and widespread adoption across industries. Their models set industry standards.</p>
+<p><strong>Capabilities for Summarization</strong>: GPT family models excel at complex reasoning and multi-step tasks, making them reliable for nuanced qualitative data summarization.</p>
+<p><strong>Pricing</strong>: Premium per-token rates, reflecting their cutting-edge performance.</p>
+<p><strong>Data Privacy</strong>: Zero data retention by default; strong compliance options (SOC 2, HIPAA).</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Mature ecosystem with extensive documentation and integrations; ideal for production deployments despite higher costs.</p>
+<p><strong>Business Model &amp; Positioning</strong>: OpenAI monetizes through: (1) ChatGPT subscriptions ($20+/month consumer), (2) API token consumption ($5-$25/M tokens depending on model tier), (3) enterprise licensing/agreements (Department of War contract, Amazon partnership). Market positioning: frontier model performance (GPT-5 series), industry-standard API, and brand reputation; disadvantage: premium pricing and vendor lock-in risk.</p>
+</section>
+<section id="openrouter" class="level3">
+<h3 class="anchored" data-anchor-id="openrouter">OpenRouter</h3>
+<p><strong>Who They Are</strong>: Aggregator providing unified access to multiple AI providers.</p>
+<p><strong>Why Pay Attention</strong>: Simplifies experimenting across providers without switching APIs.</p>
+<p><strong>Capabilities for Summarization</strong>: Routes to top models for cost/latency optimization.</p>
+<p><strong>Pricing</strong>: Variable, based on underlying providers.</p>
+<p><strong>Data Privacy</strong>: Inherits from chosen provider.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Fallback routing for reliability; no lock-in.</p>
+<p><strong>Business Model &amp; Positioning</strong>: OpenRouter monetizes through margin on aggregated provider pricing (pay-as-you-go credits, no subscriptions); acts as a marketplace arbitrageur distributing requests across 60+ providers/300+ models. Strengths: price comparison tools, multi-provider uptime optimization, no vendor lock-in; positioning as neutral aggregator for cost optimization and reliability-conscious teams.</p>
+</section>
+<section id="perplexity.ai" class="level3">
+<h3 class="anchored" data-anchor-id="perplexity.ai">perplexity.ai</h3>
+<p><strong>Who They Are</strong>: AI search engine combining LLMs with real-time web data.</p>
+<p><strong>Why Pay Attention</strong>: Adds web search for up-to-date, research-oriented summarization.</p>
+<p><strong>Capabilities for Summarization</strong>: Hybrid LLM + search for current events.</p>
+<p><strong>Pricing</strong>: Subscription-based.</p>
+<p><strong>Data Privacy</strong>: Processes queries; review policies.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Best for knowledge workers; limited API.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Perplexity monetizes through subscription tiers (~$20/month Pro) combining LLM + real-time web search; limited API availability (currently not production-ready for enterprise pipelines). Positioning: specialized for knowledge workers needing web-aware summarization; disadvantage for data analysts: limited API, primarily consumer/knowledge-work focused.</p>
+</section>
+<section id="snowflake-cortex" class="level3">
+<h3 class="anchored" data-anchor-id="snowflake-cortex">Snowflake Cortex</h3>
+<p><strong>Who They Are</strong>: Snowflake’s AI features integrated into their data warehouse.</p>
+<p><strong>Why Pay Attention</strong>: Keeps data in-warehouse for seamless AI workflows.</p>
+<p><strong>Capabilities for Summarization</strong>: SQL functions for direct summarization.</p>
+<p><strong>Pricing</strong>: Tied to Snowflake consumption.</p>
+<p><strong>Data Privacy</strong>: Data stays secure in warehouse.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Ideal for Snowflake users; no data movement.</p>
+<p><strong>Business Model &amp; Positioning</strong>: Snowflake monetizes through consumption-based pricing on Cortex AI functions within Snowflake warehouse credits, alongside data storage/compute. Competitive advantage: data stays in secure warehouse perimeter with native governance, seamless SQL integration (SUMMARIZE() functions), and unified structured/unstructured data analysis—optimal for existing Snowflake customers.</p>
+</section>
+<section id="vllm" class="level3">
+<h3 class="anchored" data-anchor-id="vllm">VLLM</h3>
+<p><strong>Who They Are</strong>: Open-source library for efficient model inference.</p>
+<p><strong>Why Pay Attention</strong>: Enables cost-effective, self-hosted AI at scale.</p>
+<p><strong>Capabilities for Summarization</strong>: Optimizes throughput for various models.</p>
+<p><strong>Pricing</strong>: Free and open-source.</p>
+<p><strong>Data Privacy</strong>: Runs on your infrastructure.</p>
+<p><strong>Scalability &amp; Ecosystem</strong>: Supports diverse hardware; high throughput.</p>
+<p><strong>Business Model &amp; Positioning</strong>: VLLM (open-source) monetizes indirectly through adoption by hosting providers (RunPod, Lambda, AWS Neuron, etc.) who charge for compute; PyTorch Foundation backing supports development. Strengths: highest throughput optimization via PagedAttention, supports all major hardware (NVIDIA, AMD, Intel, TPU, CPU), 74K+ GitHub stars; positioning as foundation for self-hosted, cost-optimized inference at scale.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/mpfoley73\.github\.io\/ds_lab");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/notes/llm_providers.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/notes/llm_providers.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>

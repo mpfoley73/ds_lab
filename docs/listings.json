@@ -20,5 +20,12 @@
       "/experiments/gt_tables/gt_tables.html",
       "/experiments/us_census_api/census.html"
     ]
+  },
+  {
+    "listing": "/notes/index.html",
+    "items": [
+      "/notes/tricks.html",
+      "/notes/llm_providers.html"
+    ]
   }
 ]
