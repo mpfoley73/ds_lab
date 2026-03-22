@@ -24,8 +24,8 @@
   {
     "listing": "/notes/index.html",
     "items": [
-      "/notes/tricks.html",
-      "/notes/llm_providers.html"
+      "/notes/llm_providers.html",
+      "/notes/prob_distr.html"
     ]
   }
 ]
