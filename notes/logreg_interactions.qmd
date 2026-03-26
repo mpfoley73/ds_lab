@@ -4,26 +4,47 @@ subtitle: Interpreting Interaction Effects in Logistic Regression
 date: '2021-08-15'
 categories: [regression]
 description: |
-  Using interaction effects in a logistic regression
+  Interpreting the coefficient estimators in a simple logistic regression is straightforward, but it gets messy when your model includes interaction effects.
+number-sections: true
 ---
 
-Interpreting the coefficient estimators in a logistic regression is straightforward. The binary logistic regression model is 
+ The coefficient estimators in a simple logistic regression are straightforward to interpret, but it gets complicated when there are interaction effects. I'm going to work through that here.
+ 
+ Here is the simple model:
 
-$$y = \mathrm{logit}(\pi) = \ln\left(\frac{\pi}{1 - \pi}\right) = X\beta$$
+$$
+\begin{eqnarray}
+y &=& X \beta \\
+\mathrm{logit}(\pi)  &=& \\
+\ln\left(\frac{\pi}{1 - \pi}\right) &=&
+\end{eqnarray}
+$$
 
-A $\delta = x_1 - x_0$ unit change in $x$ in a estimated regression $\hat{y} = X\hat{\beta}$ is associated with a $\delta\hat{\beta}$ factor change in the _log odds_ of $y$. More commonly, you take the exponent of the coefficient estimate and say a $\delta$ unit change is associated with a $e^{\delta\hat{\beta}}$ factor change in the _odds_ of $y$ (see my [handbook](https://bookdown.org/mpfoley1973/supervised-ml/)). The factor change in the odds, $y^{'} = y \cdot e^{\delta \hat{\beta}}$, means $e^{\delta\hat{\beta}}$ is the _odds ratio_ relative to the reference level of the predictor variable. How does this change when there are interaction terms? I'm going to tackle that here.
+The model is estimated by $\hat{y} = X\hat{\beta}$. Interpret $\hat{\beta}$ as a $\delta = x_1 - x_0$ unit change in $x$ is associated with a $\delta\hat{\beta}$ factor change in the _log odds_ of $y$. Take the exponent of $\hat{\beta}$ and a $\delta$ change is associated with a $e^{\delta\hat{\beta}}$ factor change in the _odds_ of $y$. The factor change in the odds, $y^{'} = y \cdot e^{\delta \hat{\beta}}$, means $e^{\delta\hat{\beta}}$ is the _odds ratio_ relative to the reference level of the predictor variable. 
 
-Here's the game plan. Base R dataset `esoph` has cancer diagnoses and several categorical predictor variables. We'll _manually_ calculate the cancer odds for each combination of predictors and combine them into odds ratios, then show how those same values flow from a fitted logistic regression model.
+How does this change when there are interaction terms? I'm going to tackle that here using R dataset `esoph` for illustration.
 
-## Odds and Odds Ratios
+```{r}
+#| warning: false
+#| code-fold: false
 
-The `esoph` dataset is a count of cancer cases in a [case-control study](https://pubmed.ncbi.nlm.nih.gov/28846237/). Column `ncases` is a count of positive diagnoses and `ncontrols` is a count of negative diagnoses. The dataset has three explanatory variables, but to keep this simple, I'll narrow the set to one age group, three levels of explanatory variable alcohol consumption (`alcgp`) and two levels of tobacco consumption (`tobgp`).
-
-```{r message=FALSE, warning=FALSE, collapse = TRUE}
 library(tidyverse)
 
-dat <- esoph %>%
-  filter(agegp == "65-74") %>%
+dat <- esoph
+```
+
+```{r}
+#| include: false
+
+ggplot2::set_theme(theme_light())
+```
+
+Each row of `esoph` is a count of cancer cases from a [case-control study](https://pubmed.ncbi.nlm.nih.gov/28846237/). `n_pos` is a count of positive diagnoses and `n_neg` is a count of negative diagnoses. I'll simplify the set to one age group, three levels of explanatory variable alcohol consumption (`alcgp`) and two levels of tobacco consumption (`tobgp`).
+
+```{r}
+dat <- dat |>
+  filter(agegp == "65-74") |>
+  rename(n_pos = ncases, n_neg = ncontrols) |>
   mutate(
     alc = factor(alcgp, ordered = FALSE),
     alc = fct_collapse(
@@ -34,43 +55,56 @@ dat <- esoph %>%
       "H" = "120+"
     ),
     tob = factor(tobgp, ordered = FALSE),
-    tob = fct_collapse(tob, "L" = "0-9g/day", "H" = c("10-19", "20-29", "30+"))
-  ) %>%
-  group_by(alc, tob) %>%
-  summarize(.groups = "drop", ncases = sum(ncases), ncontrols = sum(ncontrols))
+    tob = fct_collapse(
+      tob,
+      "L" = "0-9g/day",
+      "H" = c("10-19", "20-29", "30+")
+    )
+  ) |>
+  summarize(.by = c(alc, tob), across(c(n_pos, n_neg), sum))
+```
+
+```{r}
+#| code-fold: false
 
 dat
 ```
 
-The cancer odds is the ratio of the probability of a positive diagnosis to the probability of a negative diagnosis, which given the common denominator is just the ratio of counts.
+## Odds and Odds Ratios
 
-$$odds = \frac{\pi_+}{\pi_-} = \frac{\mathrm{ncases / n}}{\mathrm{ncontrols / n}} = \frac{\mathrm{ncases}}{\mathrm{ncontrols}}$$
+The cancer odds is the ratio of the positive and negative diagnosis probabilities. Since the denominators are the same, the odds is just the ratio of counts.
+
+$$
+O = \frac{\pi_+}{\pi_-} = \frac{\mathrm{n_{pos} / n}}{\mathrm{n_{neg} / n}} = \frac{\mathrm{n_{pos}}}{\mathrm{n_{neg}}}
+$$
 
 ```{r}
-dat <- dat %>%
-  mutate(odds = ncases / ncontrols)
+#| code-fold: false
 
-dat %>%
+dat <- dat |> mutate(odds = n_pos / n_neg)
+```
+
+The plot below shows cancer odds increase with tobacco use and with alcohol consumption, but their effects vary by their combination. If tobacco and alcohol had independent effects on cancer, you'd see parallel lines. Instead, alcohol "moderates" the effect of tobacco on cancer risk, and vice-versa.
+
+```{r}
+dat |>
   ggplot(aes(x = tob, y = odds, color = alc, group = alc)) +
   geom_point(stat = "summary", fun = sum) +
   stat_summary(fun = sum, geom = "line") +
   geom_label(aes(label = scales::number(odds, accuracy = .001))) +
-  labs(title = "Alcohol moderates effect of tobacco on cancer odds.") +
-  theme_light()
+  labs(title = "Alcohol moderates effect of tobacco on cancer odds.")
 ```
 
-The figure above shows how cancer odds increase with tobacco use and with alcohol consumption, but their effects vary by their combination. If tobacco and alcohol had independent effects on cancer, you'd see parallel lines. Instead, we say alcohol "moderates" the effect of tobacco on cancer risk, and vice-versa.
+You can combine these six combinations of alcohol and tobacco into 36 odds ratios (OR). I usually only care about comparisons to the reference groups, (`tob` = "L" and `alc` = "L"). It's the top row in Table @tbl-odds-ratios.
 
-You can combine these six combinations of alcohol and tobacco into odds ratios (OR). There are 6x6=36 possible ORs. In my experience, I've only cared about comparisons to the reference group. From the data frame definition, we've chosen `tob` = "L" and `alc` = "L" as the reference group. Its the top row in Table 1.
-
-```{r collapse=TRUE}
-odds_ratios <- merge(dat, dat, by = NULL) %>%
+```{r}
+odds_ratios <- merge(dat, dat, by = NULL) |>
   mutate(
     odds_1_lbl = paste0("alc", alc.x, "tob", tob.x),
     odds_2_lbl = paste0("alc", alc.y, "tob", tob.y),
     odds_ratio_lbl = paste(odds_1_lbl, odds_2_lbl, sep = ":"),
     OR = odds.x / odds.y
-  ) %>%
+  ) |>
   select(
     odds_1_lbl,
     odds_2_lbl,
@@ -79,26 +113,34 @@ odds_ratios <- merge(dat, dat, by = NULL) %>%
     odds_2 = odds.y,
     OR
   )
+```
 
-odds_ratios %>%
+```{r}
+#| label: tbl-odds-ratios
+#| tbl-cap: "36 possible odds ratios formed from 6 odds."
+#| tbl-cap-location: bottom
+
+odds_ratios |>
   mutate(
     odds_1 = scales::number(odds_1, accuracy = .001),
     odds_2 = scales::number(odds_2, accuracy = .001),
     OR = scales::number(OR, accuracy = .001),
-    ` ` = paste(odds_1_lbl, odds_1)
-  ) %>%
+    y = paste(odds_1_lbl, odds_1)
+  ) |>
   select(-c(odds_ratio_lbl, odds_1_lbl, odds_1)) %>%
   pivot_wider(
     names_from = c(odds_2_lbl, odds_2),
     values_from = OR,
     names_sep = "\n"
-  ) %>%
-  flextable::flextable() %>%
-  flextable::set_caption("36 possible odds ratios formed from 6 odds.") %>%
-  flextable::theme_vanilla() %>%
-  flextable::border(j = 1, border.right = officer::fp_border()) %>%
-  flextable::bold(j = 1) %>%
-  flextable::autofit()
+  ) |>
+  gt::gt(rowname_col = "y") |>
+  gt::tab_header(title = "36 possible odds ratios formed from 6 odds.")
+# flextable::flextable() %>%
+# flextable::set_caption("36 possible odds ratios formed from 6 odds.") %>%
+# flextable::theme_vanilla() %>%
+# flextable::border(j = 1, border.right = officer::fp_border()) %>%
+# flextable::bold(j = 1) %>%
+# flextable::autofit()
 ```
 
 ## Logistic Regression Model
@@ -107,11 +149,11 @@ Recall that a logistic regression fits the _log odds_ of the response variable t
 
 $$y = \mathrm{logit(\pi)} = \ln\left(\frac{\pi}{1-\pi}\right) = X\beta$$
 
-Our data set is summarized so that `ncases` and `ncontrols` combine to specify the binary response to the predictor combinations (see `?glm()`). Let's model the log-odds of cancer as a function of alcohol and tobacco consumption, including their interaction.
+Our data set is summarized so that `n_pos` and `n_neg` combine to specify the binary response to the predictor combinations (see `?glm()`). Let's model the log-odds of cancer as a function of alcohol and tobacco consumption, including their interaction.
 
 ```{r collapse=TRUE}
 mdl <- glm(
-  cbind(ncases, ncontrols) ~ alc * tob,
+  cbind(n_pos, n_neg) ~ alc * tob,
   data = dat,
   family = binomial()
 )
@@ -123,14 +165,18 @@ The intercept term, `r coef(mdl)["(Intercept)"] %>% scales::number(accuracy = .0
 
 The interpretation of the coefficient estimators, $\hat{\beta}$, is "a $\delta$ change in _x_ is associated with a $\delta\hat{\beta}$ change in the log-odds of _y_." A difference in logs is the same as the log of their ratio, so you can express the change as a ratio.
 
-$$\begin{eqnarray}
+$$
+\begin{eqnarray}
 \delta\beta &=& \log(\pi / (1-\pi))|_{X_1} - \log(\pi / (1-\pi))|_{X_0}\\
  &=& \log\left[\frac{\pi / (1-\pi)|_{X_1}}{\pi / (1-\pi)|_{X_0}}\right]
-\end{eqnarray}$$
+\end{eqnarray}
+$$
 
 A $\delta = 1$ unit increase in `tobH` from 0 to 1 (from "L" to "H") is associated with a `r coef(mdl)["tobH"] %>% scales::number(accuracy = .01)` increase in the log-odds of cancer for a low-alcohol (`alc` = "L") user. Log-odds are abstract, but since we can express the change in log-odds as the log of a ratio, we can take the exponential.
 
-$$e^{\delta\beta} = \frac{\pi / (1-\pi)|_{X_1}}{\pi / (1-\pi)|_{X_0}} = \mathrm{OR}$$
+$$
+e^{\delta\beta} = \frac{\pi / (1-\pi)|_{X_1}}{\pi / (1-\pi)|_{X_0}} = \mathrm{OR}
+$$
 
 The exponentiated coefficient estimators equal the ratio of the odds after and before the change. I.e., they are odds ratios. A $\delta$ unit change in _x_ is associated with a factor $e^{\delta\hat{\beta}}$ change in the _odds_ of _y_.
 
@@ -161,60 +207,66 @@ But wait - there's two more odds ratios we can estimate! The effects are multipl
 If you are following along, you see we've calculated 7 of the odds ratios from Table 1. In fact, you can calculate all 36 odds ratios through combinations of main effects and interaction effects. 
 
 ```{r}
-alcLtobL = exp(coef(mdl)["(Intercept)"])
-alcLtobH = exp(coef(mdl)["tobH"])
-alcMtobL = exp(coef(mdl)["alcM"])
-alcMtobH = exp(coef(mdl)["alcM"]) * exp(coef(mdl)["tobH"]) * exp(coef(mdl)["alcM:tobH"])
-alcHtobL = exp(coef(mdl)["alcH"])
-alcHtobH = exp(coef(mdl)["alcH"]) * exp(coef(mdl)["tobH"]) * exp(coef(mdl)["alcH:tobH"])
+alcLtobL <- exp(coef(mdl)["(Intercept)"])
+alcLtobH <- exp(coef(mdl)["tobH"])
+alcMtobL <- exp(coef(mdl)["alcM"])
+alcMtobH <- exp(coef(mdl)["alcM"]) *
+  exp(coef(mdl)["tobH"]) *
+  exp(coef(mdl)["alcM:tobH"])
+alcHtobL <- exp(coef(mdl)["alcH"])
+alcHtobH <- exp(coef(mdl)["alcH"]) *
+  exp(coef(mdl)["tobH"]) *
+  exp(coef(mdl)["alcH:tobH"])
 tribble(
-  ~num, ~den, ~OR,
-  "alcLtobL", "1", alcLtobL,
-  "alcLtobH", "1", alcLtobL * alcLtobH,
-  "alcMtobL", "1", alcLtobL * alcMtobL,
-  "alcMtobH", "1", alcLtobL * alcMtobH,
-  "alcHtobL", "1", alcLtobL * alcHtobL,
-  "alcHtobH", "1", alcLtobL * alcHtobH,
-  "alcLtobL", "alcLtobL", exp(coef(mdl)["(Intercept)"]) / exp(coef(mdl)["(Intercept)"]),
-  "alcLtobH", "alcLtobL", alcLtobH,
-  "alcMtobL", "alcLtobL", alcMtobL,
-  "alcMtobH", "alcLtobL", alcMtobH,
-  "alcHtobL", "alcLtobL", alcHtobL,
-  "alcHtobH", "alcLtobL", alcHtobH,
-  "alcLtobL", "alcLtobH", 1 / alcLtobH,
-  "alcLtobH", "alcLtobH", alcLtobH / alcLtobH,
-  "alcMtobL", "alcLtobH", alcMtobL / alcLtobH,
-  "alcMtobH", "alcLtobH", alcMtobH / alcLtobH,
-  "alcHtobL", "alcLtobH", alcHtobL / alcLtobH,
-  "alcHtobH", "alcLtobH", alcHtobH / alcLtobH,
-  "alcLtobL", "alcMtobL", 1 / alcMtobL,
-  "alcLtobH", "alcMtobL", alcLtobH / alcMtobL,
-  "alcMtobL", "alcMtobL", alcMtobL / alcMtobL,
-  "alcMtobH", "alcMtobL", alcMtobH / alcMtobL,
-  "alcHtobL", "alcMtobL", alcHtobL / alcMtobL,
-  "alcHtobH", "alcMtobL", alcHtobH / alcMtobL,
-  "alcLtobL", "alcMtobH", 1 / alcMtobH,
-  "alcLtobH", "alcMtobH", alcLtobH / alcMtobH,
-  "alcMtobL", "alcMtobH", alcMtobL / alcMtobH,
-  "alcMtobH", "alcMtobH", alcMtobH / alcMtobH,
-  "alcHtobL", "alcMtobH", alcHtobL / alcMtobH,
-  "alcHtobH", "alcMtobH", alcHtobH / alcMtobH,
-  "alcLtobL", "alcHtobL", 1 / alcHtobL,
-  "alcLtobH", "alcHtobL", alcLtobH / alcHtobL,
-  "alcMtobL", "alcHtobL", alcMtobL / alcHtobL,
-  "alcMtobH", "alcHtobL", alcMtobH / alcHtobL,
-  "alcHtobL", "alcHtobL", alcHtobL / alcHtobL,
-  "alcHtobH", "alcHtobL", alcHtobH / alcHtobL,
-  "alcLtobL", "alcHtobH", 1 / alcMtobH,
-  "alcLtobH", "alcHtobH", alcLtobH / alcHtobH,
-  "alcMtobL", "alcHtobH", alcMtobL / alcHtobH,
-  "alcMtobH", "alcHtobH", alcMtobH / alcHtobH,
-  "alcHtobL", "alcHtobH", alcHtobL / alcHtobH,
-  "alcHtobH", "alcHtobH", alcHtobH / alcHtobH
+  ~num       , ~den       , ~OR                                                           ,
+  "alcLtobL" , "1"        , alcLtobL                                                      ,
+  "alcLtobH" , "1"        , alcLtobL * alcLtobH                                           ,
+  "alcMtobL" , "1"        , alcLtobL * alcMtobL                                           ,
+  "alcMtobH" , "1"        , alcLtobL * alcMtobH                                           ,
+  "alcHtobL" , "1"        , alcLtobL * alcHtobL                                           ,
+  "alcHtobH" , "1"        , alcLtobL * alcHtobH                                           ,
+  "alcLtobL" , "alcLtobL" , exp(coef(mdl)["(Intercept)"]) / exp(coef(mdl)["(Intercept)"]) ,
+  "alcLtobH" , "alcLtobL" , alcLtobH                                                      ,
+  "alcMtobL" , "alcLtobL" , alcMtobL                                                      ,
+  "alcMtobH" , "alcLtobL" , alcMtobH                                                      ,
+  "alcHtobL" , "alcLtobL" , alcHtobL                                                      ,
+  "alcHtobH" , "alcLtobL" , alcHtobH                                                      ,
+  "alcLtobL" , "alcLtobH" , 1 / alcLtobH                                                  ,
+  "alcLtobH" , "alcLtobH" , alcLtobH / alcLtobH                                           ,
+  "alcMtobL" , "alcLtobH" , alcMtobL / alcLtobH                                           ,
+  "alcMtobH" , "alcLtobH" , alcMtobH / alcLtobH                                           ,
+  "alcHtobL" , "alcLtobH" , alcHtobL / alcLtobH                                           ,
+  "alcHtobH" , "alcLtobH" , alcHtobH / alcLtobH                                           ,
+  "alcLtobL" , "alcMtobL" , 1 / alcMtobL                                                  ,
+  "alcLtobH" , "alcMtobL" , alcLtobH / alcMtobL                                           ,
+  "alcMtobL" , "alcMtobL" , alcMtobL / alcMtobL                                           ,
+  "alcMtobH" , "alcMtobL" , alcMtobH / alcMtobL                                           ,
+  "alcHtobL" , "alcMtobL" , alcHtobL / alcMtobL                                           ,
+  "alcHtobH" , "alcMtobL" , alcHtobH / alcMtobL                                           ,
+  "alcLtobL" , "alcMtobH" , 1 / alcMtobH                                                  ,
+  "alcLtobH" , "alcMtobH" , alcLtobH / alcMtobH                                           ,
+  "alcMtobL" , "alcMtobH" , alcMtobL / alcMtobH                                           ,
+  "alcMtobH" , "alcMtobH" , alcMtobH / alcMtobH                                           ,
+  "alcHtobL" , "alcMtobH" , alcHtobL / alcMtobH                                           ,
+  "alcHtobH" , "alcMtobH" , alcHtobH / alcMtobH                                           ,
+  "alcLtobL" , "alcHtobL" , 1 / alcHtobL                                                  ,
+  "alcLtobH" , "alcHtobL" , alcLtobH / alcHtobL                                           ,
+  "alcMtobL" , "alcHtobL" , alcMtobL / alcHtobL                                           ,
+  "alcMtobH" , "alcHtobL" , alcMtobH / alcHtobL                                           ,
+  "alcHtobL" , "alcHtobL" , alcHtobL / alcHtobL                                           ,
+  "alcHtobH" , "alcHtobL" , alcHtobH / alcHtobL                                           ,
+  "alcLtobL" , "alcHtobH" , 1 / alcMtobH                                                  ,
+  "alcLtobH" , "alcHtobH" , alcLtobH / alcHtobH                                           ,
+  "alcMtobL" , "alcHtobH" , alcMtobL / alcHtobH                                           ,
+  "alcMtobH" , "alcHtobH" , alcMtobH / alcHtobH                                           ,
+  "alcHtobL" , "alcHtobH" , alcHtobL / alcHtobH                                           ,
+  "alcHtobH" , "alcHtobH" , alcHtobH / alcHtobH
 ) %>%
   pivot_wider(names_from = num, values_from = OR) %>%
   flextable::flextable() %>%
-  flextable::set_caption("Odds ratios calculated from regression coefficients.") %>%
+  flextable::set_caption(
+    "Odds ratios calculated from regression coefficients."
+  ) %>%
   flextable::theme_vanilla() %>%
   flextable::border(j = 1, border.right = officer::fp_border()) %>%
   flextable::bold(j = 1) %>%
@@ -250,27 +302,46 @@ $$
 Let's see this calculation by taking elements from the model variance-covariance matrix.
 
 ```{r collapse=TRUE}
-mdl_vcov <- mdl %>% vcov() %>%  data.frame() %>% rownames_to_column()
+mdl_vcov <- mdl %>%
+  vcov() %>%
+  data.frame() %>%
+  rownames_to_column()
 
-var_alcM <- mdl_vcov %>% filter(rowname == "alcM") %>% pull("alcM")
-var_tobH <- mdl_vcov %>% filter(rowname == "tobH") %>% pull("tobH")
-var_alcMtobH <- mdl_vcov %>% filter(rowname == "alcM:tobH") %>% pull("alcM.tobH")
-cov_alcM_tobH <- mdl_vcov %>% filter(rowname == "alcM") %>% pull("tobH")
-cov_alcM_alcMtobH <- mdl_vcov %>% filter(rowname == "alcM") %>% pull("alcM.tobH")
-cov_tobH_alcMtobH <- mdl_vcov %>% filter(rowname == "tobH") %>% pull("alcM.tobH")
+var_alcM <- mdl_vcov %>%
+  filter(rowname == "alcM") %>%
+  pull("alcM")
+var_tobH <- mdl_vcov %>%
+  filter(rowname == "tobH") %>%
+  pull("tobH")
+var_alcMtobH <- mdl_vcov %>%
+  filter(rowname == "alcM:tobH") %>%
+  pull("alcM.tobH")
+cov_alcM_tobH <- mdl_vcov %>%
+  filter(rowname == "alcM") %>%
+  pull("tobH")
+cov_alcM_alcMtobH <- mdl_vcov %>%
+  filter(rowname == "alcM") %>%
+  pull("alcM.tobH")
+cov_tobH_alcMtobH <- mdl_vcov %>%
+  filter(rowname == "tobH") %>%
+  pull("alcM.tobH")
 
 # alpha
 (alpha <- coef(mdl)["alcM"] + coef(mdl)["tobH"] + coef(mdl)["alcM:tobH"])
 
 # SE for Medium Alcohol + High Tobacco
-(se <- sqrt(var_alcM + var_tobH + var_alcMtobH + 
-             2 * (cov_alcM_tobH + cov_alcM_alcMtobH + cov_tobH_alcMtobH)))
+(se <- sqrt(
+  var_alcM +
+    var_tobH +
+    var_alcMtobH +
+    2 * (cov_alcM_tobH + cov_alcM_alcMtobH + cov_tobH_alcMtobH)
+))
 
 # t
 (t <- alpha / se)
 
 # p-value
-(p_value <- pt(abs(t), Inf, lower.tail = FALSE)* 2)
+(p_value <- pt(abs(t), Inf, lower.tail = FALSE) * 2)
 ```
 
 Happily, there is a package **emmeans** that calculates both the combined coefficient effects, and these *p*-values.
