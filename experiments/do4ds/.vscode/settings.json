@@ -1,0 +1,21 @@
+{
+    // --- Global defaults ---
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    // --- Python files ---
+    "[python]": {
+        "editor.tabSize": 4
+    },
+    // --- R files ---
+    "[r]": {
+        "editor.tabSize": 2
+    },
+    // --- Quarto files (.qmd) ---
+    "[quarto]": {
+        "editor.tabSize": 2
+    },
+    // --- Markdown (Quarto is Markdown-based) ---
+    "[markdown]": {
+        "editor.tabSize": 2
+    },
+}
