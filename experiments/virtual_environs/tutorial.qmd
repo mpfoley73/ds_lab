@@ -1,7 +1,10 @@
 ---
-title: "Virtual Environments: A Practical Tutorial for R (and Python)"
-author: "Your Name"
-date: "`r Sys.Date()`"
+title: "Virtual Environments"
+subtitle: "with **renv** and **venv**"
+date: 2026-04-27
+categories: [gt, tables]
+description: |
+  How to use **renv** and **venv** for reproducible data science in R and Python, with examples and deployment tips.
 format:
   html:
     toc: true
@@ -26,7 +29,7 @@ Before we begin, let's configure our Python environment for the examples in this
 #| include: false
 # Configure reticulate to use our project virtual environment
 if (!require(reticulate)) {
-    install.packages("reticulate")
+  install.packages("reticulate")
 }
 # Use the Python executable from our virtual environment
 reticulate::use_python(".venv/Scripts/python.exe", required = TRUE)
@@ -318,16 +321,16 @@ library(ggplot2)
 # Generate sample data
 set.seed(123)
 df <- data.frame(
-    x = rnorm(100),
-    y = rnorm(100),
-    group = sample(c("A", "B"), 100, replace = TRUE)
+  x = rnorm(100),
+  y = rnorm(100),
+  group = sample(c("A", "B"), 100, replace = TRUE)
 )
 
 # Create a plot
 p <- ggplot(df, aes(x = x, y = y, color = group)) +
-    geom_point() +
-    labs(title = "Sample Scatter Plot", x = "X Variable", y = "Y Variable") +
-    theme_minimal()
+  geom_point() +
+  labs(title = "Sample Scatter Plot", x = "X Variable", y = "Y Variable") +
+  theme_minimal()
 
 print(p)
 
@@ -381,24 +384,24 @@ library(shiny)
 library(ggplot2)
 
 ui <- fluidPage(
-    titlePanel("Virtual Environment Demo"),
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("n", "Number of points:", 10, 1000, 100),
-            selectInput("color", "Color:", c("blue", "red", "green"))
-        ),
-        mainPanel(plotOutput("plot"))
-    )
+  titlePanel("Virtual Environment Demo"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("n", "Number of points:", 10, 1000, 100),
+      selectInput("color", "Color:", c("blue", "red", "green"))
+    ),
+    mainPanel(plotOutput("plot"))
+  )
 )
 
 server <- function(input, output) {
-    output$plot <- renderPlot({
-        set.seed(123)
-        df <- data.frame(x = rnorm(input$n), y = rnorm(input$n))
-        ggplot(df, aes(x, y)) +
-            geom_point(color = input$color) +
-            theme_minimal()
-    })
+  output$plot <- renderPlot({
+    set.seed(123)
+    df <- data.frame(x = rnorm(input$n), y = rnorm(input$n))
+    ggplot(df, aes(x, y)) +
+      geom_point(color = input$color) +
+      theme_minimal()
+  })
 }
 
 shinyApp(ui, server)
