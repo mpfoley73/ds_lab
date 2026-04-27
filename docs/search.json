@@ -67,7 +67,7 @@
     "href": "index.html#recent-experiments",
     "title": "Data Science Lab",
     "section": "Recent Experiments",
-    "text": "Recent Experiments\n\n\n\n\n\n\n\n\n\n\nPenguins EDA\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nGreat Tables with gt\n\n\nHow to use gt\n\n\nExperimenting with gt package to learn basics plus advanced features. \n\n\n\n\n\nMar 15, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nCleveland’s Changing Population\n\n\nExploring the US Census with R\n\n\nWorking with APIs using the tidycensus R package. \n\n\n\n\n\nNov 20, 2024\n\n\n\n\n\n\nNo matching items"
+    "text": "Recent Experiments\n\n\n\n\n\n\n\n\n\n\nPenguins EDA\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nModel\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nGreat Tables with gt\n\n\nHow to use gt\n\n\nExperimenting with gt package to learn basics plus advanced features. \n\n\n\n\n\nMar 15, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nCleveland’s Changing Population\n\n\nExploring the US Census with R\n\n\nWorking with APIs using the tidycensus R package. \n\n\n\n\n\nNov 20, 2024\n\n\n\n\n\n\n\n\n\n\n\n\nVirtual Environments: A Practical Tutorial for R (and Python)\n\n\n\n\n\n\n\n\n\n\n\nInvalid Date\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "experiments/us_census_api/census.html",
@@ -530,5 +530,250 @@
     "title": "Penguins EDA",
     "section": "Penguin Size vs Mass by Species",
     "text": "Penguin Size vs Mass by Species\n\n\nShow the code\ndf |&gt;\n  ggplot(aes(x = bill_length_mm, y = body_mass_g, color = species)) +\n  geom_point() +\n  geom_smooth(method = \"lm\")"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html",
+    "href": "experiments/virtual_environs/tutorial.html",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "",
+    "text": "This tutorial provides a comprehensive introduction to virtual environments in data science, with a focus on R users who may also work with Python. We’ll explore the conceptual foundations, practical reasons for using virtual environments, common use cases in data science workflows, and the mechanics of implementation in both R and Python. The tutorial includes hands-on examples and deployment considerations to give you both functional knowledge and conceptual understanding suitable for presenting to peers.\n\n\nBefore we begin, let’s configure our Python environment for the examples in this tutorial."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#setup",
+    "href": "experiments/virtual_environs/tutorial.html#setup",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "",
+    "text": "Before we begin, let’s configure our Python environment for the examples in this tutorial."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#key-benefits",
+    "href": "experiments/virtual_environs/tutorial.html#key-benefits",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Key Benefits",
+    "text": "Key Benefits\n\nDependency Isolation: Each project maintains its own set of packages and versions, preventing “dependency hell” where different projects require conflicting package versions.\nReproducibility: By locking exact package versions, you can recreate the exact same environment on different machines or at different times, ensuring analyses produce consistent results.\nCollaboration: Team members can easily recreate your environment, reducing “works on my machine” issues.\nSystem Stability: Your global R/Python installation remains clean and stable, unaffected by project-specific changes.\nDeployment Readiness: Lockfiles make it straightforward to deploy applications with known, tested dependencies."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#the-problem-without-virtual-environments",
+    "href": "experiments/virtual_environs/tutorial.html#the-problem-without-virtual-environments",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "The Problem Without Virtual Environments",
+    "text": "The Problem Without Virtual Environments\nImagine you’re working on multiple data science projects:\n\nProject A uses dplyr 1.0.0 and ggplot2 3.3.0\nProject B requires dplyr 1.1.0 and ggplot2 3.4.0\n\nWithout virtual environments, upgrading packages for Project B might break Project A. Virtual environments solve this by giving each project its own package sandbox."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#research-and-academic-work",
+    "href": "experiments/virtual_environs/tutorial.html#research-and-academic-work",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Research and Academic Work",
+    "text": "Research and Academic Work\n\nReproducible Research: Journals increasingly require code and data to reproduce results. Virtual environments ensure the exact packages used are preserved.\nLong-term Archival: Analyses from years ago can still run with the original environment.\nPeer Review: Reviewers can recreate your exact setup to verify results."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#teaching-and-education",
+    "href": "experiments/virtual_environs/tutorial.html#teaching-and-education",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Teaching and Education",
+    "text": "Teaching and Education\n\nConsistent Student Environments: All students get the same package versions, avoiding confusion from version differences.\nCourse Materials: Tutorials and assignments work reliably across different student machines."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#production-and-deployment",
+    "href": "experiments/virtual_environs/tutorial.html#production-and-deployment",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Production and Deployment",
+    "text": "Production and Deployment\n\nModel Deployment: Machine learning models deployed to production need the exact same environment used during training.\nWeb Applications: Shiny apps or Streamlit apps require consistent dependencies across development, staging, and production.\nAPI Services: Data science APIs must have predictable package versions to ensure stable behavior."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#multi-language-projects",
+    "href": "experiments/virtual_environs/tutorial.html#multi-language-projects",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Multi-language Projects",
+    "text": "Multi-language Projects\n\nR + Python Integration: Projects using both languages (via reticulate) need coordinated environments.\nLegacy Code Migration: Gradually migrate from one language to another while maintaining separate environments."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#basic-workflow",
+    "href": "experiments/virtual_environs/tutorial.html#basic-workflow",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Basic Workflow",
+    "text": "Basic Workflow\n\nInitialize: Set up renv for your project\nInstall Packages: Add packages as needed during development\nSnapshot: Record current package state to renv.lock\nRestore: Recreate the environment from renv.lock on another machine"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#core-commands",
+    "href": "experiments/virtual_environs/tutorial.html#core-commands",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Core Commands",
+    "text": "Core Commands\nInitialize renv in your project directory:\n# One-time setup per project\nrenv::init()\nInstall packages during development:\n# Install packages as you work\ninstall.packages(\"dplyr\")\ninstall.packages(\"ggplot2\")\nSnapshot your current environment:\n# Record exact versions to renv.lock\nrenv::snapshot()\nRestore environment on another machine:\n# Install packages exactly as in renv.lock\nrenv::restore()"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#how-renv-works",
+    "href": "experiments/virtual_environs/tutorial.html#how-renv-works",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "How renv Works",
+    "text": "How renv Works\n\nCreates a renv/ directory with project-specific package installations\nGenerates renv.lock with exact versions, sources, and dependencies\nModifies .Rprofile to automatically activate the local environment\nProvides tools for managing package conflicts and updates"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#best-practices-for-r-projects",
+    "href": "experiments/virtual_environs/tutorial.html#best-practices-for-r-projects",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Best Practices for R Projects",
+    "text": "Best Practices for R Projects\n\nAlways commit renv.lock to version control\nNever commit the renv/library/ directory (it’s large and machine-specific)\nRun renv::snapshot() after installing new packages\nUse renv::status() to check for discrepancies between lockfile and current environment"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#venv-built-in-virtual-environments",
+    "href": "experiments/virtual_environs/tutorial.html#venv-built-in-virtual-environments",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "venv: Built-in Virtual Environments",
+    "text": "venv: Built-in Virtual Environments\nvenv creates isolated Python environments using the standard library.\n\nBasic Commands\nCreate a virtual environment:\n# Create environment in .venv directory\npython -m venv .venv\nActivate the environment:\n# On Windows\n.venv\\Scripts\\activate\n\n# On macOS/Linux\nsource .venv/bin/activate\nInstall packages:\npip install pandas numpy matplotlib\nCreate requirements file:\npip freeze &gt; requirements.txt\nInstall from requirements:\npip install -r requirements.txt"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#poetry-advanced-dependency-management",
+    "href": "experiments/virtual_environs/tutorial.html#poetry-advanced-dependency-management",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Poetry: Advanced Dependency Management",
+    "text": "Poetry: Advanced Dependency Management\nPoetry provides deterministic dependency resolution and better lockfile management.\n\nBasic Commands\nInitialize a Poetry project:\npoetry init\nAdd dependencies:\npoetry add pandas numpy\nInstall dependencies:\npoetry install\nActivate the virtual environment:\npoetry shell"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#python-best-practices",
+    "href": "experiments/virtual_environs/tutorial.html#python-best-practices",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Python Best Practices",
+    "text": "Python Best Practices\n\nUse .venv or venv as directory name (add to .gitignore)\nCommit requirements.txt or poetry.lock + pyproject.toml\nSpecify Python version in your environment\nUse pip-tools or Poetry for complex dependency trees"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#setting-up-reticulate-with-virtual-environments",
+    "href": "experiments/virtual_environs/tutorial.html#setting-up-reticulate-with-virtual-environments",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Setting Up reticulate with Virtual Environments",
+    "text": "Setting Up reticulate with Virtual Environments\nCreate and configure a Python environment:\n# Install reticulate if needed\ninstall.packages(\"reticulate\")\n\n# Create a Python virtual environment\nreticulate::virtualenv_create(\"python_env\")\n\n# Configure reticulate to use this environment\nreticulate::use_virtualenv(\"python_env\", required = TRUE)\nCheck configuration:\nreticulate::py_config()"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#using-python-objects-in-r",
+    "href": "experiments/virtual_environs/tutorial.html#using-python-objects-in-r",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Using Python Objects in R",
+    "text": "Using Python Objects in R\n# Import Python modules\npd &lt;- reticulate::import(\"pandas\")\nnp &lt;- reticulate::import(\"numpy\")\n\n# Use Python objects\ndf &lt;- pd$DataFrame(list(x = c(1, 2, 3), y = c(4, 5, 6)))\nprint(df)"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#r-renv.lock",
+    "href": "experiments/virtual_environs/tutorial.html#r-renv.lock",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "R: renv.lock",
+    "text": "R: renv.lock\nContains: - Package names and versions - Package sources (CRAN, GitHub, local) - Dependency relationships - R version information"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#python-requirements.txt-vs.-poetry",
+    "href": "experiments/virtual_environs/tutorial.html#python-requirements.txt-vs.-poetry",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Python: requirements.txt vs. Poetry",
+    "text": "Python: requirements.txt vs. Poetry\nrequirements.txt (basic):\npandas==2.0.3\nnumpy==1.24.3\nmatplotlib==3.7.1\nPoetry lockfile (comprehensive): - Exact versions and hashes - Dependency resolution details - Platform-specific information"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#version-control-strategy",
+    "href": "experiments/virtual_environs/tutorial.html#version-control-strategy",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Version Control Strategy",
+    "text": "Version Control Strategy\n\nCommit lockfiles to Git\nNever commit virtual environment directories\nUse CI to validate environment restoration\nTag releases with specific lockfile versions"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#project-structure",
+    "href": "experiments/virtual_environs/tutorial.html#project-structure",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Project Structure",
+    "text": "Project Structure\nvirtual_environs_tutorial/\n├── tutorial.qmd\n├── R/\n│   ├── analysis.R\n│   └── shiny_app.R\n├── python/\n│   ├── app.py\n│   └── requirements.txt\n├── renv.lock\n└── .github/\n    └── workflows/\n        └── ci.yml"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#r-analysis-example",
+    "href": "experiments/virtual_environs/tutorial.html#r-analysis-example",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "R Analysis Example",
+    "text": "R Analysis Example\nOur R script performs basic data exploration and visualization:\n\n\nShow the code\n# Load required packages\nlibrary(ggplot2)\n\n# Generate sample data\nset.seed(123)\ndf &lt;- data.frame(\n    x = rnorm(100),\n    y = rnorm(100),\n    group = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\n# Create a plot\np &lt;- ggplot(df, aes(x = x, y = y, color = group)) +\n    geom_point() +\n    labs(title = \"Sample Scatter Plot\", x = \"X Variable\", y = \"Y Variable\") +\n    theme_minimal()\n\nprint(p)\n\n\n\n\n\n\n\n\n\nShow the code\n# Save the plot\nggsave(\"R/plot.png\", p, width = 6, height = 4)\n\n# Print summary\nsummary(df)\n\n\n       x                  y              group          \n Min.   :-2.30917   Min.   :-2.0532   Length:100        \n 1st Qu.:-0.49385   1st Qu.:-0.8011   Class :character  \n Median : 0.06176   Median :-0.2258   Mode  :character  \n Mean   : 0.09041   Mean   :-0.1075                     \n 3rd Qu.: 0.69182   3rd Qu.: 0.4678                     \n Max.   : 2.18733   Max.   : 3.2410"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#python-analysis-example",
+    "href": "experiments/virtual_environs/tutorial.html#python-analysis-example",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Python Analysis Example",
+    "text": "Python Analysis Example\nOur Python script performs similar analysis using pandas:\n\n\nShow the code\nimport pandas as pd\nimport numpy as np\n\n# Generate sample data\nnp.random.seed(123)\ndf = pd.DataFrame(\n    {\n        \"x\": np.random.normal(0, 1, 100),\n        \"y\": np.random.normal(0, 1, 100),\n        \"group\": np.random.choice([\"A\", \"B\"], 100),\n    }\n)\n\n# Print summary\nprint(\"Data Summary:\")\n\n\nData Summary:\n\n\nShow the code\nprint(df.describe())\n\n\n                x           y\ncount  100.000000  100.000000\nmean     0.027109   -0.019536\nstd      1.133924    0.974941\nmin     -2.798589   -3.231055\n25%     -0.832745   -0.548712\n50%     -0.053270    0.053525\n75%      0.983388    0.480696\nmax      2.392365    2.598304\n\n\nShow the code\nprint(\"\\nGroup counts:\")\n\n\n\nGroup counts:\n\n\nShow the code\nprint(df[\"group\"].value_counts())\n\n\ngroup\nA    53\nB    47\nName: count, dtype: int64\n\n\nShow the code\n# Save to CSV\ndf.to_csv(\"python_output.csv\", index=False)\nprint(\"\\nData saved to python_output.csv\")\n\n\n\nData saved to python_output.csv"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#shiny-app-for-deployment",
+    "href": "experiments/virtual_environs/tutorial.html#shiny-app-for-deployment",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Shiny App for Deployment",
+    "text": "Shiny App for Deployment\nFor demonstration purposes, we’ve included a simple Shiny app:\n\n\nShow the code\nlibrary(shiny)\nlibrary(ggplot2)\n\nui &lt;- fluidPage(\n    titlePanel(\"Virtual Environment Demo\"),\n    sidebarLayout(\n        sidebarPanel(\n            sliderInput(\"n\", \"Number of points:\", 10, 1000, 100),\n            selectInput(\"color\", \"Color:\", c(\"blue\", \"red\", \"green\"))\n        ),\n        mainPanel(plotOutput(\"plot\"))\n    )\n)\n\nserver &lt;- function(input, output) {\n    output$plot &lt;- renderPlot({\n        set.seed(123)\n        df &lt;- data.frame(x = rnorm(input$n), y = rnorm(input$n))\n        ggplot(df, aes(x, y)) +\n            geom_point(color = input$color) +\n            theme_minimal()\n    })\n}\n\nshinyApp(ui, server)"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#deploying-a-shiny-app",
+    "href": "experiments/virtual_environs/tutorial.html#deploying-a-shiny-app",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Deploying a Shiny App",
+    "text": "Deploying a Shiny App\n\nPrepare Your App: Ensure all dependencies are in renv.lock\nPush to GitHub: Commit your code and lockfiles\nCreate Posit Cloud Project:\n\nGo to Posit Cloud\nCreate “New Project from Git Repository”\nEnter your repository URL\n\nConfigure Environment: Posit Cloud will automatically restore from renv.lock\nPublish: Use the publish button to make your app publicly accessible"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#benefits-for-deployment",
+    "href": "experiments/virtual_environs/tutorial.html#benefits-for-deployment",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Benefits for Deployment",
+    "text": "Benefits for Deployment\n\nManaged Infrastructure: No server maintenance\nAutomatic Scaling: Handles traffic spikes\nEnvironment Consistency: Uses your lockfile for exact reproduction\nEasy Sharing: Share links with collaborators or for presentations"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#basic-ci-workflow",
+    "href": "experiments/virtual_environs/tutorial.html#basic-ci-workflow",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Basic CI Workflow",
+    "text": "Basic CI Workflow"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#ci-benefits",
+    "href": "experiments/virtual_environs/tutorial.html#ci-benefits",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "CI Benefits",
+    "text": "CI Benefits\n\nAutomated Testing: Ensures code works in clean environments\nEnvironment Validation: Confirms lockfiles are correct\nCross-platform Testing: Test on multiple R/Python versions\nDeployment Triggers: Automatically deploy on successful tests"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#structure-your-talk",
+    "href": "experiments/virtual_environs/tutorial.html#structure-your-talk",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Structure Your Talk",
+    "text": "Structure Your Talk\n\nStart with Problems: Show real-world dependency conflicts\nExplain Concepts: Use simple analogies (apartments vs. houses)\nLive Demo: Initialize renv, snapshot, restore on “fresh” machine\nShow Cross-language: Demonstrate reticulate integration\nDeployment Demo: Deploy Shiny app to Posit Cloud\nQ&A: Prepare for common questions"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#key-takeaways-for-audience",
+    "href": "experiments/virtual_environs/tutorial.html#key-takeaways-for-audience",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Key Takeaways for Audience",
+    "text": "Key Takeaways for Audience\n\nVirtual environments are essential for reproducible data science\nrenv makes R environment management straightforward\nPython’s venv + requirements.txt is the minimum viable approach\nLockfiles are your insurance policy for deployment\nStart small: use renv on your next R project"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#common-questions",
+    "href": "experiments/virtual_environs/tutorial.html#common-questions",
+    "title": "Virtual Environments: A Practical Tutorial for R (and Python)",
+    "section": "Common Questions",
+    "text": "Common Questions\n\n“Isn’t this overkill for small projects?” No, the overhead is minimal and prevents future headaches\n“What about conda?” Great for complex scientific stacks, but renv/venv are simpler for most R/Python work\n“How do I handle system dependencies?” Virtual environments handle packages, but system libraries (like GDAL) need separate management"
+  },
+  {
+    "objectID": "experiments/do4ds/lab1/model_basic-py.html",
+    "href": "experiments/do4ds/lab1/model_basic-py.html",
+    "title": "Model",
+    "section": "",
+    "text": "Show the code\nfrom palmerpenguins import penguins\nfrom pandas import get_dummies\nimport numpy as np\nfrom sklearn.linear_model import LinearRegression\nfrom sklearn import preprocessing"
+  },
+  {
+    "objectID": "experiments/do4ds/lab1/model_basic-py.html#get-data",
+    "href": "experiments/do4ds/lab1/model_basic-py.html#get-data",
+    "title": "Model",
+    "section": "Get Data",
+    "text": "Get Data\n\n\nShow the code\ndf = penguins.load_penguins().dropna()\n\ndf.head(3)\n\n\n\n\n\n\n\n\n\nspecies\nisland\nbill_length_mm\nbill_depth_mm\nflipper_length_mm\nbody_mass_g\nsex\nyear\n\n\n\n\n0\nAdelie\nTorgersen\n39.1\n18.7\n181.0\n3750.0\nmale\n2007\n\n\n1\nAdelie\nTorgersen\n39.5\n17.4\n186.0\n3800.0\nfemale\n2007\n\n\n2\nAdelie\nTorgersen\n40.3\n18.0\n195.0\n3250.0\nfemale\n2007"
+  },
+  {
+    "objectID": "experiments/do4ds/lab1/model_basic-py.html#define-model-and-fit",
+    "href": "experiments/do4ds/lab1/model_basic-py.html#define-model-and-fit",
+    "title": "Model",
+    "section": "Define Model and Fit",
+    "text": "Define Model and Fit\n\n\nShow the code\nX = get_dummies(df[['bill_length_mm', 'species', 'sex']], drop_first = True)\ny = df['body_mass_g']\n\nmodel = LinearRegression().fit(X, y)"
+  },
+  {
+    "objectID": "experiments/do4ds/lab1/model_basic-py.html#get-some-information",
+    "href": "experiments/do4ds/lab1/model_basic-py.html#get-some-information",
+    "title": "Model",
+    "section": "Get some information",
+    "text": "Get some information\n\n\nShow the code\nprint(f\"R^2 {model.score(X,y)}\")\nprint(f\"Intercept {model.intercept_}\")\nprint(f\"Columns {X.columns}\")\nprint(f\"Coefficients {model.coef_}\")\n\n\nR^2 0.8555368759537614\nIntercept 2169.2697209393973\nColumns Index(['bill_length_mm', 'species_Chinstrap', 'species_Gentoo', 'sex_male'], dtype='str')\nCoefficients [  32.53688677 -298.76553447 1094.86739145  547.36692408]"
   }
 ]

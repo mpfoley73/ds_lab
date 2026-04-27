@@ -18,8 +18,10 @@
     "listing": "/index.html",
     "items": [
       "/experiments/do4ds/lab1/eda-basic.html",
+      "/experiments/do4ds/lab1/model_basic-py.html",
       "/experiments/gt_tables/gt_tables.html",
-      "/experiments/us_census_api/census.html"
+      "/experiments/us_census_api/census.html",
+      "/experiments/virtual_environs/tutorial.html"
     ]
   },
   {

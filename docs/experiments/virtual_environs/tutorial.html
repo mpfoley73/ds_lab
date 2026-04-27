@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Your Name">
+<meta name="dcterms.date" content="2026-04-27">
+
+<title>Virtual Environments: A Practical Tutorial for R (and Python) – Data Science Lab</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ddd961a2510921635943dfbbd19534c4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Data Science Lab</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../experiments/index.html"> 
+<span class="menu-text">Experiments</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../notes/index.html"> 
+<span class="menu-text">Notes</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
+  <ul class="collapse">
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
+  </ul></li>
+  <li><a href="#why-use-virtual-environments" id="toc-why-use-virtual-environments" class="nav-link" data-scroll-target="#why-use-virtual-environments">Why Use Virtual Environments?</a>
+  <ul class="collapse">
+  <li><a href="#key-benefits" id="toc-key-benefits" class="nav-link" data-scroll-target="#key-benefits">Key Benefits</a></li>
+  <li><a href="#the-problem-without-virtual-environments" id="toc-the-problem-without-virtual-environments" class="nav-link" data-scroll-target="#the-problem-without-virtual-environments">The Problem Without Virtual Environments</a></li>
+  </ul></li>
+  <li><a href="#common-use-cases-in-data-science" id="toc-common-use-cases-in-data-science" class="nav-link" data-scroll-target="#common-use-cases-in-data-science">Common Use Cases in Data Science</a>
+  <ul class="collapse">
+  <li><a href="#research-and-academic-work" id="toc-research-and-academic-work" class="nav-link" data-scroll-target="#research-and-academic-work">Research and Academic Work</a></li>
+  <li><a href="#teaching-and-education" id="toc-teaching-and-education" class="nav-link" data-scroll-target="#teaching-and-education">Teaching and Education</a></li>
+  <li><a href="#production-and-deployment" id="toc-production-and-deployment" class="nav-link" data-scroll-target="#production-and-deployment">Production and Deployment</a></li>
+  <li><a href="#multi-language-projects" id="toc-multi-language-projects" class="nav-link" data-scroll-target="#multi-language-projects">Multi-language Projects</a></li>
+  </ul></li>
+  <li><a href="#core-concepts" id="toc-core-concepts" class="nav-link" data-scroll-target="#core-concepts">Core Concepts</a></li>
+  <li><a href="#r-renv-the-standard-approach" id="toc-r-renv-the-standard-approach" class="nav-link" data-scroll-target="#r-renv-the-standard-approach">R: renv (The Standard Approach)</a>
+  <ul class="collapse">
+  <li><a href="#basic-workflow" id="toc-basic-workflow" class="nav-link" data-scroll-target="#basic-workflow">Basic Workflow</a></li>
+  <li><a href="#core-commands" id="toc-core-commands" class="nav-link" data-scroll-target="#core-commands">Core Commands</a></li>
+  <li><a href="#how-renv-works" id="toc-how-renv-works" class="nav-link" data-scroll-target="#how-renv-works">How renv Works</a></li>
+  <li><a href="#best-practices-for-r-projects" id="toc-best-practices-for-r-projects" class="nav-link" data-scroll-target="#best-practices-for-r-projects">Best Practices for R Projects</a></li>
+  </ul></li>
+  <li><a href="#python-venv-and-poetry" id="toc-python-venv-and-poetry" class="nav-link" data-scroll-target="#python-venv-and-poetry">Python: venv and Poetry</a>
+  <ul class="collapse">
+  <li><a href="#venv-built-in-virtual-environments" id="toc-venv-built-in-virtual-environments" class="nav-link" data-scroll-target="#venv-built-in-virtual-environments">venv: Built-in Virtual Environments</a></li>
+  <li><a href="#poetry-advanced-dependency-management" id="toc-poetry-advanced-dependency-management" class="nav-link" data-scroll-target="#poetry-advanced-dependency-management">Poetry: Advanced Dependency Management</a></li>
+  <li><a href="#python-best-practices" id="toc-python-best-practices" class="nav-link" data-scroll-target="#python-best-practices">Python Best Practices</a></li>
+  </ul></li>
+  <li><a href="#using-python-from-r-reticulate" id="toc-using-python-from-r-reticulate" class="nav-link" data-scroll-target="#using-python-from-r-reticulate">Using Python from R (reticulate)</a>
+  <ul class="collapse">
+  <li><a href="#setting-up-reticulate-with-virtual-environments" id="toc-setting-up-reticulate-with-virtual-environments" class="nav-link" data-scroll-target="#setting-up-reticulate-with-virtual-environments">Setting Up reticulate with Virtual Environments</a></li>
+  <li><a href="#using-python-objects-in-r" id="toc-using-python-objects-in-r" class="nav-link" data-scroll-target="#using-python-objects-in-r">Using Python Objects in R</a></li>
+  </ul></li>
+  <li><a href="#lockfiles-and-reproducibility" id="toc-lockfiles-and-reproducibility" class="nav-link" data-scroll-target="#lockfiles-and-reproducibility">Lockfiles and Reproducibility</a>
+  <ul class="collapse">
+  <li><a href="#r-renv.lock" id="toc-r-renv.lock" class="nav-link" data-scroll-target="#r-renv.lock">R: renv.lock</a></li>
+  <li><a href="#python-requirements.txt-vs.-poetry" id="toc-python-requirements.txt-vs.-poetry" class="nav-link" data-scroll-target="#python-requirements.txt-vs.-poetry">Python: requirements.txt vs.&nbsp;Poetry</a></li>
+  <li><a href="#version-control-strategy" id="toc-version-control-strategy" class="nav-link" data-scroll-target="#version-control-strategy">Version Control Strategy</a></li>
+  </ul></li>
+  <li><a href="#hands-on-examples" id="toc-hands-on-examples" class="nav-link" data-scroll-target="#hands-on-examples">Hands-on Examples</a>
+  <ul class="collapse">
+  <li><a href="#project-structure" id="toc-project-structure" class="nav-link" data-scroll-target="#project-structure">Project Structure</a></li>
+  <li><a href="#r-analysis-example" id="toc-r-analysis-example" class="nav-link" data-scroll-target="#r-analysis-example">R Analysis Example</a></li>
+  <li><a href="#python-analysis-example" id="toc-python-analysis-example" class="nav-link" data-scroll-target="#python-analysis-example">Python Analysis Example</a></li>
+  <li><a href="#shiny-app-for-deployment" id="toc-shiny-app-for-deployment" class="nav-link" data-scroll-target="#shiny-app-for-deployment">Shiny App for Deployment</a></li>
+  </ul></li>
+  <li><a href="#deployment-to-posit-cloud" id="toc-deployment-to-posit-cloud" class="nav-link" data-scroll-target="#deployment-to-posit-cloud">Deployment to Posit Cloud</a>
+  <ul class="collapse">
+  <li><a href="#deploying-a-shiny-app" id="toc-deploying-a-shiny-app" class="nav-link" data-scroll-target="#deploying-a-shiny-app">Deploying a Shiny App</a></li>
+  <li><a href="#benefits-for-deployment" id="toc-benefits-for-deployment" class="nav-link" data-scroll-target="#benefits-for-deployment">Benefits for Deployment</a></li>
+  </ul></li>
+  <li><a href="#github-actions-for-cicd" id="toc-github-actions-for-cicd" class="nav-link" data-scroll-target="#github-actions-for-cicd">GitHub Actions for CI/CD</a>
+  <ul class="collapse">
+  <li><a href="#basic-ci-workflow" id="toc-basic-ci-workflow" class="nav-link" data-scroll-target="#basic-ci-workflow">Basic CI Workflow</a></li>
+  </ul></li>
+  <li><a href="#yaml" id="toc-yaml" class="nav-link" data-scroll-target="#yaml">yaml</a>
+  <ul class="collapse">
+  <li><a href="#ci-benefits" id="toc-ci-benefits" class="nav-link" data-scroll-target="#ci-benefits">CI Benefits</a></li>
+  </ul></li>
+  <li><a href="#presentation-tips-for-r-meetup" id="toc-presentation-tips-for-r-meetup" class="nav-link" data-scroll-target="#presentation-tips-for-r-meetup">Presentation Tips for R Meetup</a>
+  <ul class="collapse">
+  <li><a href="#structure-your-talk" id="toc-structure-your-talk" class="nav-link" data-scroll-target="#structure-your-talk">Structure Your Talk</a></li>
+  <li><a href="#key-takeaways-for-audience" id="toc-key-takeaways-for-audience" class="nav-link" data-scroll-target="#key-takeaways-for-audience">Key Takeaways for Audience</a></li>
+  <li><a href="#common-questions" id="toc-common-questions" class="nav-link" data-scroll-target="#common-questions">Common Questions</a></li>
+  </ul></li>
+  <li><a href="#further-resources" id="toc-further-resources" class="nav-link" data-scroll-target="#further-resources">Further Resources</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+<div class="toc-actions"><ul class="collapse"><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/experiments/virtual_environs/tutorial.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/experiments/virtual_environs/tutorial.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Virtual Environments: A Practical Tutorial for R (and Python)</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Your Name </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 27, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>This tutorial provides a comprehensive introduction to virtual environments in data science, with a focus on R users who may also work with Python. We’ll explore the conceptual foundations, practical reasons for using virtual environments, common use cases in data science workflows, and the mechanics of implementation in both R and Python. The tutorial includes hands-on examples and deployment considerations to give you both functional knowledge and conceptual understanding suitable for presenting to peers.</p>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<p>Before we begin, let’s configure our Python environment for the examples in this tutorial.</p>
+</section>
+</section>
+<section id="why-use-virtual-environments" class="level1">
+<h1>Why Use Virtual Environments?</h1>
+<p>Virtual environments are isolated spaces where you can install and manage project-specific dependencies without affecting your system’s global package installations. This isolation prevents conflicts and ensures reproducibility.</p>
+<section id="key-benefits" class="level2">
+<h2 class="anchored" data-anchor-id="key-benefits">Key Benefits</h2>
+<ol type="1">
+<li><p><strong>Dependency Isolation</strong>: Each project maintains its own set of packages and versions, preventing “dependency hell” where different projects require conflicting package versions.</p></li>
+<li><p><strong>Reproducibility</strong>: By locking exact package versions, you can recreate the exact same environment on different machines or at different times, ensuring analyses produce consistent results.</p></li>
+<li><p><strong>Collaboration</strong>: Team members can easily recreate your environment, reducing “works on my machine” issues.</p></li>
+<li><p><strong>System Stability</strong>: Your global R/Python installation remains clean and stable, unaffected by project-specific changes.</p></li>
+<li><p><strong>Deployment Readiness</strong>: Lockfiles make it straightforward to deploy applications with known, tested dependencies.</p></li>
+</ol>
+</section>
+<section id="the-problem-without-virtual-environments" class="level2">
+<h2 class="anchored" data-anchor-id="the-problem-without-virtual-environments">The Problem Without Virtual Environments</h2>
+<p>Imagine you’re working on multiple data science projects:</p>
+<ul>
+<li>Project A uses <code>dplyr</code> 1.0.0 and <code>ggplot2</code> 3.3.0</li>
+<li>Project B requires <code>dplyr</code> 1.1.0 and <code>ggplot2</code> 3.4.0</li>
+</ul>
+<p>Without virtual environments, upgrading packages for Project B might break Project A. Virtual environments solve this by giving each project its own package sandbox.</p>
+</section>
+</section>
+<section id="common-use-cases-in-data-science" class="level1">
+<h1>Common Use Cases in Data Science</h1>
+<section id="research-and-academic-work" class="level2">
+<h2 class="anchored" data-anchor-id="research-and-academic-work">Research and Academic Work</h2>
+<ul>
+<li><strong>Reproducible Research</strong>: Journals increasingly require code and data to reproduce results. Virtual environments ensure the exact packages used are preserved.</li>
+<li><strong>Long-term Archival</strong>: Analyses from years ago can still run with the original environment.</li>
+<li><strong>Peer Review</strong>: Reviewers can recreate your exact setup to verify results.</li>
+</ul>
+</section>
+<section id="teaching-and-education" class="level2">
+<h2 class="anchored" data-anchor-id="teaching-and-education">Teaching and Education</h2>
+<ul>
+<li><strong>Consistent Student Environments</strong>: All students get the same package versions, avoiding confusion from version differences.</li>
+<li><strong>Course Materials</strong>: Tutorials and assignments work reliably across different student machines.</li>
+</ul>
+</section>
+<section id="production-and-deployment" class="level2">
+<h2 class="anchored" data-anchor-id="production-and-deployment">Production and Deployment</h2>
+<ul>
+<li><strong>Model Deployment</strong>: Machine learning models deployed to production need the exact same environment used during training.</li>
+<li><strong>Web Applications</strong>: Shiny apps or Streamlit apps require consistent dependencies across development, staging, and production.</li>
+<li><strong>API Services</strong>: Data science APIs must have predictable package versions to ensure stable behavior.</li>
+</ul>
+</section>
+<section id="multi-language-projects" class="level2">
+<h2 class="anchored" data-anchor-id="multi-language-projects">Multi-language Projects</h2>
+<ul>
+<li><strong>R + Python Integration</strong>: Projects using both languages (via <code>reticulate</code>) need coordinated environments.</li>
+<li><strong>Legacy Code Migration</strong>: Gradually migrate from one language to another while maintaining separate environments.</li>
+</ul>
+</section>
+</section>
+<section id="core-concepts" class="level1">
+<h1>Core Concepts</h1>
+<p>Before diving into mechanics, let’s understand the key concepts:</p>
+<ul>
+<li><strong>Environment</strong>: A project-specific collection of packages with their versions.</li>
+<li><strong>Lockfile</strong>: A file that records exact package versions and sources, enabling perfect recreation of the environment.</li>
+<li><strong>Snapshot</strong>: The process of recording current package versions to a lockfile.</li>
+<li><strong>Restore</strong>: Installing packages from a lockfile to recreate an environment.</li>
+<li><strong>Isolation</strong>: Keeping project dependencies separate from system-wide installations.</li>
+</ul>
+</section>
+<section id="r-renv-the-standard-approach" class="level1">
+<h1>R: renv (The Standard Approach)</h1>
+<p><code>renv</code> is the recommended tool for managing R package environments. It creates a project-local library and generates a <code>renv.lock</code> file that captures exact package versions and sources.</p>
+<section id="basic-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="basic-workflow">Basic Workflow</h2>
+<ol type="1">
+<li><strong>Initialize</strong>: Set up renv for your project</li>
+<li><strong>Install Packages</strong>: Add packages as needed during development</li>
+<li><strong>Snapshot</strong>: Record current package state to <code>renv.lock</code></li>
+<li><strong>Restore</strong>: Recreate the environment from <code>renv.lock</code> on another machine</li>
+</ol>
+</section>
+<section id="core-commands" class="level2">
+<h2 class="anchored" data-anchor-id="core-commands">Core Commands</h2>
+<p>Initialize renv in your project directory:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># One-time setup per project</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">init</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Install packages during development:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install packages as you work</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"dplyr"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Snapshot your current environment:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Record exact versions to renv.lock</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">snapshot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Restore environment on another machine:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install packages exactly as in renv.lock</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">restore</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="how-renv-works" class="level2">
+<h2 class="anchored" data-anchor-id="how-renv-works">How renv Works</h2>
+<ul>
+<li>Creates a <code>renv/</code> directory with project-specific package installations</li>
+<li>Generates <code>renv.lock</code> with exact versions, sources, and dependencies</li>
+<li>Modifies <code>.Rprofile</code> to automatically activate the local environment</li>
+<li>Provides tools for managing package conflicts and updates</li>
+</ul>
+</section>
+<section id="best-practices-for-r-projects" class="level2">
+<h2 class="anchored" data-anchor-id="best-practices-for-r-projects">Best Practices for R Projects</h2>
+<ul>
+<li>Always commit <code>renv.lock</code> to version control</li>
+<li>Never commit the <code>renv/library/</code> directory (it’s large and machine-specific)</li>
+<li>Run <code>renv::snapshot()</code> after installing new packages</li>
+<li>Use <code>renv::status()</code> to check for discrepancies between lockfile and current environment</li>
+</ul>
+</section>
+</section>
+<section id="python-venv-and-poetry" class="level1">
+<h1>Python: venv and Poetry</h1>
+<p>Python offers several virtual environment tools. We’ll cover the built-in <code>venv</code> and the more advanced <code>poetry</code>.</p>
+<section id="venv-built-in-virtual-environments" class="level2">
+<h2 class="anchored" data-anchor-id="venv-built-in-virtual-environments">venv: Built-in Virtual Environments</h2>
+<p><code>venv</code> creates isolated Python environments using the standard library.</p>
+<section id="basic-commands" class="level3">
+<h3 class="anchored" data-anchor-id="basic-commands">Basic Commands</h3>
+<p>Create a virtual environment:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create environment in .venv directory</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Activate the environment:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On Windows</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\activate</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># On macOS/Linux</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Install packages:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install pandas numpy matplotlib</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Create requirements file:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> freeze <span class="op">&gt;</span> requirements.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Install from requirements:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="poetry-advanced-dependency-management" class="level2">
+<h2 class="anchored" data-anchor-id="poetry-advanced-dependency-management">Poetry: Advanced Dependency Management</h2>
+<p>Poetry provides deterministic dependency resolution and better lockfile management.</p>
+<section id="basic-commands-1" class="level3">
+<h3 class="anchored" data-anchor-id="basic-commands-1">Basic Commands</h3>
+<p>Initialize a Poetry project:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> init</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Add dependencies:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> add pandas numpy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Install dependencies:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> install</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Activate the virtual environment:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> shell</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="python-best-practices" class="level2">
+<h2 class="anchored" data-anchor-id="python-best-practices">Python Best Practices</h2>
+<ul>
+<li>Use <code>.venv</code> or <code>venv</code> as directory name (add to <code>.gitignore</code>)</li>
+<li>Commit <code>requirements.txt</code> or <code>poetry.lock</code> + <code>pyproject.toml</code></li>
+<li>Specify Python version in your environment</li>
+<li>Use <code>pip-tools</code> or Poetry for complex dependency trees</li>
+</ul>
+</section>
+</section>
+<section id="using-python-from-r-reticulate" class="level1">
+<h1>Using Python from R (reticulate)</h1>
+<p>The <code>reticulate</code> package allows seamless integration between R and Python.</p>
+<section id="setting-up-reticulate-with-virtual-environments" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-reticulate-with-virtual-environments">Setting Up reticulate with Virtual Environments</h2>
+<p>Create and configure a Python environment:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install reticulate if needed</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"reticulate"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a Python virtual environment</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">virtualenv_create</span>(<span class="st">"python_env"</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Configure reticulate to use this environment</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">use_virtualenv</span>(<span class="st">"python_env"</span>, <span class="at">required =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Check configuration:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">py_config</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="using-python-objects-in-r" class="level2">
+<h2 class="anchored" data-anchor-id="using-python-objects-in-r">Using Python Objects in R</h2>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Import Python modules</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pd <span class="ot">&lt;-</span> reticulate<span class="sc">::</span><span class="fu">import</span>(<span class="st">"pandas"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>np <span class="ot">&lt;-</span> reticulate<span class="sc">::</span><span class="fu">import</span>(<span class="st">"numpy"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Use Python objects</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> pd<span class="sc">$</span><span class="fu">DataFrame</span>(<span class="fu">list</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>)))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="lockfiles-and-reproducibility" class="level1">
+<h1>Lockfiles and Reproducibility</h1>
+<p>Lockfiles are the key to reproducible environments. They record exact versions and sources.</p>
+<section id="r-renv.lock" class="level2">
+<h2 class="anchored" data-anchor-id="r-renv.lock">R: renv.lock</h2>
+<p>Contains: - Package names and versions - Package sources (CRAN, GitHub, local) - Dependency relationships - R version information</p>
+</section>
+<section id="python-requirements.txt-vs.-poetry" class="level2">
+<h2 class="anchored" data-anchor-id="python-requirements.txt-vs.-poetry">Python: requirements.txt vs.&nbsp;Poetry</h2>
+<p><strong>requirements.txt</strong> (basic):</p>
+<pre><code>pandas==2.0.3
+numpy==1.24.3
+matplotlib==3.7.1</code></pre>
+<p><strong>Poetry lockfile</strong> (comprehensive): - Exact versions and hashes - Dependency resolution details - Platform-specific information</p>
+</section>
+<section id="version-control-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="version-control-strategy">Version Control Strategy</h2>
+<ul>
+<li>Commit lockfiles to Git</li>
+<li>Never commit virtual environment directories</li>
+<li>Use CI to validate environment restoration</li>
+<li>Tag releases with specific lockfile versions</li>
+</ul>
+</section>
+</section>
+<section id="hands-on-examples" class="level1">
+<h1>Hands-on Examples</h1>
+<p>Let’s create a simple cross-language data analysis project.</p>
+<section id="project-structure" class="level2">
+<h2 class="anchored" data-anchor-id="project-structure">Project Structure</h2>
+<pre><code>virtual_environs_tutorial/
+├── tutorial.qmd
+├── R/
+│   ├── analysis.R
+│   └── shiny_app.R
+├── python/
+│   ├── app.py
+│   └── requirements.txt
+├── renv.lock
+└── .github/
+    └── workflows/
+        └── ci.yml</code></pre>
+</section>
+<section id="r-analysis-example" class="level2">
+<h2 class="anchored" data-anchor-id="r-analysis-example">R Analysis Example</h2>
+<p>Our R script performs basic data exploration and visualization:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required packages</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate sample data</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a plot</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">color =</span> group)) <span class="sc">+</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sample Scatter Plot"</span>, <span class="at">x =</span> <span class="st">"X Variable"</span>, <span class="at">y =</span> <span class="st">"Y Variable"</span>) <span class="sc">+</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="tutorial_files/figure-html/r-analysis-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the plot</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"R/plot.png"</span>, p, <span class="at">width =</span> <span class="dv">6</span>, <span class="at">height =</span> <span class="dv">4</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Print summary</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       x                  y              group          
+ Min.   :-2.30917   Min.   :-2.0532   Length:100        
+ 1st Qu.:-0.49385   1st Qu.:-0.8011   Class :character  
+ Median : 0.06176   Median :-0.2258   Mode  :character  
+ Mean   : 0.09041   Mean   :-0.1075                     
+ 3rd Qu.: 0.69182   3rd Qu.: 0.4678                     
+ Max.   : 2.18733   Max.   : 3.2410                     </code></pre>
+</div>
+</div>
+</section>
+<section id="python-analysis-example" class="level2">
+<h2 class="anchored" data-anchor-id="python-analysis-example">Python Analysis Example</h2>
+<p>Our Python script performs similar analysis using pandas:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate sample data</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"x"</span>: np.random.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>),</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"y"</span>: np.random.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>),</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"group"</span>: np.random.choice([<span class="st">"A"</span>, <span class="st">"B"</span>], <span class="dv">100</span>),</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Print summary</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data Summary:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data Summary:</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.describe())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>                x           y
+count  100.000000  100.000000
+mean     0.027109   -0.019536
+std      1.133924    0.974941
+min     -2.798589   -3.231055
+25%     -0.832745   -0.548712
+50%     -0.053270    0.053525
+75%      0.983388    0.480696
+max      2.392365    2.598304</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Group counts:"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Group counts:</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">"group"</span>].value_counts())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>group
+A    53
+B    47
+Name: count, dtype: int64</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to CSV</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"python_output.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Data saved to python_output.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Data saved to python_output.csv</code></pre>
+</div>
+</div>
+</section>
+<section id="shiny-app-for-deployment" class="level2">
+<h2 class="anchored" data-anchor-id="shiny-app-for-deployment">Shiny App for Deployment</h2>
+<p>For demonstration purposes, we’ve included a simple Shiny app:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">titlePanel</span>(<span class="st">"Virtual Environment Demo"</span>),</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarLayout</span>(</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sidebarPanel</span>(</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sliderInput</span>(<span class="st">"n"</span>, <span class="st">"Number of points:"</span>, <span class="dv">10</span>, <span class="dv">1000</span>, <span class="dv">100</span>),</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">selectInput</span>(<span class="st">"color"</span>, <span class="st">"Color:"</span>, <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"green"</span>))</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mainPanel</span>(<span class="fu">plotOutput</span>(<span class="st">"plot"</span>))</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>plot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>        df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rnorm</span>(input<span class="sc">$</span>n), <span class="at">y =</span> <span class="fu">rnorm</span>(input<span class="sc">$</span>n))</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">color =</span> input<span class="sc">$</span>color) <span class="sc">+</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_minimal</span>()</span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="deployment-to-posit-cloud" class="level1">
+<h1>Deployment to Posit Cloud</h1>
+<p>Posit Cloud provides an excellent platform for deploying R applications with managed environments.</p>
+<section id="deploying-a-shiny-app" class="level2">
+<h2 class="anchored" data-anchor-id="deploying-a-shiny-app">Deploying a Shiny App</h2>
+<ol type="1">
+<li><strong>Prepare Your App</strong>: Ensure all dependencies are in <code>renv.lock</code></li>
+<li><strong>Push to GitHub</strong>: Commit your code and lockfiles</li>
+<li><strong>Create Posit Cloud Project</strong>:
+<ul>
+<li>Go to Posit Cloud</li>
+<li>Create “New Project from Git Repository”</li>
+<li>Enter your repository URL</li>
+</ul></li>
+<li><strong>Configure Environment</strong>: Posit Cloud will automatically restore from <code>renv.lock</code></li>
+<li><strong>Publish</strong>: Use the publish button to make your app publicly accessible</li>
+</ol>
+</section>
+<section id="benefits-for-deployment" class="level2">
+<h2 class="anchored" data-anchor-id="benefits-for-deployment">Benefits for Deployment</h2>
+<ul>
+<li><strong>Managed Infrastructure</strong>: No server maintenance</li>
+<li><strong>Automatic Scaling</strong>: Handles traffic spikes</li>
+<li><strong>Environment Consistency</strong>: Uses your lockfile for exact reproduction</li>
+<li><strong>Easy Sharing</strong>: Share links with collaborators or for presentations</li>
+</ul>
+</section>
+</section>
+<section id="github-actions-for-cicd" class="level1">
+<h1>GitHub Actions for CI/CD</h1>
+<p>GitHub Actions can automate environment setup and testing.</p>
+<section id="basic-ci-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="basic-ci-workflow">Basic CI Workflow</h2>
+</section>
+</section>
+<section id="yaml" class="level1">
+<h1>yaml</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<pre class="text cell-code"><code>name: R + Python CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        r-version: [4.3]
+        python-version: [3.10]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup R
+      uses: r-lib/actions/setup-r@v2
+      with:
+        r-version: ${{ matrix.r-version }}
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Restore R environment
+      run: |
+        R -e 'install.packages("renv")'
+        R -e 'renv::restore()'
+    
+    - name: Setup Python environment
+      run: |
+        python -m venv .venv
+        source .venv/bin/activate
+        pip install -r python/requirements.txt
+    
+    - name: Run R tests
+      run: Rscript R/analysis.R
+    
+    - name: Run Python tests
+      run: |
+        source .venv/bin/activate
+        python python/app.py</code></pre>
+</details>
+</div>
+<section id="ci-benefits" class="level2">
+<h2 class="anchored" data-anchor-id="ci-benefits">CI Benefits</h2>
+<ul>
+<li><strong>Automated Testing</strong>: Ensures code works in clean environments</li>
+<li><strong>Environment Validation</strong>: Confirms lockfiles are correct</li>
+<li><strong>Cross-platform Testing</strong>: Test on multiple R/Python versions</li>
+<li><strong>Deployment Triggers</strong>: Automatically deploy on successful tests</li>
+</ul>
+</section>
+</section>
+<section id="presentation-tips-for-r-meetup" class="level1">
+<h1>Presentation Tips for R Meetup</h1>
+<section id="structure-your-talk" class="level2">
+<h2 class="anchored" data-anchor-id="structure-your-talk">Structure Your Talk</h2>
+<ol type="1">
+<li><strong>Start with Problems</strong>: Show real-world dependency conflicts</li>
+<li><strong>Explain Concepts</strong>: Use simple analogies (apartments vs.&nbsp;houses)</li>
+<li><strong>Live Demo</strong>: Initialize renv, snapshot, restore on “fresh” machine</li>
+<li><strong>Show Cross-language</strong>: Demonstrate reticulate integration</li>
+<li><strong>Deployment Demo</strong>: Deploy Shiny app to Posit Cloud</li>
+<li><strong>Q&amp;A</strong>: Prepare for common questions</li>
+</ol>
+</section>
+<section id="key-takeaways-for-audience" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways-for-audience">Key Takeaways for Audience</h2>
+<ul>
+<li>Virtual environments are essential for reproducible data science</li>
+<li>renv makes R environment management straightforward</li>
+<li>Python’s venv + requirements.txt is the minimum viable approach</li>
+<li>Lockfiles are your insurance policy for deployment</li>
+<li>Start small: use renv on your next R project</li>
+</ul>
+</section>
+<section id="common-questions" class="level2">
+<h2 class="anchored" data-anchor-id="common-questions">Common Questions</h2>
+<ul>
+<li><strong>“Isn’t this overkill for small projects?”</strong> No, the overhead is minimal and prevents future headaches</li>
+<li><strong>“What about conda?”</strong> Great for complex scientific stacks, but renv/venv are simpler for most R/Python work</li>
+<li><strong>“How do I handle system dependencies?”</strong> Virtual environments handle packages, but system libraries (like GDAL) need separate management</li>
+</ul>
+</section>
+</section>
+<section id="further-resources" class="level1">
+<h1>Further Resources</h1>
+<ul>
+<li><a href="https://rstudio.github.io/renv/">renv Documentation</a></li>
+<li><a href="https://python-poetry.org/docs/">Poetry Guide</a></li>
+<li><a href="https://rstudio.github.io/reticulate/">reticulate Package</a></li>
+<li><a href="https://docs.posit.co/posit-cloud/">Posit Cloud Deployment</a></li>
+<li><a href="https://github.com/r-lib/actions">GitHub Actions for R</a></li>
+</ul>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Virtual environments transform data science workflows from fragile, machine-dependent processes to robust, reproducible systems. By isolating dependencies and capturing exact versions in lockfiles, you ensure that your analyses will work consistently across different environments and over time. Whether you’re an R user dipping into Python or maintaining complex multi-language projects, mastering virtual environments will make you a more effective and confident data scientist.</p>
+<p>The examples in this tutorial provide a solid foundation—start by applying renv to your next R project, and you’ll quickly see the benefits in practice.</p>
+
+
+<!-- -->
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+  const viewSource = window.document.getElementById('quarto-view-source') ||
+                     window.document.getElementById('quarto-code-tools-source');
+  if (viewSource) {
+    const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+    viewSource.addEventListener("click", function(e) {
+      if (sourceUrl) {
+        // rstudio viewer pane
+        if (/\bcapabilities=\b/.test(window.location)) {
+          window.open(sourceUrl);
+        } else {
+          window.location.href = sourceUrl;
+        }
+      } else {
+        const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+        modal.show();
+      }
+      return false;
+    });
+  }
+  function toggleCodeHandler(show) {
+    return function(e) {
+      const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+      for (let i=0; i<detailsSrc.length; i++) {
+        const details = detailsSrc[i].parentElement;
+        if (show) {
+          details.open = true;
+        } else {
+          details.removeAttribute("open");
+        }
+      }
+      const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+      const fromCls = show ? "hidden" : "unhidden";
+      const toCls = show ? "unhidden" : "hidden";
+      for (let i=0; i<cellCodeDivs.length; i++) {
+        const codeDiv = cellCodeDivs[i];
+        if (codeDiv.classList.contains(fromCls)) {
+          codeDiv.classList.remove(fromCls);
+          codeDiv.classList.add(toCls);
+        } 
+      }
+      return false;
+    }
+  }
+  const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+  if (hideAllCode) {
+    hideAllCode.addEventListener("click", toggleCodeHandler(false));
+  }
+  const showAllCode = window.document.getElementById("quarto-show-all-code");
+  if (showAllCode) {
+    showAllCode.addEventListener("click", toggleCodeHandler(true));
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/mpfoley73\.github\.io\/ds_lab");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="sourceCode" id="cb34" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Virtual Environments: A Practical Tutorial for R (and Python)"</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "Your Name"</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "`r Sys.Date()`"</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-depth: 2</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: true</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="co">  error: false</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="fu"># Overview</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>This tutorial provides a comprehensive introduction to virtual environments in data science, with a focus on R users who may also work with Python. We'll explore the conceptual foundations, practical reasons for using virtual environments, common use cases in data science workflows, and the mechanics of implementation in both R and Python. The tutorial includes hands-on examples and deployment considerations to give you both functional knowledge and conceptual understanding suitable for presenting to peers.</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a><span class="fu">## Setup</span></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>Before we begin, let's configure our Python environment for the examples in this tutorial.</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Configure reticulate to use our project virtual environment</span></span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(reticulate)) {</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(<span class="st">"reticulate"</span>)</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the Python executable from our virtual environment</span></span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">use_python</span>(<span class="st">".venv/Scripts/python.exe"</span>, <span class="at">required =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a><span class="fu"># Why Use Virtual Environments?</span></span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>Virtual environments are isolated spaces where you can install and manage project-specific dependencies without affecting your system's global package installations. This isolation prevents conflicts and ensures reproducibility.</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a><span class="fu">## Key Benefits</span></span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Dependency Isolation**: Each project maintains its own set of packages and versions, preventing "dependency hell" where different projects require conflicting package versions.</span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Reproducibility**: By locking exact package versions, you can recreate the exact same environment on different machines or at different times, ensuring analyses produce consistent results.</span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Collaboration**: Team members can easily recreate your environment, reducing "works on my machine" issues.</span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**System Stability**: Your global R/Python installation remains clean and stable, unaffected by project-specific changes.</span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Deployment Readiness**: Lockfiles make it straightforward to deploy applications with known, tested dependencies.</span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a><span class="fu">## The Problem Without Virtual Environments</span></span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-55"><a href="#cb34-55" aria-hidden="true" tabindex="-1"></a>Imagine you're working on multiple data science projects:</span>
+<span id="cb34-56"><a href="#cb34-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-57"><a href="#cb34-57" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Project A uses <span class="in">`dplyr`</span> 1.0.0 and <span class="in">`ggplot2`</span> 3.3.0</span>
+<span id="cb34-58"><a href="#cb34-58" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Project B requires <span class="in">`dplyr`</span> 1.1.0 and <span class="in">`ggplot2`</span> 3.4.0</span>
+<span id="cb34-59"><a href="#cb34-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-60"><a href="#cb34-60" aria-hidden="true" tabindex="-1"></a>Without virtual environments, upgrading packages for Project B might break Project A. Virtual environments solve this by giving each project its own package sandbox.</span>
+<span id="cb34-61"><a href="#cb34-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-62"><a href="#cb34-62" aria-hidden="true" tabindex="-1"></a><span class="fu"># Common Use Cases in Data Science</span></span>
+<span id="cb34-63"><a href="#cb34-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-64"><a href="#cb34-64" aria-hidden="true" tabindex="-1"></a><span class="fu">## Research and Academic Work</span></span>
+<span id="cb34-65"><a href="#cb34-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-66"><a href="#cb34-66" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Reproducible Research**: Journals increasingly require code and data to reproduce results. Virtual environments ensure the exact packages used are preserved.</span>
+<span id="cb34-67"><a href="#cb34-67" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Long-term Archival**: Analyses from years ago can still run with the original environment.</span>
+<span id="cb34-68"><a href="#cb34-68" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Peer Review**: Reviewers can recreate your exact setup to verify results.</span>
+<span id="cb34-69"><a href="#cb34-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-70"><a href="#cb34-70" aria-hidden="true" tabindex="-1"></a><span class="fu">## Teaching and Education</span></span>
+<span id="cb34-71"><a href="#cb34-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-72"><a href="#cb34-72" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Consistent Student Environments**: All students get the same package versions, avoiding confusion from version differences.</span>
+<span id="cb34-73"><a href="#cb34-73" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Course Materials**: Tutorials and assignments work reliably across different student machines.</span>
+<span id="cb34-74"><a href="#cb34-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-75"><a href="#cb34-75" aria-hidden="true" tabindex="-1"></a><span class="fu">## Production and Deployment</span></span>
+<span id="cb34-76"><a href="#cb34-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-77"><a href="#cb34-77" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Model Deployment**: Machine learning models deployed to production need the exact same environment used during training.</span>
+<span id="cb34-78"><a href="#cb34-78" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Web Applications**: Shiny apps or Streamlit apps require consistent dependencies across development, staging, and production.</span>
+<span id="cb34-79"><a href="#cb34-79" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**API Services**: Data science APIs must have predictable package versions to ensure stable behavior.</span>
+<span id="cb34-80"><a href="#cb34-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-81"><a href="#cb34-81" aria-hidden="true" tabindex="-1"></a><span class="fu">## Multi-language Projects</span></span>
+<span id="cb34-82"><a href="#cb34-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-83"><a href="#cb34-83" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**R + Python Integration**: Projects using both languages (via <span class="in">`reticulate`</span>) need coordinated environments.</span>
+<span id="cb34-84"><a href="#cb34-84" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Legacy Code Migration**: Gradually migrate from one language to another while maintaining separate environments.</span>
+<span id="cb34-85"><a href="#cb34-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-86"><a href="#cb34-86" aria-hidden="true" tabindex="-1"></a><span class="fu"># Core Concepts</span></span>
+<span id="cb34-87"><a href="#cb34-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-88"><a href="#cb34-88" aria-hidden="true" tabindex="-1"></a>Before diving into mechanics, let's understand the key concepts:</span>
+<span id="cb34-89"><a href="#cb34-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-90"><a href="#cb34-90" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Environment**: A project-specific collection of packages with their versions.</span>
+<span id="cb34-91"><a href="#cb34-91" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Lockfile**: A file that records exact package versions and sources, enabling perfect recreation of the environment.</span>
+<span id="cb34-92"><a href="#cb34-92" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Snapshot**: The process of recording current package versions to a lockfile.</span>
+<span id="cb34-93"><a href="#cb34-93" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Restore**: Installing packages from a lockfile to recreate an environment.</span>
+<span id="cb34-94"><a href="#cb34-94" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Isolation**: Keeping project dependencies separate from system-wide installations.</span>
+<span id="cb34-95"><a href="#cb34-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-96"><a href="#cb34-96" aria-hidden="true" tabindex="-1"></a><span class="fu"># R: renv (The Standard Approach)</span></span>
+<span id="cb34-97"><a href="#cb34-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-98"><a href="#cb34-98" aria-hidden="true" tabindex="-1"></a><span class="in">`renv`</span> is the recommended tool for managing R package environments. It creates a project-local library and generates a <span class="in">`renv.lock`</span> file that captures exact package versions and sources.</span>
+<span id="cb34-99"><a href="#cb34-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-100"><a href="#cb34-100" aria-hidden="true" tabindex="-1"></a><span class="fu">## Basic Workflow</span></span>
+<span id="cb34-101"><a href="#cb34-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-102"><a href="#cb34-102" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Initialize**: Set up renv for your project</span>
+<span id="cb34-103"><a href="#cb34-103" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Install Packages**: Add packages as needed during development</span>
+<span id="cb34-104"><a href="#cb34-104" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Snapshot**: Record current package state to <span class="in">`renv.lock`</span></span>
+<span id="cb34-105"><a href="#cb34-105" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Restore**: Recreate the environment from <span class="in">`renv.lock`</span> on another machine</span>
+<span id="cb34-106"><a href="#cb34-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-107"><a href="#cb34-107" aria-hidden="true" tabindex="-1"></a><span class="fu">## Core Commands</span></span>
+<span id="cb34-108"><a href="#cb34-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-109"><a href="#cb34-109" aria-hidden="true" tabindex="-1"></a>Initialize renv in your project directory:</span>
+<span id="cb34-110"><a href="#cb34-110" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-111"><a href="#cb34-111" aria-hidden="true" tabindex="-1"></a><span class="co"># One-time setup per project</span></span>
+<span id="cb34-112"><a href="#cb34-112" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">init</span>()</span>
+<span id="cb34-113"><a href="#cb34-113" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-114"><a href="#cb34-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-115"><a href="#cb34-115" aria-hidden="true" tabindex="-1"></a>Install packages during development:</span>
+<span id="cb34-116"><a href="#cb34-116" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-117"><a href="#cb34-117" aria-hidden="true" tabindex="-1"></a><span class="co"># Install packages as you work</span></span>
+<span id="cb34-118"><a href="#cb34-118" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"dplyr"</span>)</span>
+<span id="cb34-119"><a href="#cb34-119" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ggplot2"</span>)</span>
+<span id="cb34-120"><a href="#cb34-120" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-121"><a href="#cb34-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-122"><a href="#cb34-122" aria-hidden="true" tabindex="-1"></a>Snapshot your current environment:</span>
+<span id="cb34-123"><a href="#cb34-123" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-124"><a href="#cb34-124" aria-hidden="true" tabindex="-1"></a><span class="co"># Record exact versions to renv.lock</span></span>
+<span id="cb34-125"><a href="#cb34-125" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">snapshot</span>()</span>
+<span id="cb34-126"><a href="#cb34-126" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-127"><a href="#cb34-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-128"><a href="#cb34-128" aria-hidden="true" tabindex="-1"></a>Restore environment on another machine:</span>
+<span id="cb34-129"><a href="#cb34-129" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-130"><a href="#cb34-130" aria-hidden="true" tabindex="-1"></a><span class="co"># Install packages exactly as in renv.lock</span></span>
+<span id="cb34-131"><a href="#cb34-131" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">restore</span>()</span>
+<span id="cb34-132"><a href="#cb34-132" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-133"><a href="#cb34-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-134"><a href="#cb34-134" aria-hidden="true" tabindex="-1"></a><span class="fu">## How renv Works</span></span>
+<span id="cb34-135"><a href="#cb34-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-136"><a href="#cb34-136" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Creates a <span class="in">`renv/`</span> directory with project-specific package installations</span>
+<span id="cb34-137"><a href="#cb34-137" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Generates <span class="in">`renv.lock`</span> with exact versions, sources, and dependencies</span>
+<span id="cb34-138"><a href="#cb34-138" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Modifies <span class="in">`.Rprofile`</span> to automatically activate the local environment</span>
+<span id="cb34-139"><a href="#cb34-139" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Provides tools for managing package conflicts and updates</span>
+<span id="cb34-140"><a href="#cb34-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-141"><a href="#cb34-141" aria-hidden="true" tabindex="-1"></a><span class="fu">## Best Practices for R Projects</span></span>
+<span id="cb34-142"><a href="#cb34-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-143"><a href="#cb34-143" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Always commit <span class="in">`renv.lock`</span> to version control</span>
+<span id="cb34-144"><a href="#cb34-144" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Never commit the <span class="in">`renv/library/`</span> directory (it's large and machine-specific)</span>
+<span id="cb34-145"><a href="#cb34-145" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Run <span class="in">`renv::snapshot()`</span> after installing new packages</span>
+<span id="cb34-146"><a href="#cb34-146" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Use <span class="in">`renv::status()`</span> to check for discrepancies between lockfile and current environment</span>
+<span id="cb34-147"><a href="#cb34-147" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-148"><a href="#cb34-148" aria-hidden="true" tabindex="-1"></a><span class="fu"># Python: venv and Poetry</span></span>
+<span id="cb34-149"><a href="#cb34-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-150"><a href="#cb34-150" aria-hidden="true" tabindex="-1"></a>Python offers several virtual environment tools. We'll cover the built-in <span class="in">`venv`</span> and the more advanced <span class="in">`poetry`</span>.</span>
+<span id="cb34-151"><a href="#cb34-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-152"><a href="#cb34-152" aria-hidden="true" tabindex="-1"></a><span class="fu">## venv: Built-in Virtual Environments</span></span>
+<span id="cb34-153"><a href="#cb34-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-154"><a href="#cb34-154" aria-hidden="true" tabindex="-1"></a><span class="in">`venv`</span> creates isolated Python environments using the standard library.</span>
+<span id="cb34-155"><a href="#cb34-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-156"><a href="#cb34-156" aria-hidden="true" tabindex="-1"></a><span class="fu">### Basic Commands</span></span>
+<span id="cb34-157"><a href="#cb34-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-158"><a href="#cb34-158" aria-hidden="true" tabindex="-1"></a>Create a virtual environment:</span>
+<span id="cb34-159"><a href="#cb34-159" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb34-160"><a href="#cb34-160" aria-hidden="true" tabindex="-1"></a><span class="co"># Create environment in .venv directory</span></span>
+<span id="cb34-161"><a href="#cb34-161" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span>
+<span id="cb34-162"><a href="#cb34-162" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-163"><a href="#cb34-163" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-164"><a href="#cb34-164" aria-hidden="true" tabindex="-1"></a>Activate the environment:</span>
+<span id="cb34-165"><a href="#cb34-165" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb34-166"><a href="#cb34-166" aria-hidden="true" tabindex="-1"></a><span class="co"># On Windows</span></span>
+<span id="cb34-167"><a href="#cb34-167" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv\Scripts\activate</span></span>
+<span id="cb34-168"><a href="#cb34-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-169"><a href="#cb34-169" aria-hidden="true" tabindex="-1"></a><span class="co"># On macOS/Linux</span></span>
+<span id="cb34-170"><a href="#cb34-170" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span>
+<span id="cb34-171"><a href="#cb34-171" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-172"><a href="#cb34-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-173"><a href="#cb34-173" aria-hidden="true" tabindex="-1"></a>Install packages:</span>
+<span id="cb34-174"><a href="#cb34-174" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb34-175"><a href="#cb34-175" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install pandas numpy matplotlib</span>
+<span id="cb34-176"><a href="#cb34-176" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-177"><a href="#cb34-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-178"><a href="#cb34-178" aria-hidden="true" tabindex="-1"></a>Create requirements file:</span>
+<span id="cb34-179"><a href="#cb34-179" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb34-180"><a href="#cb34-180" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> freeze <span class="op">&gt;</span> requirements.txt</span>
+<span id="cb34-181"><a href="#cb34-181" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-182"><a href="#cb34-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-183"><a href="#cb34-183" aria-hidden="true" tabindex="-1"></a>Install from requirements:</span>
+<span id="cb34-184"><a href="#cb34-184" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb34-185"><a href="#cb34-185" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span>
+<span id="cb34-186"><a href="#cb34-186" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-187"><a href="#cb34-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-188"><a href="#cb34-188" aria-hidden="true" tabindex="-1"></a><span class="fu">## Poetry: Advanced Dependency Management</span></span>
+<span id="cb34-189"><a href="#cb34-189" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-190"><a href="#cb34-190" aria-hidden="true" tabindex="-1"></a>Poetry provides deterministic dependency resolution and better lockfile management.</span>
+<span id="cb34-191"><a href="#cb34-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-192"><a href="#cb34-192" aria-hidden="true" tabindex="-1"></a><span class="fu">### Basic Commands</span></span>
+<span id="cb34-193"><a href="#cb34-193" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-194"><a href="#cb34-194" aria-hidden="true" tabindex="-1"></a>Initialize a Poetry project:</span>
+<span id="cb34-195"><a href="#cb34-195" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb34-196"><a href="#cb34-196" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> init</span>
+<span id="cb34-197"><a href="#cb34-197" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-198"><a href="#cb34-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-199"><a href="#cb34-199" aria-hidden="true" tabindex="-1"></a>Add dependencies:</span>
+<span id="cb34-200"><a href="#cb34-200" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb34-201"><a href="#cb34-201" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> add pandas numpy</span>
+<span id="cb34-202"><a href="#cb34-202" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-203"><a href="#cb34-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-204"><a href="#cb34-204" aria-hidden="true" tabindex="-1"></a>Install dependencies:</span>
+<span id="cb34-205"><a href="#cb34-205" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb34-206"><a href="#cb34-206" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> install</span>
+<span id="cb34-207"><a href="#cb34-207" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-208"><a href="#cb34-208" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-209"><a href="#cb34-209" aria-hidden="true" tabindex="-1"></a>Activate the virtual environment:</span>
+<span id="cb34-210"><a href="#cb34-210" aria-hidden="true" tabindex="-1"></a><span class="in">```bash</span></span>
+<span id="cb34-211"><a href="#cb34-211" aria-hidden="true" tabindex="-1"></a><span class="ex">poetry</span> shell</span>
+<span id="cb34-212"><a href="#cb34-212" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-213"><a href="#cb34-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-214"><a href="#cb34-214" aria-hidden="true" tabindex="-1"></a><span class="fu">## Python Best Practices</span></span>
+<span id="cb34-215"><a href="#cb34-215" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-216"><a href="#cb34-216" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Use <span class="in">`.venv`</span> or <span class="in">`venv`</span> as directory name (add to <span class="in">`.gitignore`</span>)</span>
+<span id="cb34-217"><a href="#cb34-217" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Commit <span class="in">`requirements.txt`</span> or <span class="in">`poetry.lock`</span> + <span class="in">`pyproject.toml`</span></span>
+<span id="cb34-218"><a href="#cb34-218" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Specify Python version in your environment</span>
+<span id="cb34-219"><a href="#cb34-219" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Use <span class="in">`pip-tools`</span> or Poetry for complex dependency trees</span>
+<span id="cb34-220"><a href="#cb34-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-221"><a href="#cb34-221" aria-hidden="true" tabindex="-1"></a><span class="fu"># Using Python from R (reticulate)</span></span>
+<span id="cb34-222"><a href="#cb34-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-223"><a href="#cb34-223" aria-hidden="true" tabindex="-1"></a>The <span class="in">`reticulate`</span> package allows seamless integration between R and Python.</span>
+<span id="cb34-224"><a href="#cb34-224" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-225"><a href="#cb34-225" aria-hidden="true" tabindex="-1"></a><span class="fu">## Setting Up reticulate with Virtual Environments</span></span>
+<span id="cb34-226"><a href="#cb34-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-227"><a href="#cb34-227" aria-hidden="true" tabindex="-1"></a>Create and configure a Python environment:</span>
+<span id="cb34-228"><a href="#cb34-228" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-229"><a href="#cb34-229" aria-hidden="true" tabindex="-1"></a><span class="co"># Install reticulate if needed</span></span>
+<span id="cb34-230"><a href="#cb34-230" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"reticulate"</span>)</span>
+<span id="cb34-231"><a href="#cb34-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-232"><a href="#cb34-232" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a Python virtual environment</span></span>
+<span id="cb34-233"><a href="#cb34-233" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">virtualenv_create</span>(<span class="st">"python_env"</span>)</span>
+<span id="cb34-234"><a href="#cb34-234" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-235"><a href="#cb34-235" aria-hidden="true" tabindex="-1"></a><span class="co"># Configure reticulate to use this environment</span></span>
+<span id="cb34-236"><a href="#cb34-236" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">use_virtualenv</span>(<span class="st">"python_env"</span>, <span class="at">required =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-237"><a href="#cb34-237" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-238"><a href="#cb34-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-239"><a href="#cb34-239" aria-hidden="true" tabindex="-1"></a>Check configuration:</span>
+<span id="cb34-240"><a href="#cb34-240" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-241"><a href="#cb34-241" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">py_config</span>()</span>
+<span id="cb34-242"><a href="#cb34-242" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-243"><a href="#cb34-243" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-244"><a href="#cb34-244" aria-hidden="true" tabindex="-1"></a><span class="fu">## Using Python Objects in R</span></span>
+<span id="cb34-245"><a href="#cb34-245" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-246"><a href="#cb34-246" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb34-247"><a href="#cb34-247" aria-hidden="true" tabindex="-1"></a><span class="co"># Import Python modules</span></span>
+<span id="cb34-248"><a href="#cb34-248" aria-hidden="true" tabindex="-1"></a>pd <span class="ot">&lt;-</span> reticulate<span class="sc">::</span><span class="fu">import</span>(<span class="st">"pandas"</span>)</span>
+<span id="cb34-249"><a href="#cb34-249" aria-hidden="true" tabindex="-1"></a>np <span class="ot">&lt;-</span> reticulate<span class="sc">::</span><span class="fu">import</span>(<span class="st">"numpy"</span>)</span>
+<span id="cb34-250"><a href="#cb34-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-251"><a href="#cb34-251" aria-hidden="true" tabindex="-1"></a><span class="co"># Use Python objects</span></span>
+<span id="cb34-252"><a href="#cb34-252" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> pd<span class="sc">$</span><span class="fu">DataFrame</span>(<span class="fu">list</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>), <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>)))</span>
+<span id="cb34-253"><a href="#cb34-253" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(df)</span>
+<span id="cb34-254"><a href="#cb34-254" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-255"><a href="#cb34-255" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-256"><a href="#cb34-256" aria-hidden="true" tabindex="-1"></a><span class="fu"># Lockfiles and Reproducibility</span></span>
+<span id="cb34-257"><a href="#cb34-257" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-258"><a href="#cb34-258" aria-hidden="true" tabindex="-1"></a>Lockfiles are the key to reproducible environments. They record exact versions and sources.</span>
+<span id="cb34-259"><a href="#cb34-259" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-260"><a href="#cb34-260" aria-hidden="true" tabindex="-1"></a><span class="fu">## R: renv.lock</span></span>
+<span id="cb34-261"><a href="#cb34-261" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-262"><a href="#cb34-262" aria-hidden="true" tabindex="-1"></a>Contains:</span>
+<span id="cb34-263"><a href="#cb34-263" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Package names and versions</span>
+<span id="cb34-264"><a href="#cb34-264" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Package sources (CRAN, GitHub, local)</span>
+<span id="cb34-265"><a href="#cb34-265" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Dependency relationships</span>
+<span id="cb34-266"><a href="#cb34-266" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>R version information</span>
+<span id="cb34-267"><a href="#cb34-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-268"><a href="#cb34-268" aria-hidden="true" tabindex="-1"></a><span class="fu">## Python: requirements.txt vs. Poetry</span></span>
+<span id="cb34-269"><a href="#cb34-269" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-270"><a href="#cb34-270" aria-hidden="true" tabindex="-1"></a>**requirements.txt** (basic):</span>
+<span id="cb34-271"><a href="#cb34-271" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-272"><a href="#cb34-272" aria-hidden="true" tabindex="-1"></a><span class="in">pandas==2.0.3</span></span>
+<span id="cb34-273"><a href="#cb34-273" aria-hidden="true" tabindex="-1"></a><span class="in">numpy==1.24.3</span></span>
+<span id="cb34-274"><a href="#cb34-274" aria-hidden="true" tabindex="-1"></a><span class="in">matplotlib==3.7.1</span></span>
+<span id="cb34-275"><a href="#cb34-275" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-276"><a href="#cb34-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-277"><a href="#cb34-277" aria-hidden="true" tabindex="-1"></a>**Poetry lockfile** (comprehensive):</span>
+<span id="cb34-278"><a href="#cb34-278" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Exact versions and hashes</span>
+<span id="cb34-279"><a href="#cb34-279" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Dependency resolution details</span>
+<span id="cb34-280"><a href="#cb34-280" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Platform-specific information</span>
+<span id="cb34-281"><a href="#cb34-281" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-282"><a href="#cb34-282" aria-hidden="true" tabindex="-1"></a><span class="fu">## Version Control Strategy</span></span>
+<span id="cb34-283"><a href="#cb34-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-284"><a href="#cb34-284" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Commit lockfiles to Git</span>
+<span id="cb34-285"><a href="#cb34-285" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Never commit virtual environment directories</span>
+<span id="cb34-286"><a href="#cb34-286" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Use CI to validate environment restoration</span>
+<span id="cb34-287"><a href="#cb34-287" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Tag releases with specific lockfile versions</span>
+<span id="cb34-288"><a href="#cb34-288" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-289"><a href="#cb34-289" aria-hidden="true" tabindex="-1"></a><span class="fu"># Hands-on Examples</span></span>
+<span id="cb34-290"><a href="#cb34-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-291"><a href="#cb34-291" aria-hidden="true" tabindex="-1"></a>Let's create a simple cross-language data analysis project.</span>
+<span id="cb34-292"><a href="#cb34-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-293"><a href="#cb34-293" aria-hidden="true" tabindex="-1"></a><span class="fu">## Project Structure</span></span>
+<span id="cb34-294"><a href="#cb34-294" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-295"><a href="#cb34-295" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-296"><a href="#cb34-296" aria-hidden="true" tabindex="-1"></a><span class="in">virtual_environs_tutorial/</span></span>
+<span id="cb34-297"><a href="#cb34-297" aria-hidden="true" tabindex="-1"></a><span class="in">├── tutorial.qmd</span></span>
+<span id="cb34-298"><a href="#cb34-298" aria-hidden="true" tabindex="-1"></a><span class="in">├── R/</span></span>
+<span id="cb34-299"><a href="#cb34-299" aria-hidden="true" tabindex="-1"></a><span class="in">│   ├── analysis.R</span></span>
+<span id="cb34-300"><a href="#cb34-300" aria-hidden="true" tabindex="-1"></a><span class="in">│   └── shiny_app.R</span></span>
+<span id="cb34-301"><a href="#cb34-301" aria-hidden="true" tabindex="-1"></a><span class="in">├── python/</span></span>
+<span id="cb34-302"><a href="#cb34-302" aria-hidden="true" tabindex="-1"></a><span class="in">│   ├── app.py</span></span>
+<span id="cb34-303"><a href="#cb34-303" aria-hidden="true" tabindex="-1"></a><span class="in">│   └── requirements.txt</span></span>
+<span id="cb34-304"><a href="#cb34-304" aria-hidden="true" tabindex="-1"></a><span class="in">├── renv.lock</span></span>
+<span id="cb34-305"><a href="#cb34-305" aria-hidden="true" tabindex="-1"></a><span class="in">└── .github/</span></span>
+<span id="cb34-306"><a href="#cb34-306" aria-hidden="true" tabindex="-1"></a><span class="in">    └── workflows/</span></span>
+<span id="cb34-307"><a href="#cb34-307" aria-hidden="true" tabindex="-1"></a><span class="in">        └── ci.yml</span></span>
+<span id="cb34-308"><a href="#cb34-308" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-309"><a href="#cb34-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-310"><a href="#cb34-310" aria-hidden="true" tabindex="-1"></a><span class="fu">## R Analysis Example</span></span>
+<span id="cb34-311"><a href="#cb34-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-312"><a href="#cb34-312" aria-hidden="true" tabindex="-1"></a>Our R script performs basic data exploration and visualization:</span>
+<span id="cb34-313"><a href="#cb34-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-316"><a href="#cb34-316" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-317"><a href="#cb34-317" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: r-analysis</span></span>
+<span id="cb34-318"><a href="#cb34-318" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb34-319"><a href="#cb34-319" aria-hidden="true" tabindex="-1"></a><span class="co"># Load required packages</span></span>
+<span id="cb34-320"><a href="#cb34-320" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb34-321"><a href="#cb34-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-322"><a href="#cb34-322" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate sample data</span></span>
+<span id="cb34-323"><a href="#cb34-323" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb34-324"><a href="#cb34-324" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb34-325"><a href="#cb34-325" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
+<span id="cb34-326"><a href="#cb34-326" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="fu">rnorm</span>(<span class="dv">100</span>),</span>
+<span id="cb34-327"><a href="#cb34-327" aria-hidden="true" tabindex="-1"></a>    <span class="at">group =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="dv">100</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-328"><a href="#cb34-328" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-329"><a href="#cb34-329" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-330"><a href="#cb34-330" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a plot</span></span>
+<span id="cb34-331"><a href="#cb34-331" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">color =</span> group)) <span class="sc">+</span></span>
+<span id="cb34-332"><a href="#cb34-332" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb34-333"><a href="#cb34-333" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Sample Scatter Plot"</span>, <span class="at">x =</span> <span class="st">"X Variable"</span>, <span class="at">y =</span> <span class="st">"Y Variable"</span>) <span class="sc">+</span></span>
+<span id="cb34-334"><a href="#cb34-334" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_minimal</span>()</span>
+<span id="cb34-335"><a href="#cb34-335" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-336"><a href="#cb34-336" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p)</span>
+<span id="cb34-337"><a href="#cb34-337" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-338"><a href="#cb34-338" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the plot</span></span>
+<span id="cb34-339"><a href="#cb34-339" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"R/plot.png"</span>, p, <span class="at">width =</span> <span class="dv">6</span>, <span class="at">height =</span> <span class="dv">4</span>)</span>
+<span id="cb34-340"><a href="#cb34-340" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-341"><a href="#cb34-341" aria-hidden="true" tabindex="-1"></a><span class="co"># Print summary</span></span>
+<span id="cb34-342"><a href="#cb34-342" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span>
+<span id="cb34-343"><a href="#cb34-343" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-344"><a href="#cb34-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-345"><a href="#cb34-345" aria-hidden="true" tabindex="-1"></a><span class="fu">## Python Analysis Example</span></span>
+<span id="cb34-346"><a href="#cb34-346" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-347"><a href="#cb34-347" aria-hidden="true" tabindex="-1"></a>Our Python script performs similar analysis using pandas:</span>
+<span id="cb34-348"><a href="#cb34-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-351"><a href="#cb34-351" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb34-352"><a href="#cb34-352" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: python-analysis</span></span>
+<span id="cb34-353"><a href="#cb34-353" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb34-354"><a href="#cb34-354" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb34-355"><a href="#cb34-355" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb34-356"><a href="#cb34-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-357"><a href="#cb34-357" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate sample data</span></span>
+<span id="cb34-358"><a href="#cb34-358" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
+<span id="cb34-359"><a href="#cb34-359" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(</span>
+<span id="cb34-360"><a href="#cb34-360" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb34-361"><a href="#cb34-361" aria-hidden="true" tabindex="-1"></a>        <span class="st">"x"</span>: np.random.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>),</span>
+<span id="cb34-362"><a href="#cb34-362" aria-hidden="true" tabindex="-1"></a>        <span class="st">"y"</span>: np.random.normal(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>),</span>
+<span id="cb34-363"><a href="#cb34-363" aria-hidden="true" tabindex="-1"></a>        <span class="st">"group"</span>: np.random.choice([<span class="st">"A"</span>, <span class="st">"B"</span>], <span class="dv">100</span>),</span>
+<span id="cb34-364"><a href="#cb34-364" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb34-365"><a href="#cb34-365" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-366"><a href="#cb34-366" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-367"><a href="#cb34-367" aria-hidden="true" tabindex="-1"></a><span class="co"># Print summary</span></span>
+<span id="cb34-368"><a href="#cb34-368" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data Summary:"</span>)</span>
+<span id="cb34-369"><a href="#cb34-369" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.describe())</span>
+<span id="cb34-370"><a href="#cb34-370" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Group counts:"</span>)</span>
+<span id="cb34-371"><a href="#cb34-371" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">"group"</span>].value_counts())</span>
+<span id="cb34-372"><a href="#cb34-372" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-373"><a href="#cb34-373" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to CSV</span></span>
+<span id="cb34-374"><a href="#cb34-374" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"python_output.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb34-375"><a href="#cb34-375" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Data saved to python_output.csv"</span>)</span>
+<span id="cb34-376"><a href="#cb34-376" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-377"><a href="#cb34-377" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-378"><a href="#cb34-378" aria-hidden="true" tabindex="-1"></a><span class="fu">## Shiny App for Deployment</span></span>
+<span id="cb34-379"><a href="#cb34-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-380"><a href="#cb34-380" aria-hidden="true" tabindex="-1"></a>For demonstration purposes, we've included a simple Shiny app:</span>
+<span id="cb34-381"><a href="#cb34-381" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-384"><a href="#cb34-384" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb34-385"><a href="#cb34-385" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: shiny-app</span></span>
+<span id="cb34-386"><a href="#cb34-386" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
+<span id="cb34-387"><a href="#cb34-387" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: true</span></span>
+<span id="cb34-388"><a href="#cb34-388" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb34-389"><a href="#cb34-389" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb34-390"><a href="#cb34-390" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-391"><a href="#cb34-391" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb34-392"><a href="#cb34-392" aria-hidden="true" tabindex="-1"></a>    <span class="fu">titlePanel</span>(<span class="st">"Virtual Environment Demo"</span>),</span>
+<span id="cb34-393"><a href="#cb34-393" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarLayout</span>(</span>
+<span id="cb34-394"><a href="#cb34-394" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sidebarPanel</span>(</span>
+<span id="cb34-395"><a href="#cb34-395" aria-hidden="true" tabindex="-1"></a>            <span class="fu">sliderInput</span>(<span class="st">"n"</span>, <span class="st">"Number of points:"</span>, <span class="dv">10</span>, <span class="dv">1000</span>, <span class="dv">100</span>),</span>
+<span id="cb34-396"><a href="#cb34-396" aria-hidden="true" tabindex="-1"></a>            <span class="fu">selectInput</span>(<span class="st">"color"</span>, <span class="st">"Color:"</span>, <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"red"</span>, <span class="st">"green"</span>))</span>
+<span id="cb34-397"><a href="#cb34-397" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb34-398"><a href="#cb34-398" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mainPanel</span>(<span class="fu">plotOutput</span>(<span class="st">"plot"</span>))</span>
+<span id="cb34-399"><a href="#cb34-399" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb34-400"><a href="#cb34-400" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-401"><a href="#cb34-401" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-402"><a href="#cb34-402" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb34-403"><a href="#cb34-403" aria-hidden="true" tabindex="-1"></a>    output<span class="sc">$</span>plot <span class="ot">&lt;-</span> <span class="fu">renderPlot</span>({</span>
+<span id="cb34-404"><a href="#cb34-404" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb34-405"><a href="#cb34-405" aria-hidden="true" tabindex="-1"></a>        df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">rnorm</span>(input<span class="sc">$</span>n), <span class="at">y =</span> <span class="fu">rnorm</span>(input<span class="sc">$</span>n))</span>
+<span id="cb34-406"><a href="#cb34-406" aria-hidden="true" tabindex="-1"></a>        <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(x, y)) <span class="sc">+</span></span>
+<span id="cb34-407"><a href="#cb34-407" aria-hidden="true" tabindex="-1"></a>            <span class="fu">geom_point</span>(<span class="at">color =</span> input<span class="sc">$</span>color) <span class="sc">+</span></span>
+<span id="cb34-408"><a href="#cb34-408" aria-hidden="true" tabindex="-1"></a>            <span class="fu">theme_minimal</span>()</span>
+<span id="cb34-409"><a href="#cb34-409" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb34-410"><a href="#cb34-410" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-411"><a href="#cb34-411" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-412"><a href="#cb34-412" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(ui, server)</span>
+<span id="cb34-413"><a href="#cb34-413" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-414"><a href="#cb34-414" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-415"><a href="#cb34-415" aria-hidden="true" tabindex="-1"></a><span class="fu"># Deployment to Posit Cloud</span></span>
+<span id="cb34-416"><a href="#cb34-416" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-417"><a href="#cb34-417" aria-hidden="true" tabindex="-1"></a>Posit Cloud provides an excellent platform for deploying R applications with managed environments.</span>
+<span id="cb34-418"><a href="#cb34-418" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-419"><a href="#cb34-419" aria-hidden="true" tabindex="-1"></a><span class="fu">## Deploying a Shiny App</span></span>
+<span id="cb34-420"><a href="#cb34-420" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-421"><a href="#cb34-421" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Prepare Your App**: Ensure all dependencies are in <span class="in">`renv.lock`</span></span>
+<span id="cb34-422"><a href="#cb34-422" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Push to GitHub**: Commit your code and lockfiles</span>
+<span id="cb34-423"><a href="#cb34-423" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Create Posit Cloud Project**: </span>
+<span id="cb34-424"><a href="#cb34-424" aria-hidden="true" tabindex="-1"></a><span class="ss">   - </span>Go to Posit Cloud</span>
+<span id="cb34-425"><a href="#cb34-425" aria-hidden="true" tabindex="-1"></a><span class="ss">   - </span>Create "New Project from Git Repository"</span>
+<span id="cb34-426"><a href="#cb34-426" aria-hidden="true" tabindex="-1"></a><span class="ss">   - </span>Enter your repository URL</span>
+<span id="cb34-427"><a href="#cb34-427" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Configure Environment**: Posit Cloud will automatically restore from <span class="in">`renv.lock`</span></span>
+<span id="cb34-428"><a href="#cb34-428" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Publish**: Use the publish button to make your app publicly accessible</span>
+<span id="cb34-429"><a href="#cb34-429" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-430"><a href="#cb34-430" aria-hidden="true" tabindex="-1"></a><span class="fu">## Benefits for Deployment</span></span>
+<span id="cb34-431"><a href="#cb34-431" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-432"><a href="#cb34-432" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Managed Infrastructure**: No server maintenance</span>
+<span id="cb34-433"><a href="#cb34-433" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Automatic Scaling**: Handles traffic spikes</span>
+<span id="cb34-434"><a href="#cb34-434" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Environment Consistency**: Uses your lockfile for exact reproduction</span>
+<span id="cb34-435"><a href="#cb34-435" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Easy Sharing**: Share links with collaborators or for presentations</span>
+<span id="cb34-436"><a href="#cb34-436" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-437"><a href="#cb34-437" aria-hidden="true" tabindex="-1"></a><span class="fu"># GitHub Actions for CI/CD</span></span>
+<span id="cb34-438"><a href="#cb34-438" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-439"><a href="#cb34-439" aria-hidden="true" tabindex="-1"></a>GitHub Actions can automate environment setup and testing.</span>
+<span id="cb34-440"><a href="#cb34-440" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-441"><a href="#cb34-441" aria-hidden="true" tabindex="-1"></a><span class="fu">## Basic CI Workflow</span></span>
+<span id="cb34-442"><a href="#cb34-442" aria-hidden="true" tabindex="-1"></a><span class="fu"># yaml</span></span>
+<span id="cb34-445"><a href="#cb34-445" aria-hidden="true" tabindex="-1"></a><span class="in">```{text}</span></span>
+<span id="cb34-446"><a href="#cb34-446" aria-hidden="true" tabindex="-1"></a><span class="in">name: R + Python CI</span></span>
+<span id="cb34-447"><a href="#cb34-447" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-448"><a href="#cb34-448" aria-hidden="true" tabindex="-1"></a><span class="in">on: [push, pull_request]</span></span>
+<span id="cb34-449"><a href="#cb34-449" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-450"><a href="#cb34-450" aria-hidden="true" tabindex="-1"></a><span class="in">jobs:</span></span>
+<span id="cb34-451"><a href="#cb34-451" aria-hidden="true" tabindex="-1"></a><span class="in">  test:</span></span>
+<span id="cb34-452"><a href="#cb34-452" aria-hidden="true" tabindex="-1"></a><span class="in">    runs-on: ubuntu-latest</span></span>
+<span id="cb34-453"><a href="#cb34-453" aria-hidden="true" tabindex="-1"></a><span class="in">    strategy:</span></span>
+<span id="cb34-454"><a href="#cb34-454" aria-hidden="true" tabindex="-1"></a><span class="in">      matrix:</span></span>
+<span id="cb34-455"><a href="#cb34-455" aria-hidden="true" tabindex="-1"></a><span class="in">        r-version: [4.3]</span></span>
+<span id="cb34-456"><a href="#cb34-456" aria-hidden="true" tabindex="-1"></a><span class="in">        python-version: [3.10]</span></span>
+<span id="cb34-457"><a href="#cb34-457" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb34-458"><a href="#cb34-458" aria-hidden="true" tabindex="-1"></a><span class="in">    steps:</span></span>
+<span id="cb34-459"><a href="#cb34-459" aria-hidden="true" tabindex="-1"></a><span class="in">    - uses: actions/checkout@v4</span></span>
+<span id="cb34-460"><a href="#cb34-460" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb34-461"><a href="#cb34-461" aria-hidden="true" tabindex="-1"></a><span class="in">    - name: Setup R</span></span>
+<span id="cb34-462"><a href="#cb34-462" aria-hidden="true" tabindex="-1"></a><span class="in">      uses: r-lib/actions/setup-r@v2</span></span>
+<span id="cb34-463"><a href="#cb34-463" aria-hidden="true" tabindex="-1"></a><span class="in">      with:</span></span>
+<span id="cb34-464"><a href="#cb34-464" aria-hidden="true" tabindex="-1"></a><span class="in">        r-version: ${{ matrix.r-version }}</span></span>
+<span id="cb34-465"><a href="#cb34-465" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb34-466"><a href="#cb34-466" aria-hidden="true" tabindex="-1"></a><span class="in">    - name: Setup Python</span></span>
+<span id="cb34-467"><a href="#cb34-467" aria-hidden="true" tabindex="-1"></a><span class="in">      uses: actions/setup-python@v4</span></span>
+<span id="cb34-468"><a href="#cb34-468" aria-hidden="true" tabindex="-1"></a><span class="in">      with:</span></span>
+<span id="cb34-469"><a href="#cb34-469" aria-hidden="true" tabindex="-1"></a><span class="in">        python-version: ${{ matrix.python-version }}</span></span>
+<span id="cb34-470"><a href="#cb34-470" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb34-471"><a href="#cb34-471" aria-hidden="true" tabindex="-1"></a><span class="in">    - name: Restore R environment</span></span>
+<span id="cb34-472"><a href="#cb34-472" aria-hidden="true" tabindex="-1"></a><span class="in">      run: |</span></span>
+<span id="cb34-473"><a href="#cb34-473" aria-hidden="true" tabindex="-1"></a><span class="in">        R -e 'install.packages("renv")'</span></span>
+<span id="cb34-474"><a href="#cb34-474" aria-hidden="true" tabindex="-1"></a><span class="in">        R -e 'renv::restore()'</span></span>
+<span id="cb34-475"><a href="#cb34-475" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb34-476"><a href="#cb34-476" aria-hidden="true" tabindex="-1"></a><span class="in">    - name: Setup Python environment</span></span>
+<span id="cb34-477"><a href="#cb34-477" aria-hidden="true" tabindex="-1"></a><span class="in">      run: |</span></span>
+<span id="cb34-478"><a href="#cb34-478" aria-hidden="true" tabindex="-1"></a><span class="in">        python -m venv .venv</span></span>
+<span id="cb34-479"><a href="#cb34-479" aria-hidden="true" tabindex="-1"></a><span class="in">        source .venv/bin/activate</span></span>
+<span id="cb34-480"><a href="#cb34-480" aria-hidden="true" tabindex="-1"></a><span class="in">        pip install -r python/requirements.txt</span></span>
+<span id="cb34-481"><a href="#cb34-481" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb34-482"><a href="#cb34-482" aria-hidden="true" tabindex="-1"></a><span class="in">    - name: Run R tests</span></span>
+<span id="cb34-483"><a href="#cb34-483" aria-hidden="true" tabindex="-1"></a><span class="in">      run: Rscript R/analysis.R</span></span>
+<span id="cb34-484"><a href="#cb34-484" aria-hidden="true" tabindex="-1"></a><span class="in">    </span></span>
+<span id="cb34-485"><a href="#cb34-485" aria-hidden="true" tabindex="-1"></a><span class="in">    - name: Run Python tests</span></span>
+<span id="cb34-486"><a href="#cb34-486" aria-hidden="true" tabindex="-1"></a><span class="in">      run: |</span></span>
+<span id="cb34-487"><a href="#cb34-487" aria-hidden="true" tabindex="-1"></a><span class="in">        source .venv/bin/activate</span></span>
+<span id="cb34-488"><a href="#cb34-488" aria-hidden="true" tabindex="-1"></a><span class="in">        python python/app.py</span></span>
+<span id="cb34-489"><a href="#cb34-489" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb34-490"><a href="#cb34-490" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-491"><a href="#cb34-491" aria-hidden="true" tabindex="-1"></a><span class="fu">## CI Benefits</span></span>
+<span id="cb34-492"><a href="#cb34-492" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-493"><a href="#cb34-493" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Automated Testing**: Ensures code works in clean environments</span>
+<span id="cb34-494"><a href="#cb34-494" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Environment Validation**: Confirms lockfiles are correct</span>
+<span id="cb34-495"><a href="#cb34-495" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Cross-platform Testing**: Test on multiple R/Python versions</span>
+<span id="cb34-496"><a href="#cb34-496" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**Deployment Triggers**: Automatically deploy on successful tests</span>
+<span id="cb34-497"><a href="#cb34-497" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-498"><a href="#cb34-498" aria-hidden="true" tabindex="-1"></a><span class="fu"># Presentation Tips for R Meetup</span></span>
+<span id="cb34-499"><a href="#cb34-499" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-500"><a href="#cb34-500" aria-hidden="true" tabindex="-1"></a><span class="fu">## Structure Your Talk</span></span>
+<span id="cb34-501"><a href="#cb34-501" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-502"><a href="#cb34-502" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>**Start with Problems**: Show real-world dependency conflicts</span>
+<span id="cb34-503"><a href="#cb34-503" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>**Explain Concepts**: Use simple analogies (apartments vs. houses)</span>
+<span id="cb34-504"><a href="#cb34-504" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>**Live Demo**: Initialize renv, snapshot, restore on "fresh" machine</span>
+<span id="cb34-505"><a href="#cb34-505" aria-hidden="true" tabindex="-1"></a><span class="ss">4. </span>**Show Cross-language**: Demonstrate reticulate integration</span>
+<span id="cb34-506"><a href="#cb34-506" aria-hidden="true" tabindex="-1"></a><span class="ss">5. </span>**Deployment Demo**: Deploy Shiny app to Posit Cloud</span>
+<span id="cb34-507"><a href="#cb34-507" aria-hidden="true" tabindex="-1"></a><span class="ss">6. </span>**Q&amp;A**: Prepare for common questions</span>
+<span id="cb34-508"><a href="#cb34-508" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-509"><a href="#cb34-509" aria-hidden="true" tabindex="-1"></a><span class="fu">## Key Takeaways for Audience</span></span>
+<span id="cb34-510"><a href="#cb34-510" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-511"><a href="#cb34-511" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Virtual environments are essential for reproducible data science</span>
+<span id="cb34-512"><a href="#cb34-512" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>renv makes R environment management straightforward</span>
+<span id="cb34-513"><a href="#cb34-513" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Python's venv + requirements.txt is the minimum viable approach</span>
+<span id="cb34-514"><a href="#cb34-514" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Lockfiles are your insurance policy for deployment</span>
+<span id="cb34-515"><a href="#cb34-515" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Start small: use renv on your next R project</span>
+<span id="cb34-516"><a href="#cb34-516" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-517"><a href="#cb34-517" aria-hidden="true" tabindex="-1"></a><span class="fu">## Common Questions</span></span>
+<span id="cb34-518"><a href="#cb34-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-519"><a href="#cb34-519" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**"Isn't this overkill for small projects?"** No, the overhead is minimal and prevents future headaches</span>
+<span id="cb34-520"><a href="#cb34-520" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**"What about conda?"** Great for complex scientific stacks, but renv/venv are simpler for most R/Python work</span>
+<span id="cb34-521"><a href="#cb34-521" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**"How do I handle system dependencies?"** Virtual environments handle packages, but system libraries (like GDAL) need separate management</span>
+<span id="cb34-522"><a href="#cb34-522" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-523"><a href="#cb34-523" aria-hidden="true" tabindex="-1"></a><span class="fu"># Further Resources</span></span>
+<span id="cb34-524"><a href="#cb34-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-525"><a href="#cb34-525" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">renv Documentation</span><span class="co">](https://rstudio.github.io/renv/)</span></span>
+<span id="cb34-526"><a href="#cb34-526" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Poetry Guide</span><span class="co">](https://python-poetry.org/docs/)</span></span>
+<span id="cb34-527"><a href="#cb34-527" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">reticulate Package</span><span class="co">](https://rstudio.github.io/reticulate/)</span></span>
+<span id="cb34-528"><a href="#cb34-528" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Posit Cloud Deployment</span><span class="co">](https://docs.posit.co/posit-cloud/)</span></span>
+<span id="cb34-529"><a href="#cb34-529" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">GitHub Actions for R</span><span class="co">](https://github.com/r-lib/actions)</span></span>
+<span id="cb34-530"><a href="#cb34-530" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-531"><a href="#cb34-531" aria-hidden="true" tabindex="-1"></a><span class="fu"># Conclusion</span></span>
+<span id="cb34-532"><a href="#cb34-532" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-533"><a href="#cb34-533" aria-hidden="true" tabindex="-1"></a>Virtual environments transform data science workflows from fragile, machine-dependent processes to robust, reproducible systems. By isolating dependencies and capturing exact versions in lockfiles, you ensure that your analyses will work consistently across different environments and over time. Whether you're an R user dipping into Python or maintaining complex multi-language projects, mastering virtual environments will make you a more effective and confident data scientist.</span>
+<span id="cb34-534"><a href="#cb34-534" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-535"><a href="#cb34-535" aria-hidden="true" tabindex="-1"></a>The examples in this tutorial provide a solid foundation—start by applying renv to your next R project, and you'll quickly see the benefits in practice.</span>
+</code><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></pre></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mpfoley73/ds_lab/edit/main/experiments/virtual_environs/tutorial.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mpfoley73/ds_lab/blob/main/experiments/virtual_environs/tutorial.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div></div></footer></body></html>

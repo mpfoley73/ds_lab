@@ -1,0 +1,18 @@
+# R virtual environments
+renv/
+# renv.lock  # Actually, we want to commit this!
+
+# Python virtual environments
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Output files
+*.png
+*.csv
+python_output.csv
+
+# R outputs
+.Rhistory
+.RData
