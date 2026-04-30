@@ -1,5 +1,6 @@
 ---
 title: "Penguins EDA"
+date: 2026-04-30
 format:
   html:
     code-fold: true

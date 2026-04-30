@@ -67,7 +67,7 @@
     "href": "index.html#recent-experiments",
     "title": "Data Science Lab",
     "section": "Recent Experiments",
-    "text": "Recent Experiments\n\n\n\n\n\n\n\n\n\n\nPenguins EDA\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nModel\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nVirtual Environments\n\n\nwith renv and venv\n\n\nHow to use renv and venv for reproducible data science in R and Python, with examples and deployment tips. \n\n\n\n\n\nApr 27, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nGreat Tables with gt\n\n\nHow to use gt\n\n\nExperimenting with gt package to learn basics plus advanced features. \n\n\n\n\n\nMar 15, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nCleveland’s Changing Population\n\n\nExploring the US Census with R\n\n\nWorking with APIs using the tidycensus R package. \n\n\n\n\n\nNov 20, 2024\n\n\n\n\n\n\nNo matching items"
+    "text": "Recent Experiments\n\n\n\n\n\n\n\n\n\n\nModel\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPenguins EDA\n\n\n\n\n\n\n\n\n\n\n\nApr 30, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nVirtual Environments\n\n\nwith renv\n\n\nHow to use renv for reproducible data science in R. \n\n\n\n\n\nApr 27, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nGreat Tables with gt\n\n\nHow to use gt\n\n\nExperimenting with gt package to learn basics plus advanced features. \n\n\n\n\n\nMar 15, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nCleveland’s Changing Population\n\n\nExploring the US Census with R\n\n\nWorking with APIs using the tidycensus R package. \n\n\n\n\n\nNov 20, 2024\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "experiments/us_census_api/census.html",
@@ -536,14 +536,14 @@
     "href": "experiments/virtual_environs/tutorial.html",
     "title": "Virtual Environments",
     "section": "",
-    "text": "This tutorial provides a comprehensive introduction to virtual environments in data science, with a focus on R users who may also work with Python. We’ll explore the conceptual foundations, practical reasons for using virtual environments, common use cases in data science workflows, and the mechanics of implementation in both R and Python. The tutorial includes hands-on examples and deployment considerations to give you both functional knowledge and conceptual understanding suitable for presenting to peers.\n\n\nBefore we begin, let’s configure our Python environment for the examples in this tutorial."
+    "text": "Virtual environments ensure that your code runs consistently regardless of where or when it’s executed. They allow you to manage project-specific dependencies without affecting your global R or Python installations.\nI’ve used R for years without virtual environments and nothing has broken. Why should I care about them now?\nGenerally, the decision framework is use {renv} when:\nSkip it when:"
   },
   {
     "objectID": "experiments/virtual_environs/tutorial.html#setup",
     "href": "experiments/virtual_environs/tutorial.html#setup",
     "title": "Virtual Environments",
-    "section": "",
-    "text": "Before we begin, let’s configure our Python environment for the examples in this tutorial."
+    "section": "Setup",
+    "text": "Setup\nBefore we begin, let’s configure our Python environment for the examples in this tutorial."
   },
   {
     "objectID": "experiments/virtual_environs/tutorial.html#key-benefits",

@@ -1,10 +1,10 @@
 ---
 title: "Virtual Environments"
-subtitle: "with **renv** and **venv**"
+subtitle: "with **renv**"
 date: 2026-04-27
 categories: [gt, tables]
 description: |
-  How to use **renv** and **venv** for reproducible data science in R and Python, with examples and deployment tips.
+  How to use **renv** for reproducible data science in R.
 format:
   html:
     toc: true
@@ -16,87 +16,32 @@ execute:
   error: false
 ---
 
-# Overview
+Virtual environments ensure that your code runs consistently regardless of where or when it's executed. They allow you to manage project-specific dependencies without affecting your global R or Python installations. 
 
-This tutorial provides a comprehensive introduction to virtual environments in data science, with a focus on R users who may also work with Python. We'll explore the conceptual foundations, practical reasons for using virtual environments, common use cases in data science workflows, and the mechanics of implementation in both R and Python. The tutorial includes hands-on examples and deployment considerations to give you both functional knowledge and conceptual understanding suitable for presenting to peers.
+I've used R for years without virtual environments and nothing has broken. Why should I care about them now?
 
-## Setup
+- For **one-time** analyses, I install any additional packages I need, run my code, and move on. Using **{renv}** feels like overhead with negligible payoff. Only value is if you need to exactly reproduce your results later.
+- For **recurring** analyses, I may return to a project and find that some packages need to be installed. Others have been updated, but this is easily resolved. Again, the benefits of **{renv}** don't seem to justify the effort. There is the possibility of subtle drift in results, but that rarely matters. On the other hand, if model defaults change, or factor handling changes, or plot scales or themes change, that can be a real issue.
+- For **collaborative** projects, consistent package versions start to make sense. If I upgrade a package to use a new function, that forces my collaborators to upgrade as well.
+- For **deployment** to Posit Cloud, builds use whatever package versions are current. If I want to ensure that my app continues to work as I intend, I need to use **{renv}** to lock in the versions.
 
-Before we begin, let's configure our Python environment for the examples in this tutorial.
+Generally, the decision framework is use **{renv}** when:
 
-```{r}
-#| label: setup
-#| include: false
-# Configure reticulate to use our project virtual environment
-if (!require(reticulate)) {
-  install.packages("reticulate")
-}
-# Use the Python executable from our virtual environment
-reticulate::use_python(".venv/Scripts/python.exe", required = TRUE)
-```
+- You need consistency across time (recurring reports)
+- Multiple people are involved
+- You deploy the project
+- You may need to reproduce results exactly
 
-# Why Use Virtual Environments?
+Skip it when:
 
-Virtual environments are isolated spaces where you can install and manage project-specific dependencies without affecting your system's global package installations. This isolation prevents conflicts and ensures reproducibility.
+- Project is exploratory or one-off
+- Speed matters more than reproducibility
+- You’re the only user and stakes are low
 
-## Key Benefits
-
-1. **Dependency Isolation**: Each project maintains its own set of packages and versions, preventing "dependency hell" where different projects require conflicting package versions.
-
-2. **Reproducibility**: By locking exact package versions, you can recreate the exact same environment on different machines or at different times, ensuring analyses produce consistent results.
-
-3. **Collaboration**: Team members can easily recreate your environment, reducing "works on my machine" issues.
-
-4. **System Stability**: Your global R/Python installation remains clean and stable, unaffected by project-specific changes.
-
-5. **Deployment Readiness**: Lockfiles make it straightforward to deploy applications with known, tested dependencies.
-
-## The Problem Without Virtual Environments
-
-Imagine you're working on multiple data science projects:
-
-- Project A uses `dplyr` 1.0.0 and `ggplot2` 3.3.0
-- Project B requires `dplyr` 1.1.0 and `ggplot2` 3.4.0
-
-Without virtual environments, upgrading packages for Project B might break Project A. Virtual environments solve this by giving each project its own package sandbox.
-
-# Common Use Cases in Data Science
-
-## Research and Academic Work
-
-- **Reproducible Research**: Journals increasingly require code and data to reproduce results. Virtual environments ensure the exact packages used are preserved.
-- **Long-term Archival**: Analyses from years ago can still run with the original environment.
-- **Peer Review**: Reviewers can recreate your exact setup to verify results.
-
-## Teaching and Education
-
-- **Consistent Student Environments**: All students get the same package versions, avoiding confusion from version differences.
-- **Course Materials**: Tutorials and assignments work reliably across different student machines.
-
-## Production and Deployment
-
-- **Model Deployment**: Machine learning models deployed to production need the exact same environment used during training.
-- **Web Applications**: Shiny apps or Streamlit apps require consistent dependencies across development, staging, and production.
-- **API Services**: Data science APIs must have predictable package versions to ensure stable behavior.
-
-## Multi-language Projects
-
-- **R + Python Integration**: Projects using both languages (via `reticulate`) need coordinated environments.
-- **Legacy Code Migration**: Gradually migrate from one language to another while maintaining separate environments.
-
-# Core Concepts
-
-Before diving into mechanics, let's understand the key concepts:
-
-- **Environment**: A project-specific collection of packages with their versions.
-- **Lockfile**: A file that records exact package versions and sources, enabling perfect recreation of the environment.
-- **Snapshot**: The process of recording current package versions to a lockfile.
-- **Restore**: Installing packages from a lockfile to recreate an environment.
-- **Isolation**: Keeping project dependencies separate from system-wide installations.
 
 # R: renv (The Standard Approach)
 
-`renv` is the recommended tool for managing R package environments. It creates a project-local library and generates a `renv.lock` file that captures exact package versions and sources.
+**{renv}** is the recommended tool for managing R package environments. It creates a project-local library and generates a `renv.lock` file that captures exact package versions and sources.
 
 ## Basic Workflow
 
@@ -146,113 +91,6 @@ renv::restore()
 - Run `renv::snapshot()` after installing new packages
 - Use `renv::status()` to check for discrepancies between lockfile and current environment
 
-# Python: venv and Poetry
-
-Python offers several virtual environment tools. We'll cover the built-in `venv` and the more advanced `poetry`.
-
-## venv: Built-in Virtual Environments
-
-`venv` creates isolated Python environments using the standard library.
-
-### Basic Commands
-
-Create a virtual environment:
-```bash
-# Create environment in .venv directory
-python -m venv .venv
-```
-
-Activate the environment:
-```bash
-# On Windows
-.venv\Scripts\activate
-
-# On macOS/Linux
-source .venv/bin/activate
-```
-
-Install packages:
-```bash
-pip install pandas numpy matplotlib
-```
-
-Create requirements file:
-```bash
-pip freeze > requirements.txt
-```
-
-Install from requirements:
-```bash
-pip install -r requirements.txt
-```
-
-## Poetry: Advanced Dependency Management
-
-Poetry provides deterministic dependency resolution and better lockfile management.
-
-### Basic Commands
-
-Initialize a Poetry project:
-```bash
-poetry init
-```
-
-Add dependencies:
-```bash
-poetry add pandas numpy
-```
-
-Install dependencies:
-```bash
-poetry install
-```
-
-Activate the virtual environment:
-```bash
-poetry shell
-```
-
-## Python Best Practices
-
-- Use `.venv` or `venv` as directory name (add to `.gitignore`)
-- Commit `requirements.txt` or `poetry.lock` + `pyproject.toml`
-- Specify Python version in your environment
-- Use `pip-tools` or Poetry for complex dependency trees
-
-# Using Python from R (reticulate)
-
-The `reticulate` package allows seamless integration between R and Python.
-
-## Setting Up reticulate with Virtual Environments
-
-Create and configure a Python environment:
-```r
-# Install reticulate if needed
-install.packages("reticulate")
-
-# Create a Python virtual environment
-reticulate::virtualenv_create("python_env")
-
-# Configure reticulate to use this environment
-reticulate::use_virtualenv("python_env", required = TRUE)
-```
-
-Check configuration:
-```r
-reticulate::py_config()
-```
-
-## Using Python Objects in R
-
-```r
-# Import Python modules
-pd <- reticulate::import("pandas")
-np <- reticulate::import("numpy")
-
-# Use Python objects
-df <- pd$DataFrame(list(x = c(1, 2, 3), y = c(4, 5, 6)))
-print(df)
-```
 
 # Lockfiles and Reproducibility
 
@@ -339,37 +177,6 @@ ggsave("R/plot.png", p, width = 6, height = 4)
 
 # Print summary
 summary(df)
-```
-
-## Python Analysis Example
-
-Our Python script performs similar analysis using pandas:
-
-```{python}
-#| label: python-analysis
-#| echo: true
-import pandas as pd
-import numpy as np
-
-# Generate sample data
-np.random.seed(123)
-df = pd.DataFrame(
-    {
-        "x": np.random.normal(0, 1, 100),
-        "y": np.random.normal(0, 1, 100),
-        "group": np.random.choice(["A", "B"], 100),
-    }
-)
-
-# Print summary
-print("Data Summary:")
-print(df.describe())
-print("\nGroup counts:")
-print(df["group"].value_counts())
-
-# Save to CSV
-df.to_csv("python_output.csv", index=False)
-print("\nData saved to python_output.csv")
 ```
 
 ## Shiny App for Deployment
