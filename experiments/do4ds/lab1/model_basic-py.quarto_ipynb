@@ -11,7 +11,7 @@
         "    code-fold: true\n",
         "---"
       ],
-      "id": "777ca901"
+      "id": "1567df4c"
     },
     {
       "cell_type": "code",
@@ -23,7 +23,7 @@
         "from sklearn.linear_model import LinearRegression\n",
         "from sklearn import preprocessing"
       ],
-      "id": "5f01dde9",
+      "id": "9b52b90f",
       "execution_count": null,
       "outputs": []
     },
@@ -33,7 +33,7 @@
       "source": [
         "## Get Data\n"
       ],
-      "id": "10cabf50"
+      "id": "ecc0693b"
     },
     {
       "cell_type": "code",
@@ -43,7 +43,7 @@
         "\n",
         "df.head(3)"
       ],
-      "id": "0e75295a",
+      "id": "bcb68449",
       "execution_count": null,
       "outputs": []
     },
@@ -53,7 +53,7 @@
       "source": [
         "## Define Model and Fit\n"
       ],
-      "id": "4bf0b3ea"
+      "id": "1672c48a"
     },
     {
       "cell_type": "code",
@@ -64,7 +64,7 @@
         "\n",
         "model = LinearRegression().fit(X, y)"
       ],
-      "id": "128bb6b6",
+      "id": "c0fc95a0",
       "execution_count": null,
       "outputs": []
     },
@@ -74,7 +74,7 @@
       "source": [
         "## Get some information\n"
       ],
-      "id": "d2d6cb6c"
+      "id": "7627f9d7"
     },
     {
       "cell_type": "code",
@@ -85,7 +85,7 @@
         "print(f\"Columns {X.columns}\")\n",
         "print(f\"Coefficients {model.coef_}\")"
       ],
-      "id": "eaf8b8b0",
+      "id": "744c2475",
       "execution_count": null,
       "outputs": []
     }
