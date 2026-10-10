@@ -60,14 +60,14 @@
     "href": "experiments/index.html",
     "title": "Experiments",
     "section": "",
-    "text": "Small experiments exploring R, Quarto, and LLM tooling.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nGreat Tables with gt\n\n\nExperimenting with gt package to learn basics plus advanced features.\n\n\n\nMar 15, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nCleveland’s Changing Population\n\n\nWorking with APIs using the tidycensus R package.\n\n\n\nNov 20, 2024\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Small experiments exploring R, Quarto, and LLM tooling.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nModel\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPenguins EDA\n\n\n\n\n\n\nApr 30, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nVirtual Environments\n\n\nHow to use renv for reproducible data science in R.\n\n\n\nApr 27, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nGreat Tables with gt\n\n\nExperimenting with gt package to learn basics plus advanced features.\n\n\n\nMar 15, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nCleveland’s Changing Population\n\n\nWorking with APIs using the tidycensus R package.\n\n\n\nNov 20, 2024\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html#recent-experiments",
     "href": "index.html#recent-experiments",
     "title": "Data Science Lab",
     "section": "Recent Experiments",
-    "text": "Recent Experiments\n\n\n\n\n\n\n\n\n\n\nModel\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPenguins EDA\n\n\n\n\n\n\n\n\n\n\n\nApr 30, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nGreat Tables with gt\n\n\nHow to use gt\n\n\nExperimenting with gt package to learn basics plus advanced features. \n\n\n\n\n\nMar 15, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nCleveland’s Changing Population\n\n\nExploring the US Census with R\n\n\nWorking with APIs using the tidycensus R package. \n\n\n\n\n\nNov 20, 2024\n\n\n\n\n\n\nNo matching items"
+    "text": "Recent Experiments\n\n\n\n\n\n\n\n\n\n\nModel\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPenguins EDA\n\n\n\n\n\n\n\n\n\n\n\nApr 30, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nVirtual Environments\n\n\nwith renv\n\n\nHow to use renv for reproducible data science in R. \n\n\n\n\n\nApr 27, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nGreat Tables with gt\n\n\nHow to use gt\n\n\nExperimenting with gt package to learn basics plus advanced features. \n\n\n\n\n\nMar 15, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nCleveland’s Changing Population\n\n\nExploring the US Census with R\n\n\nWorking with APIs using the tidycensus R package. \n\n\n\n\n\nNov 20, 2024\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "experiments/us_census_api/census.html",
@@ -886,7 +886,7 @@
     "href": "experiments/virtual_environs/index.html#r-analysis-example",
     "title": "Virtual Environments",
     "section": "R Analysis Example",
-    "text": "R Analysis Example\nOur R script performs basic data exploration and visualization:\n\n\nShow the code\n# Load required packages\nlibrary(ggplot2)\n\n# Generate sample data\nset.seed(123)\ndf &lt;- data.frame(\n  x = rnorm(100),\n  y = rnorm(100),\n  group = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\n# Create a plot\np &lt;- ggplot(df, aes(x = x, y = y, color = group)) +\n  geom_point() +\n  labs(title = \"Sample Scatter Plot\", x = \"X Variable\", y = \"Y Variable\") +\n  theme_minimal()\n\nprint(p)\n\n\n\n\n\n\n\n\n\nShow the code\n# Save the plot\nggsave(\"R/plot.png\", p, width = 6, height = 4)\n\n# Print summary\nsummary(df)\n\n\n       x                  y              group          \n Min.   :-2.30917   Min.   :-2.0532   Length:100        \n 1st Qu.:-0.49385   1st Qu.:-0.8011   Class :character  \n Median : 0.06176   Median :-0.2258   Mode  :character  \n Mean   : 0.09041   Mean   :-0.1075                     \n 3rd Qu.: 0.69182   3rd Qu.: 0.4678                     \n Max.   : 2.18733   Max.   : 3.2410"
+    "text": "R Analysis Example\nOur R script performs basic data exploration and visualization:\n\n\nShow the code\n# Load required packages\nlibrary(ggplot2)\n\n# Generate sample data\nset.seed(123)\ndf &lt;- data.frame(\n  x = rnorm(100),\n  y = rnorm(100),\n  group = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\n# Create a plot\np &lt;- ggplot(df, aes(x = x, y = y, color = group)) +\n  geom_point() +\n  labs(title = \"Sample Scatter Plot\", x = \"X Variable\", y = \"Y Variable\") +\n  theme_minimal()\n\nprint(p)\n\n\n\n\n\n\n\n\n\nShow the code\n# Save the plot\nggsave(\"R/plot.png\", p, width = 6, height = 4)\n\n# Print summary\nsummary(df)\n\n\n       x                  y                 group    \n Min.   :-2.30917   Min.   :-2.0532   Length   :100  \n 1st Qu.:-0.49385   1st Qu.:-0.8011   N.unique :  2  \n Median : 0.06176   Median :-0.2258   N.blank  :  0  \n Mean   : 0.09041   Mean   :-0.1075   Min.nchar:  1  \n 3rd Qu.: 0.69182   3rd Qu.: 0.4678   Max.nchar:  1  \n Max.   : 2.18733   Max.   : 3.2410"
   },
   {
     "objectID": "experiments/virtual_environs/index.html#shiny-app-for-deployment",
@@ -964,5 +964,47 @@
     "title": "Virtual Environments",
     "section": "Example",
     "text": "Example\nInitialize renv in your project directory:\n# One-time setup per project\nrenv::init()\nInstall packages during development:\n# Install packages as you work\ninstall.packages(\"dplyr\")\ninstall.packages(\"ggplot2\")\nSnapshot your current environment:\n# Record exact versions to renv.lock\nrenv::snapshot()\nRestore environment on another machine:\n# Install packages exactly as in renv.lock\nrenv::restore()"
+  },
+  {
+    "objectID": "AGENTS.html",
+    "href": "AGENTS.html",
+    "title": "Working in ds_lab",
+    "section": "",
+    "text": "ds_lab is a personal data science laboratory, primarily using R and Quarto. Use it for small, self-contained experiments, searchable reference notes, and selected work published as a Quarto website through GitHub Pages.\n\nRead relevant source files before proposing or making changes.\nPrefer a useful prototype and iterative refinement over extensive planning.\nExplain why a technique or change works, concisely. Distinguish evidence, interpretation, and open questions.\nMake direct edits when requested and validate them when practical.\nPreserve existing content, filenames, and unrelated working-tree changes. Apply new conventions to new work; migrate existing work only when requested or necessary for the task.\nKeep infrastructure proportional to the experiment. Do not introduce a shared framework, dependency environment, or formal template by default.\n\n\n\n\n\nUse experiments/&lt;topic&gt;/index.qmd for a new standalone experiment.\nBook exercises may stay grouped under experiments/do4ds/lab&lt;N&gt;/ with descriptive .qmd filenames.\nKeep supporting files beside the document. Add R/, data/, or assets/ subdirectories only when they improve clarity.\nUse notes/ for concise reference recipes, explanations, and reusable insights.\n\nGive each new experiment a meaningful title, a date in YYYY-MM-DD format, a short description, and a few consistent categories in its YAML front matter. Reuse relevant existing categories before inventing new ones. Images are optional.\nUse Question -&gt; Experiment -&gt; What I learned as a light content structure. Equivalent headings are fine. Capture what was tried, what happened, and when the technique would be useful. Include setup details, limitations, and source attribution when they help future reuse. Identify book-derived exercises and link to the relevant material.\nPrefer portable paths and minimal examples using built-in, synthetic, or public data. Document required packages, external inputs, and credentials without embedding secrets or private data.\n\n\n\nKeep code local initially. When a second experiment needs the same pattern, consider extracting a small shared helper or writing a recipe in notes/. Reuse should follow demonstrated need, not anticipated possibilities. Dependency isolation with renv or a Python environment is optional; use it when an experiment’s reproducibility needs justify it.\n\n\n\n\n_quarto.yml defines the website. index.qmd and experiments/index.qmd discover experiment pages recursively beneath experiment subdirectories, including their index.qmd files. Home shows the five most recent entries.\nA discoverable page can appear automatically in listings. Check publication intent before adding unfinished material; listing visibility alone does not control whether a page is rendered or published.\ndocs/ is the configured website output directory; _freeze/ stores cached execution results with freeze: auto. Both are tracked. Preserve that policy unless a change is requested.\nEdit source documents and regenerate output rather than hand-editing generated HTML. Check that copied website resources contain only intended public files.\nKeep publishing separate from local editing and validation; publish when the user requests it.\n\n\n\n\n\nRender the affected page when practical. For navigation or listing changes, render the affected hubs and check discovered pages and links.\nUse temporary output for validation when it would avoid disturbing existing generated work. Render the relevant content too when checking previews or execution results.\nFrozen output does not prove that changed code or dependencies execute successfully. Run the relevant computation when the task requires it.\nRun git diff --check after edits and review the diff for unintended changes.\nReport what changed, why, what was verified, and any remaining limitations. Do not claim a successful render or publication without evidence."
+  },
+  {
+    "objectID": "AGENTS.html#purpose-and-collaboration",
+    "href": "AGENTS.html#purpose-and-collaboration",
+    "title": "Working in ds_lab",
+    "section": "",
+    "text": "ds_lab is a personal data science laboratory, primarily using R and Quarto. Use it for small, self-contained experiments, searchable reference notes, and selected work published as a Quarto website through GitHub Pages.\n\nRead relevant source files before proposing or making changes.\nPrefer a useful prototype and iterative refinement over extensive planning.\nExplain why a technique or change works, concisely. Distinguish evidence, interpretation, and open questions.\nMake direct edits when requested and validate them when practical.\nPreserve existing content, filenames, and unrelated working-tree changes. Apply new conventions to new work; migrate existing work only when requested or necessary for the task.\nKeep infrastructure proportional to the experiment. Do not introduce a shared framework, dependency environment, or formal template by default."
+  },
+  {
+    "objectID": "AGENTS.html#organization-and-new-experiments",
+    "href": "AGENTS.html#organization-and-new-experiments",
+    "title": "Working in ds_lab",
+    "section": "",
+    "text": "Use experiments/&lt;topic&gt;/index.qmd for a new standalone experiment.\nBook exercises may stay grouped under experiments/do4ds/lab&lt;N&gt;/ with descriptive .qmd filenames.\nKeep supporting files beside the document. Add R/, data/, or assets/ subdirectories only when they improve clarity.\nUse notes/ for concise reference recipes, explanations, and reusable insights.\n\nGive each new experiment a meaningful title, a date in YYYY-MM-DD format, a short description, and a few consistent categories in its YAML front matter. Reuse relevant existing categories before inventing new ones. Images are optional.\nUse Question -&gt; Experiment -&gt; What I learned as a light content structure. Equivalent headings are fine. Capture what was tried, what happened, and when the technique would be useful. Include setup details, limitations, and source attribution when they help future reuse. Identify book-derived exercises and link to the relevant material.\nPrefer portable paths and minimal examples using built-in, synthetic, or public data. Document required packages, external inputs, and credentials without embedding secrets or private data."
+  },
+  {
+    "objectID": "AGENTS.html#reuse",
+    "href": "AGENTS.html#reuse",
+    "title": "Working in ds_lab",
+    "section": "",
+    "text": "Keep code local initially. When a second experiment needs the same pattern, consider extracting a small shared helper or writing a recipe in notes/. Reuse should follow demonstrated need, not anticipated possibilities. Dependency isolation with renv or a Python environment is optional; use it when an experiment’s reproducibility needs justify it."
+  },
+  {
+    "objectID": "AGENTS.html#website-and-publishing",
+    "href": "AGENTS.html#website-and-publishing",
+    "title": "Working in ds_lab",
+    "section": "",
+    "text": "_quarto.yml defines the website. index.qmd and experiments/index.qmd discover experiment pages recursively beneath experiment subdirectories, including their index.qmd files. Home shows the five most recent entries.\nA discoverable page can appear automatically in listings. Check publication intent before adding unfinished material; listing visibility alone does not control whether a page is rendered or published.\ndocs/ is the configured website output directory; _freeze/ stores cached execution results with freeze: auto. Both are tracked. Preserve that policy unless a change is requested.\nEdit source documents and regenerate output rather than hand-editing generated HTML. Check that copied website resources contain only intended public files.\nKeep publishing separate from local editing and validation; publish when the user requests it."
+  },
+  {
+    "objectID": "AGENTS.html#validation-and-reporting",
+    "href": "AGENTS.html#validation-and-reporting",
+    "title": "Working in ds_lab",
+    "section": "",
+    "text": "Render the affected page when practical. For navigation or listing changes, render the affected hubs and check discovered pages and links.\nUse temporary output for validation when it would avoid disturbing existing generated work. Render the relevant content too when checking previews or execution results.\nFrozen output does not prove that changed code or dependencies execute successfully. Run the relevant computation when the task requires it.\nRun git diff --check after edits and review the diff for unintended changes.\nReport what changed, why, what was verified, and any remaining limitations. Do not claim a successful render or publication without evidence."
   }
 ]
