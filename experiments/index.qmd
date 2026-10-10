@@ -1,7 +1,8 @@
 ---
 title: "Experiments"
 listing:
-  contents: .
+  # Match the same experiment pages as Home, including nested book labs.
+  contents: "*/**/*.qmd"
   type: grid
   sort: "date desc"
   categories: true

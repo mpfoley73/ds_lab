@@ -2,11 +2,11 @@
 title: "Data Science Lab"
 listing:
   - id: experiments-grid
-    contents: "experiments/."
+    # Include pages within experiment folders, including their index.qmd files.
+    # The top-level experiments/index.qmd hub is outside this pattern.
+    contents: "experiments/*/**/*.qmd"
     max-items: 5
     type: default
-    exclude: 
-      filename: "index.qmd"
     sort: "date desc"
     # categories: true
     fields: [title, date, description, image]

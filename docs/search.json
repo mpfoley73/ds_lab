@@ -67,7 +67,7 @@
     "href": "index.html#recent-experiments",
     "title": "Data Science Lab",
     "section": "Recent Experiments",
-    "text": "Recent Experiments\n\n\n\n\n\n\n\n\n\n\nModel\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPenguins EDA\n\n\n\n\n\n\n\n\n\n\n\nApr 30, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nVirtual Environments\n\n\nwith renv\n\n\nHow to use renv for reproducible data science in R. \n\n\n\n\n\nApr 27, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nGreat Tables with gt\n\n\nHow to use gt\n\n\nExperimenting with gt package to learn basics plus advanced features. \n\n\n\n\n\nMar 15, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nCleveland’s Changing Population\n\n\nExploring the US Census with R\n\n\nWorking with APIs using the tidycensus R package. \n\n\n\n\n\nNov 20, 2024\n\n\n\n\n\n\nNo matching items"
+    "text": "Recent Experiments\n\n\n\n\n\n\n\n\n\n\nModel\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPenguins EDA\n\n\n\n\n\n\n\n\n\n\n\nApr 30, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nGreat Tables with gt\n\n\nHow to use gt\n\n\nExperimenting with gt package to learn basics plus advanced features. \n\n\n\n\n\nMar 15, 2026\n\n\n\n\n\n\n\n\n\n\n\n\nCleveland’s Changing Population\n\n\nExploring the US Census with R\n\n\nWorking with APIs using the tidycensus R package. \n\n\n\n\n\nNov 20, 2024\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "experiments/us_census_api/census.html",
@@ -775,5 +775,194 @@
     "title": "Model",
     "section": "Get some information",
     "text": "Get some information\n\n\nShow the code\nprint(f\"R^2 {model.score(X,y)}\")\nprint(f\"Intercept {model.intercept_}\")\nprint(f\"Columns {X.columns}\")\nprint(f\"Coefficients {model.coef_}\")\n\n\nR^2 0.8555368759537614\nIntercept 2169.2697209393973\nColumns Index(['bill_length_mm', 'species_Chinstrap', 'species_Gentoo', 'sex_male'], dtype='str')\nCoefficients [  32.53688677 -298.76553447 1094.86739145  547.36692408]"
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#goal",
+    "href": "experiments/virtual_environs/tutorial.html#goal",
+    "title": "Virtual Environments",
+    "section": "Goal",
+    "text": "Goal\nI will decide if I should finally start using renv in my R projects, or if it will just add unnecessary ceremony.\n\nDo I actually need reproducible environments for the kind of work I do? When does “just update the package” stop being good enough?\nWhat exactly does renv do under the hood?\nHow much overhead does it add to a project?\n\nMy working hypothesis is that as my projects become more collaborative, more public, and more long‑lived, the cost of not using renv is starting to exceed the cost of learning it."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#why-im-thinking-about-this",
+    "href": "experiments/virtual_environs/tutorial.html#why-im-thinking-about-this",
+    "title": "Virtual Environments",
+    "section": "Why I’m thinking about this",
+    "text": "Why I’m thinking about this\nI’ve developed in R the same way for years: install/upgrade any packages I need, produce my analysis, move on. No virtual environments.\nBut a few patterns show up:\n\nOld projects don’t always run the same way they used to. Plot defaults shift. Model behavior changes.\nA collaborator uses an updated package and now I need to update too.\nDeploying to Posit Cloud sometimes produces results that don’t match my local machine.\n\nThese aren’t disasters, but they’re friction."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#questions-i-want-to-answer",
+    "href": "experiments/virtual_environs/tutorial.html#questions-i-want-to-answer",
+    "title": "Virtual Environments",
+    "section": "Questions I want to answer",
+    "text": "Questions I want to answer\n\nDo I actually need reproducible environments for the kind of work I do? When does “just update the package” stop being good enough?\nWhat exactly does renv do under the hood?\nHow much overhead does it add to a project?\n\nWorking hypothesis is that as my projects become more collaborative, more public, and more long‑lived, the cost of not using renv is starting to exceed the cost of learning it."
+  },
+  {
+    "objectID": "experiments/virtual_environs/tutorial.html#how-renv-works-1",
+    "href": "experiments/virtual_environs/tutorial.html#how-renv-works-1",
+    "title": "Virtual Environments",
+    "section": "How renv Works",
+    "text": "How renv Works\n\nCreates a renv/ directory with project-specific package installations\nGenerates renv.lock with exact versions, sources, and dependencies\nModifies .Rprofile to automatically activate the local environment\nProvides tools for managing package conflicts and updates"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html",
+    "href": "experiments/virtual_environs/index.html",
+    "title": "Virtual Environments",
+    "section": "",
+    "text": "I’ve developed in R for years without using virtual environments. There’s never been a disaster, but I do experience some friction:\nShould I finally start using renv, or will it just add unnecessary ceremony?"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#goal",
+    "href": "experiments/virtual_environs/index.html#goal",
+    "title": "Virtual Environments",
+    "section": "Goal",
+    "text": "Goal\nI’ll decide by addressing these questions:\n\nWhat exactly does renv do under the hood?\nHow much overhead does it add to a project?\nDo I actually need reproducible environments for the kind of work I do? I.e., when does “just update the package” stop being good enough?\n\nMy hypothesis is that as projects become more collaborative, more public, and more long‑lived, the cost of not using renv starts to exceed the cost of learning it."
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#how-renv-works",
+    "href": "experiments/virtual_environs/index.html#how-renv-works",
+    "title": "Virtual Environments",
+    "section": "How renv Works",
+    "text": "How renv Works\nCreate a virtual environment by running init() one time per project.\n\nrenv::init()\n\ninit():\n\ncreates a project‑local library in folder renv/,\ncreates a lockfile, renv.lock, containing package version and source specifications, and\nadds an auto‑activation hook in .Rprofile, creating the file if it doesn’t already exist.\n\nvirtual_environs/\n├── .Rprofile\n├── index.qmd\n├── renv/\n│   ├── library\n│   └── activate.R\n├── renv.lock\nThis line in .Rprofile activates the local environment whenever I start an R session:\n\nsource(\"renv/activate.R\")\n\nFrom here on, package installs go into the project, not my global library. Periodically run snapshot() to update renv.lock with the any changes to package versions.1\n\nrenv::snapshot()\n\nThat’s about it. Be sure to commit renv.lock to version control, but ignore the renv/ folder itself."
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#basic-workflow",
+    "href": "experiments/virtual_environs/index.html#basic-workflow",
+    "title": "Virtual Environments",
+    "section": "Basic Workflow",
+    "text": "Basic Workflow\n\nInitialize: Set up renv for your project\nInstall Packages: Add packages as needed during development\nSnapshot: Record current package state to renv.lock\nRestore: Recreate the environment from renv.lock on another machine"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#core-commands",
+    "href": "experiments/virtual_environs/index.html#core-commands",
+    "title": "Virtual Environments",
+    "section": "Core Commands",
+    "text": "Core Commands\nInitialize renv in your project directory:\n# One-time setup per project\nrenv::init()\nInstall packages during development:\n# Install packages as you work\ninstall.packages(\"dplyr\")\ninstall.packages(\"ggplot2\")\nSnapshot your current environment:\n# Record exact versions to renv.lock\nrenv::snapshot()\nRestore environment on another machine:\n# Install packages exactly as in renv.lock\nrenv::restore()"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#how-renv-works-1",
+    "href": "experiments/virtual_environs/index.html#how-renv-works-1",
+    "title": "Virtual Environments",
+    "section": "How renv Works",
+    "text": "How renv Works\n\nCreates a renv/ directory with project-specific package installations\nGenerates renv.lock with exact versions, sources, and dependencies\nModifies .Rprofile to automatically activate the local environment\nProvides tools for managing package conflicts and updates"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#best-practices-for-r-projects",
+    "href": "experiments/virtual_environs/index.html#best-practices-for-r-projects",
+    "title": "Virtual Environments",
+    "section": "Best Practices for R Projects",
+    "text": "Best Practices for R Projects\n\nAlways commit renv.lock to version control\nNever commit the renv/library/ directory (it’s large and machine-specific)\nRun renv::snapshot() after installing new packages\nUse renv::status() to check for discrepancies between lockfile and current environment"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#r-renv.lock",
+    "href": "experiments/virtual_environs/index.html#r-renv.lock",
+    "title": "Virtual Environments",
+    "section": "R: renv.lock",
+    "text": "R: renv.lock\nContains: - Package names and versions - Package sources (CRAN, GitHub, local) - Dependency relationships - R version information"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#python-requirements.txt-vs.-poetry",
+    "href": "experiments/virtual_environs/index.html#python-requirements.txt-vs.-poetry",
+    "title": "Virtual Environments",
+    "section": "Python: requirements.txt vs. Poetry",
+    "text": "Python: requirements.txt vs. Poetry\nrequirements.txt (basic):\npandas==2.0.3\nnumpy==1.24.3\nmatplotlib==3.7.1\nPoetry lockfile (comprehensive): - Exact versions and hashes - Dependency resolution details - Platform-specific information"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#version-control-strategy",
+    "href": "experiments/virtual_environs/index.html#version-control-strategy",
+    "title": "Virtual Environments",
+    "section": "Version Control Strategy",
+    "text": "Version Control Strategy\n\nCommit lockfiles to Git\nNever commit virtual environment directories\nUse CI to validate environment restoration\nTag releases with specific lockfile versions"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#project-structure",
+    "href": "experiments/virtual_environs/index.html#project-structure",
+    "title": "Virtual Environments",
+    "section": "Project Structure",
+    "text": "Project Structure\nvirtual_environs_tutorial/\n├── tutorial.qmd\n├── R/\n│   ├── analysis.R\n│   └── shiny_app.R\n├── python/\n│   ├── app.py\n│   └── requirements.txt\n├── renv.lock\n└── .github/\n    └── workflows/\n        └── ci.yml"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#r-analysis-example",
+    "href": "experiments/virtual_environs/index.html#r-analysis-example",
+    "title": "Virtual Environments",
+    "section": "R Analysis Example",
+    "text": "R Analysis Example\nOur R script performs basic data exploration and visualization:\n\n\nShow the code\n# Load required packages\nlibrary(ggplot2)\n\n# Generate sample data\nset.seed(123)\ndf &lt;- data.frame(\n  x = rnorm(100),\n  y = rnorm(100),\n  group = sample(c(\"A\", \"B\"), 100, replace = TRUE)\n)\n\n# Create a plot\np &lt;- ggplot(df, aes(x = x, y = y, color = group)) +\n  geom_point() +\n  labs(title = \"Sample Scatter Plot\", x = \"X Variable\", y = \"Y Variable\") +\n  theme_minimal()\n\nprint(p)\n\n\n\n\n\n\n\n\n\nShow the code\n# Save the plot\nggsave(\"R/plot.png\", p, width = 6, height = 4)\n\n# Print summary\nsummary(df)\n\n\n       x                  y              group          \n Min.   :-2.30917   Min.   :-2.0532   Length:100        \n 1st Qu.:-0.49385   1st Qu.:-0.8011   Class :character  \n Median : 0.06176   Median :-0.2258   Mode  :character  \n Mean   : 0.09041   Mean   :-0.1075                     \n 3rd Qu.: 0.69182   3rd Qu.: 0.4678                     \n Max.   : 2.18733   Max.   : 3.2410"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#shiny-app-for-deployment",
+    "href": "experiments/virtual_environs/index.html#shiny-app-for-deployment",
+    "title": "Virtual Environments",
+    "section": "Shiny App for Deployment",
+    "text": "Shiny App for Deployment\nFor demonstration purposes, we’ve included a simple Shiny app:\n\n\nShow the code\nlibrary(shiny)\nlibrary(ggplot2)\n\nui &lt;- fluidPage(\n  titlePanel(\"Virtual Environment Demo\"),\n  sidebarLayout(\n    sidebarPanel(\n      sliderInput(\"n\", \"Number of points:\", 10, 1000, 100),\n      selectInput(\"color\", \"Color:\", c(\"blue\", \"red\", \"green\"))\n    ),\n    mainPanel(plotOutput(\"plot\"))\n  )\n)\n\nserver &lt;- function(input, output) {\n  output$plot &lt;- renderPlot({\n    set.seed(123)\n    df &lt;- data.frame(x = rnorm(input$n), y = rnorm(input$n))\n    ggplot(df, aes(x, y)) +\n      geom_point(color = input$color) +\n      theme_minimal()\n  })\n}\n\nshinyApp(ui, server)"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#deploying-a-shiny-app",
+    "href": "experiments/virtual_environs/index.html#deploying-a-shiny-app",
+    "title": "Virtual Environments",
+    "section": "Deploying a Shiny App",
+    "text": "Deploying a Shiny App\n\nPrepare Your App: Ensure all dependencies are in renv.lock\nPush to GitHub: Commit your code and lockfiles\nCreate Posit Cloud Project:\n\nGo to Posit Cloud\nCreate “New Project from Git Repository”\nEnter your repository URL\n\nConfigure Environment: Posit Cloud will automatically restore from renv.lock\nPublish: Use the publish button to make your app publicly accessible"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#benefits-for-deployment",
+    "href": "experiments/virtual_environs/index.html#benefits-for-deployment",
+    "title": "Virtual Environments",
+    "section": "Benefits for Deployment",
+    "text": "Benefits for Deployment\n\nManaged Infrastructure: No server maintenance\nAutomatic Scaling: Handles traffic spikes\nEnvironment Consistency: Uses your lockfile for exact reproduction\nEasy Sharing: Share links with collaborators or for presentations"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#basic-ci-workflow",
+    "href": "experiments/virtual_environs/index.html#basic-ci-workflow",
+    "title": "Virtual Environments",
+    "section": "Basic CI Workflow",
+    "text": "Basic CI Workflow"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#ci-benefits",
+    "href": "experiments/virtual_environs/index.html#ci-benefits",
+    "title": "Virtual Environments",
+    "section": "CI Benefits",
+    "text": "CI Benefits\n\nAutomated Testing: Ensures code works in clean environments\nEnvironment Validation: Confirms lockfiles are correct\nCross-platform Testing: Test on multiple R/Python versions\nDeployment Triggers: Automatically deploy on successful tests"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#structure-your-talk",
+    "href": "experiments/virtual_environs/index.html#structure-your-talk",
+    "title": "Virtual Environments",
+    "section": "Structure Your Talk",
+    "text": "Structure Your Talk\n\nStart with Problems: Show real-world dependency conflicts\nExplain Concepts: Use simple analogies (apartments vs. houses)\nLive Demo: Initialize renv, snapshot, restore on “fresh” machine\nShow Cross-language: Demonstrate reticulate integration\nDeployment Demo: Deploy Shiny app to Posit Cloud\nQ&A: Prepare for common questions"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#key-takeaways-for-audience",
+    "href": "experiments/virtual_environs/index.html#key-takeaways-for-audience",
+    "title": "Virtual Environments",
+    "section": "Key Takeaways for Audience",
+    "text": "Key Takeaways for Audience\n\nVirtual environments are essential for reproducible data science\nrenv makes R environment management straightforward\nPython’s venv + requirements.txt is the minimum viable approach\nLockfiles are your insurance policy for deployment\nStart small: use renv on your next R project"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#common-questions",
+    "href": "experiments/virtual_environs/index.html#common-questions",
+    "title": "Virtual Environments",
+    "section": "Common Questions",
+    "text": "Common Questions\n\n“Isn’t this overkill for small projects?” No, the overhead is minimal and prevents future headaches\n“What about conda?” Great for complex scientific stacks, but renv/venv are simpler for most R/Python work\n“How do I handle system dependencies?” Virtual environments handle packages, but system libraries (like GDAL) need separate management"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#footnotes",
+    "href": "experiments/virtual_environs/index.html#footnotes",
+    "title": "Virtual Environments",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nYou can also run renv::status() to see if the current library is out of sync with the lockfile.↩︎"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#returning-to-a-project",
+    "href": "experiments/virtual_environs/index.html#returning-to-a-project",
+    "title": "Virtual Environments",
+    "section": "Returning to a project",
+    "text": "Returning to a project\nThe packages in renv/ are machine-specific, and not commited to Git. If I clone to a new machine, renv/ will not exist. If I pull change from a collaborator, the renv.lock file will be updated but not match renv/. If I install a new version of R, the library path will change.\nWhen I open a project, the auto-activation hook will run and check for consistency: does renv/ contain the right versions of all packages in renv.lock and only those packages? If not, it will print a warning and suggest running restore().\nrestore() reads the lockfile and installs the exact versions of packages into the local library.\n\nrenv::restore()"
+  },
+  {
+    "objectID": "experiments/virtual_environs/index.html#example",
+    "href": "experiments/virtual_environs/index.html#example",
+    "title": "Virtual Environments",
+    "section": "Example",
+    "text": "Example\nInitialize renv in your project directory:\n# One-time setup per project\nrenv::init()\nInstall packages during development:\n# Install packages as you work\ninstall.packages(\"dplyr\")\ninstall.packages(\"ggplot2\")\nSnapshot your current environment:\n# Record exact versions to renv.lock\nrenv::snapshot()\nRestore environment on another machine:\n# Install packages exactly as in renv.lock\nrenv::restore()"
   }
 ]

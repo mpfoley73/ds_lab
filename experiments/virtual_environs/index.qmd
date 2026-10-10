@@ -5,52 +5,90 @@ date: 2026-04-27
 categories: [gt, tables]
 description: |
   How to use **renv** for reproducible data science in R.
-format:
-  html:
-    toc: true
-    toc-depth: 2
-    code-fold: true
-execute:
-  echo: true
-  warning: false
-  error: false
 ---
 
-Virtual environments ensure that your code runs consistently regardless of where or when it's executed. They allow you to manage project-specific dependencies without affecting your global R or Python installations. 
+```{r}
+#| include: false
+root <- "C:/Users/mpfol/OneDrive/Documents/GitHub/ds_lab"
+```
 
-I've used R for years without virtual environments and nothing has broken. Why should I care about them now?
+I've developed in R for years without using virtual environments. There's never been a disaster, but I do experience some friction:
 
-- For **one-time** analyses, I install any additional packages I need, run my code, and move on. Using **{renv}** feels like overhead with negligible payoff. Only value is if you need to exactly reproduce your results later.
-- For **recurring** analyses, I may return to a project and find that some packages need to be installed. Others have been updated, but this is easily resolved. Again, the benefits of **{renv}** don't seem to justify the effort. There is the possibility of subtle drift in results, but that rarely matters. On the other hand, if model defaults change, or factor handling changes, or plot scales or themes change, that can be a real issue.
-- For **collaborative** projects, consistent package versions start to make sense. If I upgrade a package to use a new function, that forces my collaborators to upgrade as well.
-- For **deployment** to Posit Cloud, builds use whatever package versions are current. If I want to ensure that my app continues to work as I intend, I need to use **{renv}** to lock in the versions.
+- Old projects don't always run the same way they used to.
+- A collaborator uses an updated package and now I need to update too.
+- Deployed apps sometimes behave differently than on my local machine.
 
-Generally, the decision framework is use **{renv}** when:
+Should I finally start using **renv**, or will it just add unnecessary ceremony?
 
-- You need consistency across time (recurring reports)
-- Multiple people are involved
-- You deploy the project
-- You may need to reproduce results exactly
+## Goal
 
-Skip it when:
+I'll decide by addressing these questions:
 
-- Project is exploratory or one-off
-- Speed matters more than reproducibility
-- You’re the only user and stakes are low
+- What exactly does **renv** do under the hood?
+- How much overhead does it add to a project?
+- Do I actually need reproducible environments for the kind of work I do? I.e., when does "just update the package" stop being good enough?
 
+My hypothesis is that as projects become more collaborative, more public, and more long‑lived, the cost of not using **renv** starts to exceed the cost of learning it.
 
-# R: renv (The Standard Approach)
+## How renv Works
 
-**{renv}** is the recommended tool for managing R package environments. It creates a project-local library and generates a `renv.lock` file that captures exact package versions and sources.
+Create a virtual environment by running `init()` one time per project.
 
-## Basic Workflow
+```{r}
+#| eval: false
+#| code-fold: false
+renv::init()
+```
 
-1. **Initialize**: Set up renv for your project
-2. **Install Packages**: Add packages as needed during development
-3. **Snapshot**: Record current package state to `renv.lock`
-4. **Restore**: Recreate the environment from `renv.lock` on another machine
+`init()`:
 
-## Core Commands
+- creates a project‑local library in folder `renv/`,
+- creates a lockfile, `renv.lock`, containing package version and source specifications, and
+- adds an auto‑activation hook in `.Rprofile`, creating the file if it doesn't already exist.
+
+```
+virtual_environs/
+├── .Rprofile
+├── index.qmd
+├── renv/
+│   ├── library
+│   └── activate.R
+├── renv.lock
+```
+
+This line in `.Rprofile` activates the local environment whenever I start an R session:
+
+```{r}
+#| eval: false
+#| code-fold: false
+source("renv/activate.R")
+```
+
+From here on, package installs go into the project, not my global library. Periodically run `snapshot()` to update `renv.lock` with the any changes to package versions.^[You can also run `renv::status()` to see if the current library is out of sync with the lockfile.]
+
+```{r}
+#| eval: false
+#| code-fold: false
+renv::snapshot()
+```
+
+That's about it. Be sure to commit `renv.lock` to version control, but ignore the `renv/` folder itself.
+
+## Returning to a project
+
+The packages in `renv/` are machine-specific, and not commited to Git. If I clone to a new machine, `renv/` will not exist. If I pull change from a collaborator, the `renv.lock` file will be updated but not match `renv/`. If I install a new version of R, the library path will change.
+
+When I open a project, the auto-activation hook will run and check for consistency: does `renv/` contain the right versions of all packages in `renv.lock` and _only_ those packages? If not, it will print a warning and suggest running `restore()`.
+
+ `restore()` reads the lockfile and installs the exact versions of packages into the local library.
+
+```{r}
+#| eval: false
+#| code-fold: false
+renv::restore()
+```
+
+## Example
 
 Initialize renv in your project directory:
 ```r
