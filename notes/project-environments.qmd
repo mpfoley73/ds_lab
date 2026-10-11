@@ -1,0 +1,238 @@
+---
+title: "Project Environments: R and Python"
+date: 2026-10-11
+description: "Chapter 1 lessons and Windows recipes for isolating, recording, and restoring project packages."
+categories: [devops, reproducibility, R, Python]
+---
+
+These notes come from completing Chapter 1 of Alex K. Gold's
+[DevOps for Data Science](https://do4ds.com/chapters/sec1/1-1-env-as-code.html).
+The connected exercises live in
+[penguin-explorer](https://github.com/mpfoley73/penguin-explorer).
+This page is a reference, not a second copy of that project. Commands below
+are examples to run deliberately in the target project; rendering this note
+does not execute them.
+
+## The principle
+
+**Isolate the project's packages, then record the environment's recipe.**
+Isolation prevents unrelated projects from silently changing the packages this
+project uses. A dependency record lets a collaborator or future me recreate
+the package environment. Either alone is incomplete: an isolated library with
+no recipe is hard to recreate; a recipe without isolation can drift as other
+work changes the shared library.
+
+There are three layers: hardware, system (OS, language runtime, system
+libraries), and packages. Chapter 1 chiefly addresses the package layer.
+Neither `renv` nor `venv` captures an entire machine or guarantees identical
+results across operating systems.
+
+| Concept | R | Python |
+|---|---|---|
+| Package repository | CRAN or another package source | PyPI or another package source |
+| Isolated package library | Project library managed by `renv` | `.venv/Lib/site-packages` on Windows |
+| Load packages into a session | `library("dplyr")` | `import pandas` |
+| Record packages | `renv::snapshot()` -> `renv.lock` | `pip freeze` -> `requirements.txt` |
+| Reinstall recorded packages | `renv::restore()` | `pip install -r requirements.txt` |
+
+Installing makes a package available in a library; loading makes it available
+to the running session. Direct dependencies are packages my code uses.
+Transitive dependencies are packages those packages require. Both matter.
+
+## R recipe
+
+### Start a new project: once
+
+Open the project folder in Positron and start an R session. In the **R console**:
+
+```r
+getwd()       # Must be the intended project root
+.libPaths()   # Inspect the starting package search paths
+requireNamespace("renv", quietly = TRUE)
+```
+
+If the last command returns `FALSE`, install `renv` first with
+`install.packages("renv")`. Then initialize:
+
+```r
+renv::init(bare = TRUE)
+```
+
+`bare = TRUE` starts with a minimal library without discovering and installing
+existing project dependencies. Default `renv::init()` attempts that discovery
+and setup. Initialize once, not every time the project opens.
+
+If asked, **restart R itself**. In Positron, make the R console active and use
+**Interpreter: Restart Active Interpreter Session** from the Command Palette.
+`Developer: Reload Window` reloads the editor interface and can reconnect to
+the same running R session; it is not the required restart.
+
+```r
+.libPaths()
+install.packages(c("palmerpenguins", "dplyr", "ggplot2", "tidyr"))
+```
+
+The project library should now come first. Installs target that library.
+Initialization creates a project `.Rprofile` containing
+`source("renv/activate.R")`, which activates the environment at R startup.
+
+### Work, render, and record
+
+Write the analysis, load its packages, and render it successfully. For Quarto,
+run `quarto render eda.qmd` in the **project terminal**. Then in the R console:
+
+```r
+renv::snapshot()
+renv::status()
+```
+
+By default, snapshot detects package usage in project code and includes the
+required dependency chain; it does not simply record every installed package.
+Inspect the proposed or written record, but do not expect to recognize every
+transitive dependency. A confirmation prompt may depend on session/settings.
+`status()` checks consistency among dependencies, the library, and the lockfile.
+Snapshot after working milestones, rather than only at the end of a project.
+
+### Return or restore
+
+Opening the project starts R with its `.Rprofile`; normal returns do not require
+another `init()`. After cloning, or when intentionally adopting a changed
+lockfile, use:
+
+```r
+renv::restore()
+renv::status()
+```
+
+Restore installs recorded package versions. It does not install the R runtime
+named in the lockfile; arrange the appropriate R version separately. After
+restore, render the analysis to verify that it works.
+
+## Python recipe (Windows PowerShell)
+
+### Start a new environment: once
+
+From the project root, using the intended Python installation:
+
+```powershell
+python --version
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -c "import sys; print(sys.executable)"
+```
+
+The executable should be inside this project's `.venv`. A venv is built on an
+existing Python installation: its local executable/launcher and `pyvenv.cfg`
+tie it to that base installation. It is not a self-contained portable Python
+distribution and does not download or manage Python versions.
+
+Install intentional dependencies using that Python:
+
+```powershell
+python -m pip install palmerpenguins pandas scikit-learn jupyter
+```
+
+The model uses the first three packages; Jupyter supplies execution tools for
+the Quarto page. Installing the full `jupyter` suite brings many additional
+packages. That is the working Chapter 1 setup, not a claim that every component
+is required by a minimal rendering environment.
+
+### Return, work, and record
+
+Activate in each new terminal unless the editor does it automatically:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Activation changes that terminal's `PATH`. It does not switch a running
+Positron Python console; select `.venv` separately as its interpreter. If unsure,
+check `sys.executable` in the session that will run the code. Activation is
+optional when the executable is named explicitly:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip check
+```
+
+After the model renders successfully, in the activated project terminal:
+
+```powershell
+quarto render model.qmd
+python -m pip freeze | Out-File -Encoding utf8 requirements.txt
+python -m pip check
+```
+
+`Out-File -Encoding utf8` avoids Windows PowerShell's default UTF-16 file
+encoding. `freeze` records installed packages (normally excluding bootstrap
+tools such as pip), including unused tools and transitive dependencies. It
+does not scan code or compute a minimal dependency set.
+
+`pip check` checks installed dependency requirements. It does not compare the
+environment against `requirements.txt`, test rendering, or prove restoration.
+Document the Python version separately; requirements do not record it.
+
+### Recreate elsewhere
+
+Install the appropriate Python runtime, open the cloned project root, then:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+python -m pip check
+quarto render model.qmd
+```
+
+Create a fresh venv at the destination rather than copying or moving the old
+one. Package availability and platform-specific dependencies can still differ.
+
+## What belongs in Git?
+
+Commit source code, Quarto configuration, `renv.lock`, `requirements.txt`, and
+runtime/setup documentation. For R, also commit `.Rprofile`,
+`renv/activate.R`, `renv/settings.json`, and `renv/.gitignore`. **Do not ignore
+the whole `renv/` directory**: its bootstrap/configuration files are needed.
+Exclude installed `renv/library/` and `.venv/` libraries and local editor state.
+
+Generated-output policy is project-specific. Penguin ignores `_site/`; `ds_lab`
+tracks its `docs/` and `_freeze/` output. Pushing source to GitHub and publishing
+a website are separate actions. Chapter 1 does not require deployment automation.
+
+## Surprises worth remembering
+
+- `requireNamespace("renv")` needs a package name string. Without quotes, R
+  looks for an object called `renv`.
+- A bare initialization can leave no lockfile. An initial "out-of-sync" message
+  can simply mean "take the first snapshot"; read `status()` before reacting.
+- `renv` removes shared user libraries from the search paths and exposes base
+  and recommended R packages through a protected sandbox. Those packages remain
+  linked to the R installation; isolation does not remove dependence on R.
+- "Some listed binary packages have no source" concerns repository listings,
+  not proof of a broken project library. The message alone does not identify
+  the affected packages. Investigate if it obstructs installation.
+- A long dependency list is not itself evidence of a problem. Our Python
+  record contained 105 packages, including the broader Jupyter toolchain.
+
+## What we verified, and what remains
+
+At the Chapter 1 checkpoint, both Penguin pages rendered, `renv::status()`
+reported consistency, and `pip check` reported no broken requirements. The
+sessions used R 4.6.1 and Python 3.13.7. The source and dependency records were
+committed and pushed. **Restoration in a fresh environment remains untested.**
+
+A successful render demonstrates execution; consistency checks demonstrate
+package consistency. Neither alone proves portability or analytical validity.
+For the model, training R-squared measures fit to the training observations,
+not prediction accuracy on new data. Report omissions explicitly and avoid
+equating a steeper fitted slope with a stronger association.
+
+## Sources
+
+- [Chapter 1: Environments as Code](https://do4ds.com/chapters/sec1/1-1-env-as-code.html)
+- [renv initialization](https://rstudio.github.io/renv/reference/init.html),
+  [snapshot](https://rstudio.github.io/renv/reference/snapshot.html), and
+  [sandbox](https://rstudio.github.io/renv/reference/sandbox.html)
+- [Python venv documentation](https://docs.python.org/3.13/library/venv.html)
+- [pip freeze](https://pip.pypa.io/en/stable/cli/pip_freeze/) and
+  [pip check](https://pip.pypa.io/en/stable/cli/pip_check/)
+- [Positron interpreter sessions](https://positron.posit.co/managing-interpreters.html)

@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mpfoley73.github.io/ds_lab/index.html</loc>
-    <lastmod>2026-10-10T12:05:06.103Z</lastmod>
+    <loc>https://mpfoley73.github.io/ds_lab/notes/project-environments.html</loc>
+    <lastmod>2026-10-11T12:55:07.825Z</lastmod>
   </url>
   <url>
-    <loc>https://mpfoley73.github.io/ds_lab/notes/tricks.html</loc>
-    <lastmod>2026-03-21T21:28:45.539Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/experiments/us_census_api/census.html</loc>
-    <lastmod>2026-03-21T13:04:22.497Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/experiments/gt_tables.html</loc>
-    <lastmod>2026-03-15T15:06:42.079Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/experiments/index.html</loc>
-    <lastmod>2026-10-10T12:05:06.318Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/experiments/gt_tables/index.html</loc>
-    <lastmod>2026-03-21T11:09:43.264Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/experiments/gt_tables/gt_tables.html</loc>
-    <lastmod>2026-03-21T13:25:16.603Z</lastmod>
+    <loc>https://mpfoley73.github.io/ds_lab/notes/logreg_interactions.html</loc>
+    <lastmod>2026-03-26T09:15:23.831Z</lastmod>
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/notes/index.html</loc>
     <lastmod>2026-03-22T15:25:57.834Z</lastmod>
   </url>
   <url>
+    <loc>https://mpfoley73.github.io/ds_lab/experiments/us_census_api/census.html</loc>
+    <lastmod>2026-03-21T13:04:22.497Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mpfoley73.github.io/ds_lab/experiments/gt_tables/gt_tables.html</loc>
+    <lastmod>2026-03-21T13:25:16.603Z</lastmod>
+  </url>
+  <url>
     <loc>https://mpfoley73.github.io/ds_lab/about.html</loc>
     <lastmod>2026-03-21T21:30:14.143Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mpfoley73.github.io/ds_lab/AGENTS.html</loc>
+    <lastmod>2026-10-11T12:58:12.491Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mpfoley73.github.io/ds_lab/experiments/index.html</loc>
+    <lastmod>2026-10-10T12:05:06.318Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mpfoley73.github.io/ds_lab/index.html</loc>
+    <lastmod>2026-10-10T12:05:06.103Z</lastmod>
   </url>
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/notes/llm_providers.html</loc>
@@ -43,29 +43,5 @@
   <url>
     <loc>https://mpfoley73.github.io/ds_lab/notes/prob_distr.html</loc>
     <lastmod>2026-03-22T15:08:56.016Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/notes/logreg_interactions.html</loc>
-    <lastmod>2026-03-26T09:15:23.831Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/experiments/do4ds/lab1/eda-basic.html</loc>
-    <lastmod>2026-04-30T10:53:17.097Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/experiments/virtual_environs/tutorial.html</loc>
-    <lastmod>2026-05-03T12:11:26.093Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/experiments/do4ds/lab1/model_basic-py.html</loc>
-    <lastmod>2026-04-26T14:08:10.819Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/experiments/virtual_environs/index.html</loc>
-    <lastmod>2026-10-10T13:10:25.604Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mpfoley73.github.io/ds_lab/AGENTS.html</loc>
-    <lastmod>2026-10-10T12:11:43.709Z</lastmod>
   </url>
 </urlset>

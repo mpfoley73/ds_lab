@@ -1,38 +1,25 @@
 [
   {
-    "listing": "/experiments/index.html",
+    "listing": "/notes/index.html",
     "items": [
-      "/experiments/do4ds/lab1/model_basic-py.html",
-      "/experiments/do4ds/lab1/eda-basic.html",
-      "/experiments/virtual_environs/index.html",
-      "/experiments/gt_tables/gt_tables.html",
-      "/experiments/us_census_api/census.html"
+      "/notes/project-environments.html",
+      "/notes/llm_providers.html",
+      "/notes/prob_distr.html",
+      "/notes/logreg_interactions.html"
     ]
   },
   {
-    "listing": "/experiments/gt_tables/index.html",
-    "items": []
-  },
-  {
-    "listing": "/experiments/us_census_api/census.html",
-    "items": []
+    "listing": "/experiments/index.html",
+    "items": [
+      "/experiments/gt_tables/gt_tables.html",
+      "/experiments/us_census_api/census.html"
+    ]
   },
   {
     "listing": "/index.html",
     "items": [
-      "/experiments/do4ds/lab1/model_basic-py.html",
-      "/experiments/do4ds/lab1/eda-basic.html",
-      "/experiments/virtual_environs/index.html",
       "/experiments/gt_tables/gt_tables.html",
       "/experiments/us_census_api/census.html"
-    ]
-  },
-  {
-    "listing": "/notes/index.html",
-    "items": [
-      "/notes/llm_providers.html",
-      "/notes/prob_distr.html",
-      "/notes/logreg_interactions.html"
     ]
   }
 ]

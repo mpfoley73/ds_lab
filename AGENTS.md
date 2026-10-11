@@ -20,8 +20,9 @@ selected work published as a Quarto website through GitHub Pages.
 ## Organization and new experiments
 
 - Use `experiments/<topic>/index.qmd` for a new standalone experiment.
-- Book exercises may stay grouped under
-  `experiments/do4ds/lab<N>/` with descriptive `.qmd` filenames.
+- The connected DevOps for Data Science exercises live in the separate
+  `../penguin-explorer` repository. Keep reusable book lessons in `notes/`;
+  do not maintain a duplicate Penguin project here.
 - Keep supporting files beside the document. Add `R/`, `data/`, or `assets/`
   subdirectories only when they improve clarity.
 - Use `notes/` for concise reference recipes, explanations, and reusable insights.
