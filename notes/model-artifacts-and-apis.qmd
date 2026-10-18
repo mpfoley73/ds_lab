@@ -1,0 +1,216 @@
+---
+title: "Model Artifacts and Prediction APIs"
+date: 2026-10-18
+description: "Chapter 2 lessons: separate training from serving, version a saved model, and test a local prediction API."
+categories: [devops, reproducibility, Python]
+---
+
+Notes from Chapter 2, **Data Project Architecture**, of
+[DevOps for Data Science](https://do4ds.com/chapters/sec1/1-2-proj-arch.html).
+The working code lives in
+[penguin-explorer](https://github.com/mpfoley73/penguin-explorer).
+For environment setup, see [Project Environments: R and Python](project-environments.qmd).
+Examples here are reference snippets, not executable Quarto chunks.
+
+## Why separate the pieces?
+
+**Train once, save an artifact, and let a separate process load it to predict.**
+Training estimates the model's parameters. Serving uses those parameters to
+answer requests without repeating training. Saving the model creates a durable
+handoff between these activities.
+
+The chapter's three layers describe responsibilities, not necessarily three
+servers or three folders:
+
+| Layer | Responsibility | Penguin example |
+|---|---|---|
+| Presentation | Show results or collect input | Rendered Quarto reports; the API documentation used for testing |
+| Processing | Transform inputs and compute results | Feature encoding, model fitting, prediction |
+| Data | Store and retrieve inputs and artifacts | Palmer Penguins source data and the local Pins board |
+
+An API is an interface to processing that another program can call. Its
+documentation page is a client, not the prediction engine itself.
+
+Choose an output for its consumers: a report for people reading results, an app
+for people whose inputs drive computation, a job for batch work, or an API for
+on-demand machine requests. Keep presentation code focused on presentation.
+Functions may provide enough separation; an API is useful when a distinct
+process or reusable service is needed.
+
+Storage should reflect update frequency. An artifact that changes independently
+of the app can live outside the app bundle. For small data, simple in-memory
+work is adequate; scale complexity only when performance requires it. For
+larger data, consider aggregation, work at the source, lazy retrieval,
+appropriate sampling, or separable chunks before introducing more machinery.
+
+## The flow we built
+
+```text
+Palmer Penguins data
+  -> model.qmd: select complete cases, encode features, fit regression
+  -> VetiverModel: fitted model plus input prototype and metadata
+  -> external Pins board: versioned model artifact
+  -> app.py: load saved artifact, start local API
+  -> POST /predict: JSON inputs -> predicted body mass in grams
+```
+
+The report still runs training when rendered; we have separated serving from
+training, not yet extracted every processing step from the report. The API
+loads its model at startup. Writing a newer pin does not automatically replace
+the model already held by a running server; restart/reload is a separate action.
+
+## Recipe: wrap and save
+
+In the activated project environment, install the new tooling if needed:
+
+```powershell
+python -m pip install vetiver
+```
+
+After fitting `model` using the encoded predictor DataFrame `X`, in `model.qmd`:
+
+```python
+from pathlib import Path
+from pins import board_folder
+from vetiver import VetiverModel, vetiver_pin_write
+
+v = VetiverModel(model, model_name="penguin_model", prototype_data=X)
+
+# Substitute your external artifact location; use the same path in app.py.
+model_folder = Path.home() / "OneDrive" / "Documents" / "penguin-artifacts" / "model"
+model_folder.mkdir(parents=True, exist_ok=True)
+model_board = board_folder(str(model_folder), allow_pickle_read=True)
+vetiver_pin_write(model_board, v)
+```
+
+The prototype describes the model's expected input structure; supplying it
+does not train another model. The board is a storage location managed by Pins.
+The write stores the fitted object and supporting metadata, including its input
+prototype. Record the returned version when a particular artifact matters.
+`allow_pickle_read=True` permits loading serialized objects: only load artifacts
+from trusted sources, because pickle loading can execute code.
+
+A model-card suggestion is informational, not a failed write. Model cards
+document intended use, limitations, and other context; they are a separate
+documentation task.
+
+## Recipe: reload and serve
+
+First test loading in a **fresh Python session without running training**.
+Recreate the board connection and call
+`VetiverModel.from_pin(model_board, "penguin_model")`. Predict on one known
+input and compare against the original model.
+
+Then put the serving code in `app.py`, separate from the Quarto report:
+
+```python
+from pathlib import Path
+from pins import board_folder
+from vetiver import VetiverModel, VetiverAPI
+
+model_folder = Path.home() / "OneDrive" / "Documents" / "penguin-artifacts" / "model"
+model_board = board_folder(str(model_folder), allow_pickle_read=True)
+loaded_v = VetiverModel.from_pin(model_board, "penguin_model")
+api = VetiverAPI(loaded_v, check_prototype=True)
+
+if __name__ == "__main__":
+    api.run(host="127.0.0.1", port=8080)
+```
+
+The main guard starts the server when running `python app.py`, but not when
+importing `app`. Imports still execute the model-loading code above the guard.
+Without an explicit version, the load uses the latest pin version; use the
+`version=` argument when an exact historical version is needed.
+
+From the project root in PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+python app.py
+```
+
+Leave the terminal running. Open `http://127.0.0.1:8080/docs`, find
+**POST /predict**, and submit the following JSON request body. Press **Ctrl+C**
+in the server terminal to stop it. `127.0.0.1` restricts this server to the
+local computer; this exercise is not a public deployment.
+
+```json
+[
+  {
+    "bill_length_mm": 39.1,
+    "species_Chinstrap": false,
+    "species_Gentoo": false,
+    "sex_male": true
+  }
+]
+```
+
+Our successful response had HTTP status **200** and a body approximately:
+
+```json
+{"predict": [3988.8289177706565]}
+```
+
+JSON uses lowercase `true` and `false`; Python uses `True` and `False`.
+The array permits multiple observations in one request. HTTP POST sends the
+input body; the response carries predictions.
+
+## The input contract matters
+
+Our model expects these columns in this order:
+
+| Column | Training type | Meaning |
+|---|---|---|
+| `bill_length_mm` | float64 | Bill length in millimeters |
+| `species_Chinstrap` | bool | Chinstrap indicator |
+| `species_Gentoo` | bool | Gentoo indicator |
+| `sex_male` | bool | Male indicator |
+
+With the training data's encoding, both species indicators false means Adelie;
+`sex_male` false means female because missing sex values were excluded first.
+
+Vetiver wraps the fitted regression, not the earlier `pd.get_dummies()` call.
+Clients currently supply encoded features, not raw species and sex strings.
+Prototype checking helps enforce structure/types; it does not guarantee that
+inputs are biologically plausible or logically consistent (for example, both
+species indicators true). Saving preprocessing with a model could simplify
+the client contract later, but is not part of this implementation.
+
+## Finish a working milestone
+
+After successful rendering and API testing, update the Python package record:
+
+```powershell
+python -m pip freeze | Out-File -Encoding utf8 requirements.txt
+python -m pip check
+```
+
+Document how to start the service and where the artifact lives. Commit code,
+environment records, and setup instructions. The external model board stays
+outside this repository; cloning the source alone does not supply the artifact.
+Generate it from the saved training code or obtain a trusted saved version.
+
+## What we learned and verified
+
+On October 18, 2026, the user confirmed fresh-session loading, direct prediction,
+and a successful local HTTP prediction with matching output (about 3,988.83 g).
+The model-writing code is saved in `model.qmd`; `app.py` independently loads and
+serves it. The README was updated, and the user reported committing and pushing
+the Chapter 2 work.
+
+These checks establish a working local training-to-serving handoff for this
+input. They do not establish predictive quality, all input-validation behavior,
+restoration on a different machine, or production readiness. In particular,
+training R-squared is not a test of predictions on new observations.
+
+The central lesson: **source-code versions, package versions, and saved-model
+versions are different records. A reproducible prediction depends on all three,
+plus the input and its encoding.**
+
+## Sources
+
+- [Chapter 2: Data Project Architecture](https://do4ds.com/chapters/sec1/1-2-proj-arch.html)
+- [Vetiver: Store and version models](https://vetiver.posit.co/get-started/version.html)
+- [VetiverModel](https://rstudio.github.io/vetiver-python/stable/reference/VetiverModel.html)
+- [VetiverAPI](https://rstudio.github.io/vetiver-python/stable/reference/VetiverAPI.html)
+- [VetiverAPI.run](https://rstudio.github.io/vetiver-python/stable/reference/VetiverAPI.run.html)

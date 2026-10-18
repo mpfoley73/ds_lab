@@ -31,6 +31,7 @@ website:
       - about.qmd
   page-navigation: true
   repo-url: https://github.com/mpfoley73/ds_lab
+  repo-branch: master
   repo-actions: [edit, source]
   search: true
   

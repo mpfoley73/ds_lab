@@ -2,6 +2,7 @@
   {
     "listing": "/notes/index.html",
     "items": [
+      "/notes/model-artifacts-and-apis.html",
       "/notes/project-environments.html",
       "/notes/llm_providers.html",
       "/notes/prob_distr.html",

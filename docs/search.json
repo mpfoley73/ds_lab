@@ -102,7 +102,7 @@
     "href": "notes/index.html",
     "title": "Notes",
     "section": "",
-    "text": "Notes hub\nThis folder contains quick recipes and reference notes.\n\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nDate\n\n\nDescription\n\n\n\n\n\n\n\n\nProject Environments: R and Python\n\n\nOct 11, 2026\n\n\nChapter 1 lessons and Windows recipes for isolating, recording, and restoring project packages.\n\n\n\n\n\n\n\nLLM Providers\n\n\nMar 22, 2026\n\n\nA quick survey of the major players in the LLM space. \n\n\n\n\n\n\n\nProbability Distributions\n\n\nSep 14, 2023\n\n\nPrimer on probability distribution I frequently encounter. \n\n\n\n\n\n\n\nLogistic Regression Interactions\n\n\nAug 15, 2021\n\n\nInterpreting the coefficient estimators in a simple logistic regression is straightforward, but it gets messy when your model includes interaction effects. \n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Notes hub\nThis folder contains quick recipes and reference notes.\n\n\n\n\n\n\n\n   \n     \n     \n       Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\nTitle\n\n\nDate\n\n\nDescription\n\n\n\n\n\n\n\n\nModel Artifacts and Prediction APIs\n\n\nOct 18, 2026\n\n\nChapter 2 lessons: separate training from serving, version a saved model, and test a local prediction API.\n\n\n\n\n\n\n\nProject Environments: R and Python\n\n\nOct 11, 2026\n\n\nChapter 1 lessons and Windows recipes for isolating, recording, and restoring project packages.\n\n\n\n\n\n\n\nLLM Providers\n\n\nMar 22, 2026\n\n\nA quick survey of the major players in the LLM space. \n\n\n\n\n\n\n\nProbability Distributions\n\n\nSep 14, 2023\n\n\nPrimer on probability distribution I frequently encounter. \n\n\n\n\n\n\n\nLogistic Regression Interactions\n\n\nAug 15, 2021\n\n\nInterpreting the coefficient estimators in a simple logistic regression is straightforward, but it gets messy when your model includes interaction effects. \n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "experiments/us_census_api/census.html",
@@ -404,5 +404,68 @@
     "title": "Probability Distributions",
     "section": "",
     "text": "Weibull distributions are used in time-to-event models.\n\nIf \\(X\\) is the time to failure in a process in which the failure rate is proportional to a power of time defined by shape \\(k\\) and scale \\(\\lambda\\) parameters, then \\(X\\) is a random variable with a Weibull distribution \\(X \\sim  \\mathrm{WB}(k, \\lambda)\\)\n\\[ f(X = x; k, \\lambda) = \\begin{cases}\n\\frac{k}{\\lambda} \\left(\\frac{x}{\\lambda}\\right)^{k-1} e^{-(x / \\lambda)^k}, & x \\ge 0 \\\\\n0, & x &lt; 0\n\\end{cases}\\]\n\n\\(k\\) is called the hazard rate. If k &lt; 1 the failure rate decreases over time, as is the case with significant infant mortality or defective items. If k = 1 the failure rate is constant, as when external event cause failure. If k &gt; 1 the failure rate accelerates, as with aging processes.\nThere are several alternative parameterizations (Wikipedia). The common one for survival analysis replaces the scale parameter with a rate parameter \\(\\beta = 1 / \\lambda\\). Then for x \\(\\ge\\) 0,\n\\[f(X = x; k, \\beta) = \\beta k (\\beta x)^{k-1} e^{-(\\beta x)^k}\\] with cumulative distribution function \\[F(x; k, \\beta) = 1 - e^{-(\\beta x)^k}\\] and hazard function \\[h(x; k, \\beta) = \\beta k (\\beta x)^{k-1}.\\]\nThe “survival curve” is the compliment to the CDF: \\[\\begin{eqnarray}\nS(x; k, \\beta) &=& 1 - F(x; k, \\beta) \\\\\n&=& e^{-(\\beta x)^k}\n\\end{eqnarray}\\]\nThe probability of failing at time \\(x = t\\) is the probability of surviving to time time multiplied by the hazard of failing when \\(x = t\\), \\(f(t; k, \\beta) = S(t; k, \\beta) \\cdot h(t; k, \\beta)\\).\n\n\nShow the code\nexpand.grid(x = seq(from = .05, to = 2.5, by = .01),\n                   k = c(.5, 1, 1.5, 5)) %&gt;%\n  mutate(f = dweibull(x, k),\n         F = pweibull(x, k),\n         S = pweibull(x, k, lower.tail = FALSE),\n         h = f / S) %&gt;%\n  pivot_longer(cols = c(f:h)) %&gt;%\n  ggplot(aes(x = x, y = value, color = factor(k))) +\n  geom_line() +\n  facet_wrap(vars(name), scales = \"free_y\") +\n  scale_colour_hue(h = c(90, 270)) +\n  theme(legend.position = \"top\") +\n  labs(x = NULL, y = NULL, color = \"k\", title = \"Weibull (lambda = 1))\")\n\n\n\n\n\n\n\n\n\nMore here."
+  },
+  {
+    "objectID": "notes/model-artifacts-and-apis.html",
+    "href": "notes/model-artifacts-and-apis.html",
+    "title": "Model Artifacts and Prediction APIs",
+    "section": "",
+    "text": "Notes from Chapter 2, Data Project Architecture, of DevOps for Data Science. The working code lives in penguin-explorer. For environment setup, see Project Environments: R and Python. Examples here are reference snippets, not executable Quarto chunks."
+  },
+  {
+    "objectID": "notes/model-artifacts-and-apis.html#why-separate-the-pieces",
+    "href": "notes/model-artifacts-and-apis.html#why-separate-the-pieces",
+    "title": "Model Artifacts and Prediction APIs",
+    "section": "Why separate the pieces?",
+    "text": "Why separate the pieces?\nTrain once, save an artifact, and let a separate process load it to predict. Training estimates the model’s parameters. Serving uses those parameters to answer requests without repeating training. Saving the model creates a durable handoff between these activities.\nThe chapter’s three layers describe responsibilities, not necessarily three servers or three folders:\n\n\n\n\n\n\n\n\nLayer\nResponsibility\nPenguin example\n\n\n\n\nPresentation\nShow results or collect input\nRendered Quarto reports; the API documentation used for testing\n\n\nProcessing\nTransform inputs and compute results\nFeature encoding, model fitting, prediction\n\n\nData\nStore and retrieve inputs and artifacts\nPalmer Penguins source data and the local Pins board\n\n\n\nAn API is an interface to processing that another program can call. Its documentation page is a client, not the prediction engine itself.\nChoose an output for its consumers: a report for people reading results, an app for people whose inputs drive computation, a job for batch work, or an API for on-demand machine requests. Keep presentation code focused on presentation. Functions may provide enough separation; an API is useful when a distinct process or reusable service is needed.\nStorage should reflect update frequency. An artifact that changes independently of the app can live outside the app bundle. For small data, simple in-memory work is adequate; scale complexity only when performance requires it. For larger data, consider aggregation, work at the source, lazy retrieval, appropriate sampling, or separable chunks before introducing more machinery."
+  },
+  {
+    "objectID": "notes/model-artifacts-and-apis.html#the-flow-we-built",
+    "href": "notes/model-artifacts-and-apis.html#the-flow-we-built",
+    "title": "Model Artifacts and Prediction APIs",
+    "section": "The flow we built",
+    "text": "The flow we built\nPalmer Penguins data\n  -&gt; model.qmd: select complete cases, encode features, fit regression\n  -&gt; VetiverModel: fitted model plus input prototype and metadata\n  -&gt; external Pins board: versioned model artifact\n  -&gt; app.py: load saved artifact, start local API\n  -&gt; POST /predict: JSON inputs -&gt; predicted body mass in grams\nThe report still runs training when rendered; we have separated serving from training, not yet extracted every processing step from the report. The API loads its model at startup. Writing a newer pin does not automatically replace the model already held by a running server; restart/reload is a separate action."
+  },
+  {
+    "objectID": "notes/model-artifacts-and-apis.html#recipe-wrap-and-save",
+    "href": "notes/model-artifacts-and-apis.html#recipe-wrap-and-save",
+    "title": "Model Artifacts and Prediction APIs",
+    "section": "Recipe: wrap and save",
+    "text": "Recipe: wrap and save\nIn the activated project environment, install the new tooling if needed:\npython -m pip install vetiver\nAfter fitting model using the encoded predictor DataFrame X, in model.qmd:\nfrom pathlib import Path\nfrom pins import board_folder\nfrom vetiver import VetiverModel, vetiver_pin_write\n\nv = VetiverModel(model, model_name=\"penguin_model\", prototype_data=X)\n\n# Substitute your external artifact location; use the same path in app.py.\nmodel_folder = Path.home() / \"OneDrive\" / \"Documents\" / \"penguin-artifacts\" / \"model\"\nmodel_folder.mkdir(parents=True, exist_ok=True)\nmodel_board = board_folder(str(model_folder), allow_pickle_read=True)\nvetiver_pin_write(model_board, v)\nThe prototype describes the model’s expected input structure; supplying it does not train another model. The board is a storage location managed by Pins. The write stores the fitted object and supporting metadata, including its input prototype. Record the returned version when a particular artifact matters. allow_pickle_read=True permits loading serialized objects: only load artifacts from trusted sources, because pickle loading can execute code.\nA model-card suggestion is informational, not a failed write. Model cards document intended use, limitations, and other context; they are a separate documentation task."
+  },
+  {
+    "objectID": "notes/model-artifacts-and-apis.html#recipe-reload-and-serve",
+    "href": "notes/model-artifacts-and-apis.html#recipe-reload-and-serve",
+    "title": "Model Artifacts and Prediction APIs",
+    "section": "Recipe: reload and serve",
+    "text": "Recipe: reload and serve\nFirst test loading in a fresh Python session without running training. Recreate the board connection and call VetiverModel.from_pin(model_board, \"penguin_model\"). Predict on one known input and compare against the original model.\nThen put the serving code in app.py, separate from the Quarto report:\nfrom pathlib import Path\nfrom pins import board_folder\nfrom vetiver import VetiverModel, VetiverAPI\n\nmodel_folder = Path.home() / \"OneDrive\" / \"Documents\" / \"penguin-artifacts\" / \"model\"\nmodel_board = board_folder(str(model_folder), allow_pickle_read=True)\nloaded_v = VetiverModel.from_pin(model_board, \"penguin_model\")\napi = VetiverAPI(loaded_v, check_prototype=True)\n\nif __name__ == \"__main__\":\n    api.run(host=\"127.0.0.1\", port=8080)\nThe main guard starts the server when running python app.py, but not when importing app. Imports still execute the model-loading code above the guard. Without an explicit version, the load uses the latest pin version; use the version= argument when an exact historical version is needed.\nFrom the project root in PowerShell:\n.\\.venv\\Scripts\\Activate.ps1\npython app.py\nLeave the terminal running. Open http://127.0.0.1:8080/docs, find POST /predict, and submit the following JSON request body. Press Ctrl+C in the server terminal to stop it. 127.0.0.1 restricts this server to the local computer; this exercise is not a public deployment.\n[\n  {\n    \"bill_length_mm\": 39.1,\n    \"species_Chinstrap\": false,\n    \"species_Gentoo\": false,\n    \"sex_male\": true\n  }\n]\nOur successful response had HTTP status 200 and a body approximately:\n{\"predict\": [3988.8289177706565]}\nJSON uses lowercase true and false; Python uses True and False. The array permits multiple observations in one request. HTTP POST sends the input body; the response carries predictions."
+  },
+  {
+    "objectID": "notes/model-artifacts-and-apis.html#the-input-contract-matters",
+    "href": "notes/model-artifacts-and-apis.html#the-input-contract-matters",
+    "title": "Model Artifacts and Prediction APIs",
+    "section": "The input contract matters",
+    "text": "The input contract matters\nOur model expects these columns in this order:\n\n\n\nColumn\nTraining type\nMeaning\n\n\n\n\nbill_length_mm\nfloat64\nBill length in millimeters\n\n\nspecies_Chinstrap\nbool\nChinstrap indicator\n\n\nspecies_Gentoo\nbool\nGentoo indicator\n\n\nsex_male\nbool\nMale indicator\n\n\n\nWith the training data’s encoding, both species indicators false means Adelie; sex_male false means female because missing sex values were excluded first.\nVetiver wraps the fitted regression, not the earlier pd.get_dummies() call. Clients currently supply encoded features, not raw species and sex strings. Prototype checking helps enforce structure/types; it does not guarantee that inputs are biologically plausible or logically consistent (for example, both species indicators true). Saving preprocessing with a model could simplify the client contract later, but is not part of this implementation."
+  },
+  {
+    "objectID": "notes/model-artifacts-and-apis.html#finish-a-working-milestone",
+    "href": "notes/model-artifacts-and-apis.html#finish-a-working-milestone",
+    "title": "Model Artifacts and Prediction APIs",
+    "section": "Finish a working milestone",
+    "text": "Finish a working milestone\nAfter successful rendering and API testing, update the Python package record:\npython -m pip freeze | Out-File -Encoding utf8 requirements.txt\npython -m pip check\nDocument how to start the service and where the artifact lives. Commit code, environment records, and setup instructions. The external model board stays outside this repository; cloning the source alone does not supply the artifact. Generate it from the saved training code or obtain a trusted saved version."
+  },
+  {
+    "objectID": "notes/model-artifacts-and-apis.html#what-we-learned-and-verified",
+    "href": "notes/model-artifacts-and-apis.html#what-we-learned-and-verified",
+    "title": "Model Artifacts and Prediction APIs",
+    "section": "What we learned and verified",
+    "text": "What we learned and verified\nOn October 18, 2026, the user confirmed fresh-session loading, direct prediction, and a successful local HTTP prediction with matching output (about 3,988.83 g). The model-writing code is saved in model.qmd; app.py independently loads and serves it. The README was updated, and the user reported committing and pushing the Chapter 2 work.\nThese checks establish a working local training-to-serving handoff for this input. They do not establish predictive quality, all input-validation behavior, restoration on a different machine, or production readiness. In particular, training R-squared is not a test of predictions on new observations.\nThe central lesson: source-code versions, package versions, and saved-model versions are different records. A reproducible prediction depends on all three, plus the input and its encoding."
+  },
+  {
+    "objectID": "notes/model-artifacts-and-apis.html#sources",
+    "href": "notes/model-artifacts-and-apis.html#sources",
+    "title": "Model Artifacts and Prediction APIs",
+    "section": "Sources",
+    "text": "Sources\n\nChapter 2: Data Project Architecture\nVetiver: Store and version models\nVetiverModel\nVetiverAPI\nVetiverAPI.run"
   }
 ]
