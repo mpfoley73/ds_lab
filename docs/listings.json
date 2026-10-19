@@ -1,12 +1,9 @@
 [
   {
-    "listing": "/notes/index.html",
+    "listing": "/index.html",
     "items": [
-      "/notes/model-artifacts-and-apis.html",
-      "/notes/project-environments.html",
-      "/notes/llm_providers.html",
-      "/notes/prob_distr.html",
-      "/notes/logreg_interactions.html"
+      "/experiments/gt_tables/gt_tables.html",
+      "/experiments/us_census_api/census.html"
     ]
   },
   {
@@ -17,10 +14,13 @@
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/notes/index.html",
     "items": [
-      "/experiments/gt_tables/gt_tables.html",
-      "/experiments/us_census_api/census.html"
+      "/notes/model-artifacts-and-apis.html",
+      "/notes/project-environments.html",
+      "/notes/llm_providers.html",
+      "/notes/prob_distr.html",
+      "/notes/logreg_interactions.html"
     ]
   }
 ]
