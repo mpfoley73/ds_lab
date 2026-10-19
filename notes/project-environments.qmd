@@ -1,7 +1,7 @@
 ---
-title: "Project Environments: R and Python"
+title: "Virtual Environments"
 date: 2026-10-11
-description: "Chapter 1 lessons and Windows recipes for isolating, recording, and restoring project packages."
+description: "Recipes for isolating, recording, and restoring project packages."
 categories: [devops, reproducibility, R, Python]
 ---
 
@@ -37,7 +37,7 @@ results across operating systems.
 
 Installing makes a package available in a library; loading makes it available
 to the running session. Direct dependencies are packages my code uses.
-Transitive dependencies are packages those packages require. Both matter.
+Transitive dependencies are packages those packages require.
 
 ## R recipe
 

@@ -1,7 +1,7 @@
 ---
 title: "Model Artifacts and Prediction APIs"
 date: 2026-10-18
-description: "Chapter 2 lessons: separate training from serving, version a saved model, and test a local prediction API."
+description: "Using `vetiver` to separate training from serving."
 categories: [devops, reproducibility, Python]
 ---
 
