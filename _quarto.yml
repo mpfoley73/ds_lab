@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: docs
+  resources:
+    - .nojekyll
+    - experiments/housing-pins/board/
 
 execute:
   echo: true
@@ -34,4 +37,3 @@ website:
   repo-branch: master
   repo-actions: [edit, source]
   search: true
-  

@@ -1,0 +1,12 @@
+file: home-values.rds
+file_size: 26388
+pin_hash: a677ee60a09c8c5b
+type: rds
+title: 'home-values: a pinned 3210 x 3 data frame'
+description: Monthly Zillow home values for ten Northeast Ohio communities
+tags: ~
+urls: ~
+created: 20261024T153609Z
+api_version: 1
+user:
+  source_url: https://files.zillowstatic.com/research/public_csvs/zhvi/City_zhvi_uc_sfrcondo_tier_0.33_0.67_sm_sa_month.csv
