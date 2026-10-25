@@ -105,9 +105,14 @@ pins::write_board_manifest(board)
 # Pins protects its RDS files as read-only. Quarto's Windows resource copying
 # needs writable copies so subsequent renders can replace the output files.
 Sys.chmod(
-  list.files(board_path, pattern = "\\.rds$", recursive = TRUE, full.names = TRUE),
+  list.files(
+    board_path,
+    pattern = "\\.rds$",
+    recursive = TRUE,
+    full.names = TRUE
+  ),
   mode = "0644"
 )
 
-# 5. PUBLISH -- a separate, explicit step
+# PUBLISH -- a separate, explicit step
 # Follow index.qmd and the root README; do not deploy the app to update data.

@@ -1616,7 +1616,3 @@ subdiv_long |>
   gt::tab_header("Cuyahoga Age Population Change") |>
   gt::tab_options(heading.align = "left")
 ```
-:::
-::::
-:::::
-::::::

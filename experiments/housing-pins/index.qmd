@@ -1,158 +1,164 @@
 ---
 title: "Northeast Ohio Home Values: An App with Independent Data Updates"
 date: 2026-10-24
-description: "Learning to publish a small pins board on GitHub Pages and consume it from Shiny."
+description: "Publish a pins board on GitHub Pages and read it from Shiny without bundling data with the app."
 categories: [R, Shiny, devops, reproducibility]
-draft: true
+draft: false
 ---
 
 ## Question
 
-Can I update a Shiny app's data without redeploying the app?
-This toy application will compare Zillow's estimated typical home values for
-ten Northeast Ohio communities. The purpose is to learn a reusable workflow
-through an app that is enjoyable to explore.
+How can a Shiny app use periodically updated data without being redeployed
+each time the data changes?
+
+An app can query a database or API directly, or carry a static dataset in its
+deployment bundle. Slowly changing data offers another option: prepare a
+snapshot separately, publish it somewhere accessible, and let the app read it.
 
 ## Experiment
 
-### The big picture
+I built a [Northeast Ohio Home Value Explorer](https://mpfoley73.shinyapps.io/neohio-home-values/)
+using public [Zillow Research data](https://www.zillow.com/research/data/).
+Visitors compare up to four of ten local communities, choose a starting year,
+and switch between estimated typical home values and percentage growth.
 
 ```text
 Zillow city CSV
-  -> publish-data.R: select, reshape, check
-  -> board/: versioned pin + _pins.yaml manifest
-  -> Quarto render, review, commit, push
-  -> GitHub Pages: public read-only board
-  -> shinyapps.io: Shiny reads the pin once per visitor session
+  -> publish-data.R: select, reshape, validate
+  -> board/: versioned pin and _pins.yaml manifest
+  -> Quarto copies resources into docs/
+  -> commit and push -> GitHub Pages deployment
+  -> shinyapps.io app reads the public pin per visitor session
 ```
 
-Writing a local pin, publishing the website, and deploying the app are separate
-actions. A fresh visitor session will read the published pin. An already-open
-session will keep its snapshot; automatic polling is outside this first version.
+### Prepare and pin locally
 
-**Status:** the data has been prepared and the local pin round-trip verified.
-The public board is being published independently of this draft write-up.
-The Shiny shell has no data controls or chart yet. Keep this page marked as a
-draft until the learning exercise is ready to share.
+The publisher downloads the all-homes, mid-tier, smoothed, seasonally adjusted
+Zillow Home Value Index (ZHVI). It selects ten Ohio communities and reshapes
+the monthly columns into `community`, `date`, and `value`. Checks require the
+requested communities, unique community/month pairs, valid dates, and positive
+nonmissing values. Missing observations are preserved.
 
-### Files and packages
+The essential artifact handoff is:
 
-| Item | Responsibility |
-|---|---|
-| `publish-data.R` | Manually prepare and write the data artifact |
-| `board/` | Public pin files and their web manifest |
-| `app/app.R` | Shiny UI and consumer logic; deployed independently |
-| `index.qmd` | Learning record and eventual experiment write-up |
+```r
+board <- pins::board_folder(board_path, versioned = TRUE)
 
-Work from the `ds_lab` root in Positron. Use the active R interpreter's installed
-packages; do not introduce a new dependency environment for this small exercise.
-We will use `readr`, `dplyr`, `tidyr`, `ggplot2`, `pins`, and `shiny` as needed.
-Deployment will also need `rsconnect`. Check packages in the actual Positron R
-session before installing anything.
+pins::pin_write(
+  board,
+  housing_long,
+  name = "home-values",
+  type = "rds",
+  metadata = list(source_url = source_url)
+)
 
-### Completed step: download and inspect
+housing_pinned <- pins::pin_read(board, "home-values")
+stopifnot(identical(housing_long, housing_pinned))
+pins::write_board_manifest(board)
+```
 
-Open `publish-data.R` and run its configuration assignments. Write one line
-under section 1 to download `source_url` into an object named `housing_raw`.
-The function to look up is `readr::read_csv()`.
+These are reference snippets; the complete publisher is `publish-data.R`.
+RDS preserves R column types, including `Date`. The round-trip check verifies
+that the saved artifact matches the prepared object.
 
-Inspect three things:
+The **board** is the storage folder; `home-values` is a named **pin** within it:
 
-1. `dim(housing_raw)`: how many regions and columns did we download?
-2. `names(housing_raw)[1:12]`: which columns identify a place, and where do dates begin?
-3. A few Ohio rows: how does Zillow identify Cleveland and its neighbors?
+```text
+board/
+  _pins.yaml
+  home-values/
+    <version>/
+      data.txt
+      home-values.rds
+```
 
-**Why this step:** the source is a nationwide wide table, with a column for each
-month. Our pin will be a small local long table, with one row per community and
-month. Inspecting the source makes that transformation understandable.
+### Make the board accessible online
 
-We reviewed the source, selected the ten communities, reshaped the monthly
-columns, validated the result, and visually inspected a line plot. Writing
-and reading the local RDS pin preserved the prepared object exactly.
+Writing a pin creates local files; it does not publish them. A web reader
+cannot inspect a directory like a local filesystem, so `_pins.yaml` lists the
+pins and their version locations. Regenerate this manifest after writing pins.
 
-### Next checkpoints
+The root `_quarto.yml` includes:
 
-| Checkpoint | Evidence of success |
-|---|---|
-| Prepare | Ten Ohio communities, one row per community/month, a sensible local plot |
-| Pin locally | `pin_read()` reproduces the prepared data; manifest lists the pin |
-| Host | Rendered board files match the source board; public URL can be read with pins |
-| Explore | Community selection and both chart views behave as intended |
-| Update independently | A new app session reads a newly published pin without an app deployment |
+```yaml
+project:
+  resources:
+    - .nojekyll
+    - experiments/housing-pins/board/
+```
 
-The prepared dataset will have three columns: `community` (character), `date`
-(Date), and `value` (numeric dollars). Pin metadata will record the source URL
-and retrieval time. Dates in the data describe the observation period, which
-is different from when we retrieved the file.
+These entries tell Quarto to copy the board and the empty `.nojekyll` file into
+`docs/`. The board files are copied unchanged, rather than rendered as HTML.
+`.nojekyll` tells GitHub Pages to skip Jekyll processing so underscore-prefixed
+files such as `_pins.yaml` are served too.
 
-### App behavior we will build
+Rendering, committing, pushing, and waiting for GitHub Pages to deploy makes
+the copied board accessible over HTTPS. The resource configuration works
+independently of this write-up's draft status. The publisher also makes RDS
+files writable after pinning so Quarto can replace copied files on Windows.
 
-Choose up to four of Cleveland, Lakewood, Rocky River, Westlake, Parma,
-Cleveland Heights, Shaker Heights, Beachwood, Solon, and Strongsville. Start
-with Cleveland, Lakewood, and Shaker Heights, and a starting year of 2015.
+### Read the snapshot in Shiny
 
-Use a single line chart with a dollar view and a percentage-change view.
-The percentage baseline is the first month on or after the chosen start with
-nonmissing values for all selected communities. Show the baseline date and
-compute each community's change from its own value that month. If no common
-month exists, show a helpful message. Zero selections or more than four also
-produce a helpful message rather than a broken chart.
+The app's `server()` function contains:
 
-Keep missing values without filling them in, and show gaps rather than drawing
-lines across missing months. Display the latest observation month, the source,
-and the meaning of ZHVI. Do not silently substitute invented data on errors.
+```r
+web_board <- pins::board_url(
+  "https://mpfoley73.github.io/ds_lab/experiments/housing-pins/board/"
+)
+housing <- pins::pin_read(web_board, "home-values")
+```
 
-### Active step: publish the board
+Inside `server()`, this runs once per new visitor session. Existing sessions
+keep their snapshot. Outside `server()`, loading would happen at R process
+startup, so subsequent visitors could keep receiving older data. Process
+restarts are not our refresh mechanism. Pins caching can avoid unnecessary
+downloads; this experiment has not measured cache behavior separately.
 
-The web-hosted board needs both its version directories and `_pins.yaml`.
-Call `pins::write_board_manifest()` after each pin write; the manifest is not
-maintained automatically. See the [pins web-hosting guide](https://pins.rstudio.com/articles/using-board-url.html).
+The controls filter the session's data and redraw the chart without rereading
+the pin. Growth uses the first month on or after the selected start with values
+for every selected community. Each line uses its own value in that shared month:
 
-The root `_quarto.yml` explicitly copies `experiments/housing-pins/board/`
-as a project resource, independently of this page's draft status. Verify that
-every board file, including `_pins.yaml`, reaches
-`docs/experiments/housing-pins/board/` unchanged. A source `.nojekyll` file is
-also copied to `docs/` so GitHub Pages serves underscore-prefixed files.
-The publisher makes the RDS files writable after writing the pin: pins marks
-them read-only, which otherwise prevents Quarto replacing copied files on Windows.
+```r
+plot_data <- selected_data |>
+  filter(date >= baseline_date) |>
+  arrange(community, date) |>
+  mutate(.by = community, value = 100 * (value / first(value) - 1))
+```
 
-Follow the root README's render/review/commit/push/verify procedure when ready
-to publish. Publishing is an explicit step; running the publisher alone does
-not update GitHub Pages. Do not remove `draft: true` until the write-up is ready.
-
-The intended public board address is:
-`https://mpfoley73.github.io/ds_lab/experiments/housing-pins/board/`.
-After publication, verify `board_url()` and `pin_read()` against that address
-before deploying only the `app/` directory to shinyapps.io.
-Create the board and read the pin inside `server()` so each session checks the
-published snapshot, rather than reading it only once at app process startup.
-
-### Checks before calling this complete
-
-- An unsuccessful download or missing/duplicate requested community stops the
-  publisher before it writes a replacement pin.
-- The long table has unique community/date keys and positive nonmissing values.
-- The local pin round-trip preserves data types and missing observations.
-- The rendered board's file names and bytes match the source board.
-- Dollar and percentage charts work for one through four communities; the
-  baseline is shared and percentage values start at zero.
-- A temporary local copy with one missing observation demonstrates baseline
-  selection and chart gaps. Do not publish the modified test copy.
-- A second genuine data snapshot reaches a new app session without redeployment.
-  If Zillow has no new data yet, leave this check pending rather than claiming it.
+Every growth line starts at zero. The shared-baseline requirement applies only
+to growth mode; dollar comparisons do not require overlapping observations.
 
 ## What I learned
 
-To be filled in from our own results: what changed, what stayed independent,
-what the cache did, and what differed from a Connect-hosted board.
+**Preparing data, publishing data, and deploying app code are separate actions.**
+The app and artifact do not need to share a hosting platform. This recreates
+the separation I previously used with pins on Posit Connect, using platforms
+I already had: GitHub Pages for public data and shinyapps.io for the app.
+Connect-specific authentication and scheduling were not part of this experiment.
 
-## Sources and limitations
+| Change | Workflow |
+|---|---|
+| New housing data | Run `publish-data.R`; render and review the copied board; commit and push; verify the public pin after Pages deploys |
+| New app behavior | Run `deploy-app.R`, which deploys only `app/` to shinyapps.io |
+| New write-up content | Render, review, and publish through the normal `ds_lab` website workflow |
 
-[Zillow Research](https://www.zillow.com/research/data/) publishes the ZHVI data
-used here. ZHVI estimates typical home values; it is not an individual appraisal
-or the median price of homes sold that month. We chose the all-homes, mid-tier,
-smoothed, seasonally adjusted city series.
+Run scripts from the repository root. Follow the root README for website
+publication; running the publisher alone does not update GitHub Pages.
 
-Source availability, geography labels, and history can change. Historical
-estimates can be revised. This proof of concept keeps those limitations visible
-without adding a database, scheduler, map, forecasts, or a recovery framework.
+**Verified:** the initial snapshot contains 3,210 observations across ten
+communities through September 2026. Local and public pin reads reproduced the
+prepared data exactly. The deployed app works with the public board. Review
+also checked percentage calculations, selection limits, and a missing initial
+observation shifting the common baseline.
+
+**Pending:** when October observations become available, publish a new snapshot
+and open a new app session without redeploying the app. Confirm the later data
+month appears. That will complete the independent-update demonstration.
+
+ZHVI is a modeled estimate of typical home value, not an individual appraisal
+or the median price of homes sold. Historical estimates can be revised. This is
+a small public-data proof of concept: no scheduler, database, automatic refresh
+of open sessions, or elaborate recovery system.
+
+For the reusable hosting pattern, see the
+[pins web-hosted boards guide](https://pins.rstudio.com/articles/using-board-url.html).
