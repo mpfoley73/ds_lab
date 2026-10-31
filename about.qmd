@@ -14,14 +14,14 @@ title: "About"
 ## What’s here
 
 - Notes: `notes/index.qmd` (tips, code patterns, gotchas)
-- Experiments: `experiments/index.qmd` (census API, `gt`, mapping)
+- Experiments: `experiments/index.qmd` (`gt`, mapping, Pins, and other focused trials)
 - Project pages: `index.qmd`, `about.qmd`, etc.
 
 ## Tech stack
 
 - Quarto site, R Markdown, rendered to `docs/`
 - HTML output with CSS theme, local `site_libs/` asset freeze
-- Data: `experiments/us_census_api/` includes `acs1yr_2023.Rdata`, `decennial_2020.Rdata`
+- Larger reports live in their own repositories so this site remains quick to render.
 
 ## How to contribute
 

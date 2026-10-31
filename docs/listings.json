@@ -14,16 +14,14 @@
     "listing": "/experiments/index.html",
     "items": [
       "/experiments/housing-pins/index.html",
-      "/experiments/gt_tables/gt_tables.html",
-      "/experiments/us_census_api/census.html"
+      "/experiments/gt_tables/gt_tables.html"
     ]
   },
   {
     "listing": "/index.html",
     "items": [
       "/experiments/housing-pins/index.html",
-      "/experiments/gt_tables/gt_tables.html",
-      "/experiments/us_census_api/census.html"
+      "/experiments/gt_tables/gt_tables.html"
     ]
   }
 ]
