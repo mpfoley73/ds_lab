@@ -1,10 +1,13 @@
 [
   {
-    "listing": "/index.html",
+    "listing": "/notes/index.html",
     "items": [
-      "/experiments/housing-pins/index.html",
-      "/experiments/gt_tables/gt_tables.html",
-      "/experiments/us_census_api/census.html"
+      "/notes/quarto-parameterized-reports.html",
+      "/notes/model-artifacts-and-apis.html",
+      "/notes/project-environments.html",
+      "/notes/llm_providers.html",
+      "/notes/prob_distr.html",
+      "/notes/logreg_interactions.html"
     ]
   },
   {
@@ -16,13 +19,11 @@
     ]
   },
   {
-    "listing": "/notes/index.html",
+    "listing": "/index.html",
     "items": [
-      "/notes/model-artifacts-and-apis.html",
-      "/notes/project-environments.html",
-      "/notes/llm_providers.html",
-      "/notes/prob_distr.html",
-      "/notes/logreg_interactions.html"
+      "/experiments/housing-pins/index.html",
+      "/experiments/gt_tables/gt_tables.html",
+      "/experiments/us_census_api/census.html"
     ]
   }
 ]

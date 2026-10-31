@@ -1,0 +1,214 @@
+---
+title: "Parameterized Quarto Reports"
+date: 2026-10-31
+description: "Using one Quarto template to create customized R reports while keeping interactive development practical."
+categories: [Quarto, R, reproducibility]
+---
+
+## Question
+
+How can one `.qmd` file produce several customized reports without making the
+document awkward to develop interactively?
+
+The key is to separate three things:
+
+1. **The template** defines and uses parameters.
+2. **The render command** can override their default values.
+3. **An interactive helper** loads the defaults when code cells are run outside
+   a render.
+
+Quarto and Knitr use the name `params` (plural). During a render, Knitr creates
+this list before executing the document. Running an individual R cell does not
+perform that render setup, so `params` may not exist in the interactive R
+session.
+
+## A minimal template
+
+Define sensible defaults in the document's YAML:
+
+````markdown
+---
+title: "Regional Sales Report"
+params:
+  region: "Midwest"
+  start_date: "2026-01-01"
+  include_detail: false
+---
+
+```r
+#| echo: false
+
+region <- params$region
+start_date <- as.Date(params$start_date)
+include_detail <- params$include_detail
+```
+````
+
+Defaults are useful even when production renders always override them: the
+document remains runnable, and the defaults document the expected parameter
+names and types.
+
+### Render with the defaults
+
+```bash
+quarto render report.qmd
+```
+
+The editor's Preview or Render button also uses these defaults unless the
+editor has been configured to call Quarto with overrides.
+
+### Override values at the command line
+
+```bash
+quarto render report.qmd \
+  -P region:West \
+  -P start_date:2026-07-01 \
+  -P include_detail:true
+```
+
+`-P` is short for `--execute-param`. Repeating it is convenient for a few
+values.
+
+### Keep a named set of values in YAML
+
+For repeatable report variants, put only the overrides in a separate file:
+
+```yaml
+# west.yml
+region: "West"
+start_date: "2026-07-01"
+include_detail: true
+```
+
+Then render with:
+
+```bash
+quarto render report.qmd --execute-params west.yml
+```
+
+This is easier to review and reuse than a long command. Do not store passwords,
+tokens, or other secrets in a parameter file committed to Git.
+
+## Interactive development
+
+A small utility can read the template's default parameters when `params` does
+not already exist. The guard matters: during a real render, it preserves the
+values supplied by Quarto instead of replacing them with defaults.
+
+```r
+read_quarto_params <- function(input) {
+  yaml_params <- rmarkdown::yaml_front_matter(input)$params
+
+  if (is.null(yaml_params)) {
+    stop("No `params` section found in ", input, call. = FALSE)
+  }
+
+  lapply(yaml_params, function(parameter) {
+    if (is.list(parameter) && "value" %in% names(parameter)) {
+      parameter$value
+    } else {
+      parameter
+    }
+  })
+}
+```
+
+Near the beginning of `report.qmd`, use the helper only as an interactive
+fallback:
+
+```r
+if (!exists("params", inherits = FALSE)) {
+  source("R/read-quarto-params.R")
+  params <- read_quarto_params("report.qmd")
+}
+```
+
+This helper loads **YAML defaults**, not command-line overrides. That is a
+feature: interactive work gets a predictable example configuration, while a
+render remains the authoritative test of a customized report. To explore a
+different case interactively, change selected values explicitly:
+
+```r
+params$region <- "West"
+```
+
+## Validate early
+
+Parameters are inputs to the analysis. Check them once in a setup cell so a
+bad render fails with a useful message rather than producing a plausible but
+wrong report.
+
+```r
+required_params <- c("region", "start_date", "include_detail")
+missing_params <- setdiff(required_params, names(params))
+
+if (length(missing_params) > 0) {
+  stop("Missing parameters: ", paste(missing_params, collapse = ", "))
+}
+
+allowed_regions <- c("Midwest", "Northeast", "South", "West")
+if (!params$region %in% allowed_regions) {
+  stop("Unknown region: ", params$region)
+}
+
+start_date <- as.Date(params$start_date)
+if (is.na(start_date)) {
+  stop("`start_date` must use YYYY-MM-DD format")
+}
+
+if (!is.logical(params$include_detail) || length(params$include_detail) != 1) {
+  stop("`include_detail` must be one TRUE or FALSE value")
+}
+```
+
+Keeping dates in YAML as quoted ISO strings and converting them in R makes the
+type contract visible and avoids relying on a YAML parser's implicit date
+conversion.
+
+## Produce several reports from R
+
+The `quarto` R package can pass a named list through `execute_params`. Give each
+render a distinct output filename so one variant does not overwrite another.
+
+```r
+regions <- c("Midwest", "West")
+
+for (region in regions) {
+  quarto::quarto_render(
+    input = "report.qmd",
+    output_file = paste0("sales-", tolower(region), ".html"),
+    execute_params = list(
+      region = region,
+      start_date = "2026-07-01",
+      include_detail = FALSE
+    )
+  )
+}
+```
+
+Parameterized rendering is usually enough for a modest reporting workflow. If
+the number of reports, dependencies, or scheduling rules grows substantially,
+a pipeline tool such as `targets` may become a better orchestration layer.
+
+## What I learned
+
+- A parameterized document is a function-like template: YAML supplies defaults,
+  and each render supplies inputs.
+- `params` exists during Knitr rendering, not automatically during interactive
+  cell execution.
+- A guarded helper makes interactive work convenient without changing render
+  behavior.
+- Parameter values should control analysis choices, not contain secrets or
+  replace input validation.
+- A customized report is only verified when it is rendered with the intended
+  overrides; successfully running cells with defaults is not the same test.
+- Parameters control computation. Quarto metadata such as `format`, `toc`, and
+  `output-file` controls document rendering, even though both are written in
+  YAML.
+
+## References
+
+- [Quarto: Parameters](https://quarto.org/docs/computations/parameters.html)
+- [Quarto CLI: Render](https://quarto.org/docs/cli/render.html)
+- [`quarto::quarto_render()`](https://quarto-dev.github.io/quarto-r/reference/quarto_render.html)
+- [`rmarkdown::yaml_front_matter()`](https://pkgs.rstudio.com/rmarkdown/reference/yaml_front_matter.html)
