@@ -1,0 +1,170 @@
+---
+title: "From artwork images to structured R data"
+date: 2026-11-04
+description: "Lessons from Art Rogue: multimodal evidence, ellmer schemas, and displaying structured model output in Shiny."
+categories: [llm, R, shiny]
+execute:
+  eval: false
+---
+
+## Question
+
+How can an LLM return something an R application can use, rather than just a paragraph to read?
+
+Art Rogue is my virtual museum docent. While modernizing it, I added image input and a **Things to notice** panel. The useful pattern is:
+
+**Image → schema-constrained response → tibble → interface**
+
+This experiment records work completed with `ellmer` and `shinychat` 0.5.0. Code is shown but not executed when this page renders: reading or rebuilding the site does not make paid API requests. Run the examples deliberately in an R session with the required packages and credentials.
+
+## Experiment
+
+### 1. Define the evidence boundary
+
+For the looking guide, I supplied an image without museum metadata. This encourages attention to visible details rather than a familiar title or artist. It does not remove the model's prior knowledge or guarantee that every observation is correct.
+
+I separated three kinds of statements:
+
+| Field | Purpose |
+|---|---|
+| `observation` | A detail visible in the supplied image |
+| `interpretation` | A cautious explanation of why the detail may matter |
+| `uncertainty` | A limitation or ambiguity worth stating |
+
+Image input must be supplied as image content. Displaying an image in the browser is a separate operation. In Art Rogue, a thumbnail appeared even while attachments were disabled in `chat_ui()`. Enabling image attachments fixed the model-input path. The general debugging rule is to inspect what reaches the model, not only what appears on screen.
+
+### 2. Describe the result with a schema
+
+```{r}
+looking_guide_type <- ellmer::type_array(
+  ellmer::type_object(
+    observation = ellmer::type_string(
+      "A specific detail directly visible in the supplied image."
+    ),
+    interpretation = ellmer::type_string(
+      "A cautious explanation of why this detail may matter.",
+      required = FALSE
+    ),
+    uncertainty = ellmer::type_string(
+      "A limitation or ambiguity worth mentioning.",
+      required = FALSE
+    )
+  )
+)
+```
+
+An object describes one row; an array describes repeated rows. With default conversion, `ellmer` maps an array of these objects to a data frame. `required = FALSE` allows unavailable values to be returned as missing rather than making every field demand an answer. It does not enforce intellectual honesty: the prompt and review still matter.
+
+The field descriptions guide meaning. The types constrain structure. These are related but different jobs.
+
+### 3. Make one deliberate request
+
+This example needs `ellmer`, an `OPENAI_API_KEY` configured outside the document, access to a vision-capable model, and an accessible image URL. The model name below is the one used in this project; availability and cost depend on the account. Do not put keys in this file.
+
+```{r}
+image_url <- "PASTE_A_TESTED_PUBLIC_ARTWORK_IMAGE_URL_HERE"
+guide_chat <- ellmer::chat_openai(model = "gpt-6.1-sol")
+
+guide <- guide_chat$chat_structured(
+  paste(
+    "Create a looking guide with up to three distinct visible details.",
+    "Use only the supplied image; no museum metadata is provided.",
+    "Separate observation from interpretation.",
+    "Do not invent an artist, title, date, or historical explanation."
+  ),
+  ellmer::content_image_url(image_url),
+  type = looking_guide_type
+)
+
+str(guide)
+guide$observation
+guide[1, ]
+```
+
+“Up to three” is a prompt instruction, not a length constraint enforced by this schema. Network errors, unsupported inputs, or incomplete responses can still prevent a usable result.
+
+### 4. Inspect the result
+
+The console experiment returned a **3 × 3 tibble**, with character columns named `observation`, `interpretation`, and `uncertainty`. One actual returned row was:
+
+| Observation | Interpretation | Uncertainty |
+|---|---|---|
+| A bridge with repeated pale arches crosses the upper part of the scene, partly dissolving into gray and golden haze. | The repeating arches guide the eye across the image, while their softened edges suggest distance. | The hazy forms do not establish a specific location. |
+
+This is an observed model response, not an independently verified account of the artwork. Its structure was correct; its visual accuracy still requires comparison with the source image. The original image URL and a durable original response were not recorded here, so this row documents the result rather than providing an exact replay.
+
+I can now select a column, render each row, or save the result with `saveRDS()`. No prose parsing is needed.
+
+### 5. Render data separately from generating it
+
+I first saved the tibble and built the panel against that fixed result. Only after the panel worked did I connect it to a model request. This separated layout debugging from model latency and cost.
+
+This small renderer captures the reusable part. It expects the three schema columns and tolerates missing optional values:
+
+```{r}
+render_looking_guide <- function(guide) {
+  optional_text <- function(label, value) {
+    if (length(value) != 1L || is.na(value) || !nzchar(trimws(value))) {
+      return(NULL)
+    }
+    shiny::p(
+      class = "text-muted small",
+      shiny::strong(paste0(label, ": ")),
+      value
+    )
+  }
+
+  shiny::tagList(lapply(seq_len(nrow(guide)), function(i) {
+    entry <- guide[i, ]
+    shiny::div(
+      class = "mb-3",
+      shiny::h5(paste("Notice", i)),
+      shiny::p(entry$observation),
+      optional_text("Why it matters", entry$interpretation),
+      optional_text("Uncertainty", entry$uncertainty)
+    )
+  }))
+}
+
+# Within a Shiny renderUI(): render_looking_guide(guide)
+```
+
+Ordinary Shiny text elements escape model-generated text. I do not pass these strings to `HTML()`.
+
+### 6. Keep asynchronous results attached to their inputs
+
+In the application, a button starts `$chat_structured_async()`, which returns a promise. A separate chat client keeps guide generation out of the docent conversation. The app tracks whether generation is in progress and handles both success and failure.
+
+The important completion rule is:
+
+> Display the result only if it still belongs to the selected artwork and museum.
+
+Art Rogue captures those inputs when the request starts, clears the displayed guide on artwork selection, and compares captured inputs with current inputs before accepting a result. Discarding a stale result does not cancel its request or eliminate its cost. More complex interfaces may need a request ID to distinguish repeated selections of the same object.
+
+The working connection was confirmed interactively. This note does not claim an automated concurrency test or exhaustive failure testing.
+
+## What I learned
+
+**Structured output is an application interface.** Instead of asking for prose and trying to recover fields afterward, I specify the data contract first.
+
+**Valid structure is not verified evidence.** I need to check both the returned columns and whether the statements are supported by the image. Optional fields provide room for missing information; they do not establish calibrated confidence.
+
+**Application state, model context, and visible conversation are different.** A selected museum record need not describe a visitor's uploaded image. In one interactive test, the docent correctly kept the upload separate and declined to borrow the selected artwork's artist and date. That was useful evidence, not a guarantee for every upload.
+
+The conventions I want to retain are:
+
+- Keep the schema separate from request and rendering code.
+- Prototype the renderer with a saved, clearly labeled example.
+- Give the chat component ownership of its submission and streaming lifecycle.
+- Use separate clients for independent model tasks.
+- Handle missing values, request failures, and stale results explicitly.
+- Keep live API execution separate from documentation rendering.
+
+This pattern transfers to extracting evidence from documents, classifying qualitative responses, and generating reviewable annotations for analysis. Each use still needs its own schema, evidence boundary, and quality checks.
+
+## References
+
+- [ellmer: structured data](https://ellmer.tidyverse.org/articles/structured-data.html) — type specifications, R conversion, and missing values.
+- [ellmer: Chat reference](https://ellmer.tidyverse.org/reference/Chat.html) — synchronous and asynchronous structured requests.
+- [shinychat: chat UI](https://posit-dev.github.io/shinychat/r/reference/chat_ui.html) — attachment configuration and model input.
+- [Shiny: non-blocking operations](https://shiny.posit.co/r/articles/improve/nonblocking/) — asynchronous application design.

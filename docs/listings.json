@@ -2,6 +2,7 @@
   {
     "listing": "/notes/index.html",
     "items": [
+      "/notes/data-to-prediction.html",
       "/notes/quarto-parameterized-reports.html",
       "/notes/model-artifacts-and-apis.html",
       "/notes/project-environments.html",
@@ -11,15 +12,17 @@
     ]
   },
   {
-    "listing": "/experiments/index.html",
+    "listing": "/index.html",
     "items": [
+      "/experiments/ellmer-looking-guides/index.html",
       "/experiments/housing-pins/index.html",
       "/experiments/gt_tables/gt_tables.html"
     ]
   },
   {
-    "listing": "/index.html",
+    "listing": "/experiments/index.html",
     "items": [
+      "/experiments/ellmer-looking-guides/index.html",
       "/experiments/housing-pins/index.html",
       "/experiments/gt_tables/gt_tables.html"
     ]

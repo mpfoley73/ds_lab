@@ -1,0 +1,100 @@
+---
+title: "From Data to Prediction: Separating the Layers"
+date: 2026-11-08
+description: "A shared DuckDB database, a prediction API, and an interactive client."
+categories: [devops, reproducibility, Python, R]
+---
+
+Notes from Chapter 3, **Databases and Data APIs**, of
+[DevOps for Data Science](https://do4ds.com/chapters/sec1/1-3-data-access.html).
+The working implementation lives in
+[penguin-explorer](https://github.com/mpfoley73/penguin-explorer).
+See also [Model Artifacts and Prediction APIs](model-artifacts-and-apis.qmd).
+Examples below are reference snippets, not executable Quarto chunks.
+
+## Why separate the layers?
+
+A shared database gives R and Python the same stored source. A saved model
+separates training from serving. An API lets an interface request predictions
+without loading the model itself. Each piece has a clear responsibility and
+can change independently, provided its interfaces remain compatible.
+
+```{mermaid}
+flowchart TD
+    D[(DuckDB: penguins)] --> E[R EDA report]
+    D --> M[Python model training]
+    M --> P[Saved model on Pins board]
+    P --> A[Vetiver API: port 8080]
+    U[Shiny interface: port 8000] -->|POST JSON inputs| A
+    A -->|JSON prediction| U
+```
+
+The arrows show data and artifact flow, not one continuous request. Training
+reads DuckDB and saves a model. The API loads that artifact; each button click
+uses the loaded model without rerunning training or querying DuckDB.
+
+## One database, two language clients
+
+R and Python require their own DuckDB packages, installed in their respective
+project environments (`renv` and `.venv`). Both clients can read the same
+`my-db.duckdb` file. Use a consistent working directory so a relative filename
+resolves to the intended database. Close connections when finished; a shared
+file does not imply unrestricted concurrent writes from different processes.
+
+Loading query results into an R data frame or pandas DataFrame brings the data
+into memory. This differs from leaving a query lazy and computing in the
+database. Our small example uses in-memory results.
+
+Keep the original data intact, then filter for the model's required columns.
+For example, `model_df = df.dropna(subset=model_columns)` excludes missing model
+inputs without discarding rows for unrelated missing fields. Compute excluded
+counts against the original `df`. In this project, 344 rows became 333 model
+rows, with 11 excluded.
+
+## A request is an explicit contract
+
+The client sends a POST request to `http://127.0.0.1:8080/predict` with a JSON
+list of observations:
+
+```json
+[
+  {
+    "bill_length_mm": 39.1,
+    "species_Chinstrap": false,
+    "species_Gentoo": false,
+    "sex_male": true
+  }
+]
+```
+
+Both species indicators are false for Adelie, the reference category; the sex
+indicator is true for Male. The field names and encoding must match the model's
+saved input prototype. Python dictionaries use `True` and `False`; the requests
+package serializes them to JSON's lowercase Boolean values.
+
+The tested response had HTTP status 200 and this body:
+
+```json
+{"predict": [3988.8289177706565]}
+```
+
+That is a model estimate of about 3,989 grams, not an observed weight. Check HTTP
+success before extracting the response: `response.raise_for_status()` surfaces
+HTTP errors, and `response.json()["predict"][0]` extracts the first prediction.
+
+## What I learned
+
+The Shiny interface gathers inputs and displays output. The API owns prediction;
+it loads the saved model. Both servers must be running, on different ports.
+Changing a dropdown does not send a prediction request until the button is
+clicked because `@reactive.event(input.predict)` gates the rendered calculation.
+
+This separation is useful when multiple clients need the same prediction
+service or when presentation changes independently of model training. It also
+adds a process and an HTTP boundary to operate; a small app does not always
+need a separate API.
+
+Project-specific startup commands belong in the Penguin README. Dependency
+records belong with their environments: `renv.lock` for R and
+`requirements.txt` for Python. Neither record alone recreates the database or
+saved model; those require the preparation and training steps too.
